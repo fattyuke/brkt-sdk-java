@@ -18,6 +18,8 @@ public class BrktService {
             new TypeToken<ArrayList<CspImage>>() {}.getType();
     private static final Type TYPE_MACHINE_TYPE_LIST =
             new TypeToken<ArrayList<MachineType>>() {}.getType();
+    private static final Type TYPE_VOLUME_LIST =
+            new TypeToken<ArrayList<Volume>>() {}.getType();
 
     private final BrktRestClient client;
 
@@ -40,5 +42,9 @@ public class BrktService {
 
     public List<MachineType> getMachineTypes() {
         return client.get("/v1/api/config/machinetype", TYPE_MACHINE_TYPE_LIST);
+    }
+
+    public List<Volume> getVolumes() {
+        return client.get("/v1/api/config/brktvolume", TYPE_VOLUME_LIST);
     }
 }

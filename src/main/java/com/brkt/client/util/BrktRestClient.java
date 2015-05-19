@@ -60,6 +60,7 @@ public class BrktRestClient {
         public final String message;
 
         public HttpError(int status, String message) {
+            super("" + status + " " + message);
             this.status = status;
             this.message = message;
         }

@@ -31,17 +31,11 @@ public class Main {
         boolean help;
     }
 
-    @Parameters()
-    static class CommandGetOperatingSystems {}
-
-    @Parameters()
-    static class CommandGetImageDefinitions {}
-
-    @Parameters()
-    static class CommandGetCspImages {}
-
-    @Parameters()
-    static class CommandGetMachineTypes {}
+    @Parameters() static class CommandGetOperatingSystems {}
+    @Parameters() static class CommandGetImageDefinitions {}
+    @Parameters() static class CommandGetCspImages {}
+    @Parameters() static class CommandGetMachineTypes {}
+    @Parameters() static class CommandGetVolumes {}
 
     public static void main(String[] stringArgs) {
         Arguments args = new Arguments();
@@ -53,6 +47,7 @@ public class Main {
             jc.addCommand("getImageDefinitions", new CommandGetImageDefinitions(), "gid");
             jc.addCommand("getCspImages", new CommandGetCspImages(), "gci");
             jc.addCommand("getMachineTypes", new CommandGetMachineTypes(), "gmt");
+            jc.addCommand("getVolumes", new CommandGetVolumes(), "gv");
             jc.parse(stringArgs);
         } catch (ParameterException e) {
             System.err.println(e.getMessage());
@@ -93,6 +88,11 @@ public class Main {
         if (command.equals("getMachineTypes")) {
             for (MachineType mt : service.getMachineTypes()) {
                 System.out.println(mt);
+            }
+        }
+        if (command.equals("getVolumes")) {
+            for (Volume v : service.getVolumes()) {
+                System.out.println(v);
             }
         }
     }

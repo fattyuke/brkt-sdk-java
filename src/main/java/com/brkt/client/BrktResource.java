@@ -1,6 +1,7 @@
 package com.brkt.client;
 
 import com.google.common.base.MoreObjects;
+import com.google.gson.annotations.SerializedName;
 
 import java.sql.Timestamp;
 
@@ -26,7 +27,7 @@ abstract public class BrktResource {
         return createdTime;
     }
 
-    public String getCustomer() {
+    public String getCustomerId() {
         return customer;
     }
 
