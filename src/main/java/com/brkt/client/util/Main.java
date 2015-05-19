@@ -4,8 +4,7 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.Parameters;
-import com.brkt.client.BrktService;
-import com.brkt.client.OperatingSystem;
+import com.brkt.client.*;
 import com.brkt.client.util.BrktRestClient;
 
 import java.util.ArrayList;
@@ -33,8 +32,16 @@ public class Main {
     }
 
     @Parameters()
-    static class CommandGetOperatingSystems {
-    }
+    static class CommandGetOperatingSystems {}
+
+    @Parameters()
+    static class CommandGetImageDefinitions {}
+
+    @Parameters()
+    static class CommandGetCspImages {}
+
+    @Parameters()
+    static class CommandGetMachineTypes {}
 
     public static void main(String[] stringArgs) {
         Arguments args = new Arguments();
@@ -43,6 +50,9 @@ public class Main {
         try {
             jc = new JCommander(args);
             jc.addCommand("getOperatingSystems", new CommandGetOperatingSystems(), "gos");
+            jc.addCommand("getImageDefinitions", new CommandGetImageDefinitions(), "gid");
+            jc.addCommand("getCspImages", new CommandGetCspImages(), "gci");
+            jc.addCommand("getMachineTypes", new CommandGetMachineTypes(), "gmt");
             jc.parse(stringArgs);
         } catch (ParameterException e) {
             System.err.println(e.getMessage());
@@ -61,12 +71,28 @@ public class Main {
             System.exit(1);
         }
 
+        BrktRestClient client = new BrktRestClient.Builder(args.rootUri)
+                .secretKey(args.secretKey).accessToken(args.token).build();
+        BrktService service = new BrktService(client);
+
         if (command.equals("getOperatingSystems")) {
-            BrktRestClient client = new BrktRestClient.Builder(args.rootUri)
-                    .secretKey(args.secretKey).accessToken(args.token).build();
-            BrktService osService = new BrktService(client);
-            for (OperatingSystem os : osService.getOperatingSystems()) {
+            for (OperatingSystem os : service.getOperatingSystems()) {
                 System.out.println(os);
+            }
+        }
+        if (command.equals("getImageDefinitions")) {
+            for (ImageDefinition id : service.getImageDefinitions()) {
+                System.out.println(id);
+            }
+        }
+        if (command.equals("getCspImages")) {
+            for (CspImage ci : service.getCspImages()) {
+                System.out.println(ci);
+            }
+        }
+        if (command.equals("getMachineTypes")) {
+            for (MachineType mt : service.getMachineTypes()) {
+                System.out.println(mt);
             }
         }
     }
