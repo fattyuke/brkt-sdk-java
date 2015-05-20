@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
 import java.sql.Timestamp;
+import java.util.Map;
 
 public class BrktRestClient {
 
@@ -26,6 +27,7 @@ public class BrktRestClient {
         private String rootUri;
         private String accessToken;
         private String secretKey;
+        private Integer timeoutMillis;
 
         public Builder (String rootUri) {
             this.rootUri = rootUri;
@@ -41,21 +43,29 @@ public class BrktRestClient {
             return this;
         }
 
+        public Builder timeoutMillis(int millis) {
+            this.timeoutMillis = millis;
+            return this;
+        }
+
         public BrktRestClient build() {
             Preconditions.checkNotNull(rootUri, "rootUri cannot be null");
             Preconditions.checkNotNull(accessToken, "accessToken cannot be null");
             Preconditions.checkNotNull(secretKey, "secretKey cannot be null");
 
-            BrktHttpClient httpClient = new BrktHttpClient.Builder(rootUri)
-                    .secretKey(secretKey).accessToken(accessToken).build();
-            return new BrktRestClient(httpClient);
+            BrktHttpClient.Builder builder = new BrktHttpClient.Builder(rootUri)
+                    .secretKey(secretKey).accessToken(accessToken);
+            if (timeoutMillis != null) {
+                builder.timeoutMillis(timeoutMillis);
+            }
+            return new BrktRestClient(builder.build());
         }
     }
 
     /**
      * Thrown when the server returns an unsuccessful HTTP status code.
      */
-    public static class HttpError extends RuntimeException {
+    public static class HttpError extends Exception {
         public final int status;
         public final String message;
 
@@ -63,15 +73,6 @@ public class BrktRestClient {
             super("" + status + " " + message);
             this.status = status;
             this.message = message;
-        }
-    }
-
-    /**
-     * Thrown when an {@link IOException} occurs while talking to the server.
-     */
-    public static class RuntimeIoException extends RuntimeException {
-        public RuntimeIoException(IOException cause) {
-            super(cause);
         }
     }
 
@@ -103,18 +104,10 @@ public class BrktRestClient {
     }
 
     /**
-     * Get the resource and deserialize to the an object of the given type.
-     * @throws RuntimeIoException if an {@link IOException} was thrown
-     * @throws HttpError if an HTTP error response was returned
+     * Get the resource and deserialize to an object of the given type.
      */
-    public <T> T get(String path, Type type) {
-        BrktHttpClient.Response response;
-        try {
-            response = httpClient.get(path);
-        } catch (IOException e) {
-            throw new RuntimeIoException(e);
-        }
-
+    public <T> T get(String path, Type type) throws IOException, HttpError {
+        BrktHttpClient.Response response = httpClient.get(path);
         if (response.status / 100 != 2) {
             throw new HttpError(response.status, response.message);
         }
@@ -123,18 +116,28 @@ public class BrktRestClient {
     }
 
     /**
-     * Get the resource and deserialize to the an object of the given type.
-     * @throws RuntimeIoException if an {@link IOException} was thrown
-     * @throws HttpError if an HTTP error response was returned
+     * Get the resource and deserialize to an object of the given type.
      */
-    public <T> T get(String path, Class<T> myClass) {
-        BrktHttpClient.Response response;
-        try {
-            response = httpClient.get(path);
-        } catch (IOException e) {
-            throw new RuntimeIoException(e);
+    public <T> T get(String path, Class<T> myClass) throws IOException, HttpError {
+        BrktHttpClient.Response response = httpClient.get(path);
+        if (response.status / 100 != 2) {
+            throw new HttpError(response.status, response.message);
         }
+        Reader reader = new InputStreamReader(new ByteArrayInputStream(response.payload));
+        return gson.fromJson(reader, myClass);
+    }
 
+    /**
+     * Post an element map to the server and deserialize to an object of the given type.
+     */
+    public <T> T post(String path, Class<T> myClass, Map<String, Object> elements)
+            throws IOException, HttpError {
+        byte[] requestPayload = BrktHttpClient.NO_CONTENT;
+        if (elements != null) {
+            String json = gson.toJson(elements);
+            requestPayload = json.getBytes();
+        }
+        BrktHttpClient.Response response = httpClient.post(path, requestPayload);
         if (response.status / 100 != 2) {
             throw new HttpError(response.status, response.message);
         }

@@ -7,6 +7,19 @@ import java.sql.Timestamp;
 import java.util.Map;
 
 public class Volume extends BrktResource {
+    public static final String AUTO_SNAPSHOT_DURATION_DAYS = "auto_snapshot_duration_days";
+    public static final String AVAILABILITY = "availability";
+    public static final String DESCRIPTION = "description";
+    public static final String INSTANCE = "instance";
+    public static final String IOPS = "iops";
+    public static final String LARGE_IO = "large_io";
+    public static final String LEASE_EXPIRE_TIME = "lease_expire_time";
+    public static final String METADATA = "metadata";
+    public static final String REQUESTED_STATE = "requested_state";
+    public static final String SIZE_IN_GB = "size_in_gb";
+    public static final String SLO = "slo";
+    public static final String VOLUME_TYPE = "volume_type";
+
     private Integer autoSnapshotDurationDays;
     private Integer availability;
     private String billingGroup;

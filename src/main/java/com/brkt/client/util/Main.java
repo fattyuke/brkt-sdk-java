@@ -5,10 +5,13 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.Parameters;
 import com.brkt.client.*;
-import com.brkt.client.util.BrktRestClient;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Main {
 
@@ -16,7 +19,7 @@ public class Main {
         // Without this, JCommand will throw an unintuitive exception if the user specifies an
         // unexpected argument.
         @Parameter
-        List<String> parameters = new ArrayList<String>();
+        List<String> parameters = Lists.newArrayList();
 
         @Parameter(names = { "--token" }, required = true, description = "Auth token")
         String token;
@@ -37,9 +40,31 @@ public class Main {
     @Parameters() static class CommandGetMachineTypes {}
     @Parameters() static class CommandGetVolumes {}
 
+    @Parameters()
+    static class CommandUpdateVolume {
+        @Parameter(description = "<volumeId> field1=value field2=value...")
+        List<String> args = Lists.newArrayList();
+    }
+
+    private static final Pattern PAT_FIELD_VALUE = Pattern.compile("([^=]+)=(.*)");
+
+    static Map<String, Object> splitParams(List<String> paramStrings) {
+        Map<String, Object> params = Maps.newHashMap();
+        for (String keyValue : paramStrings) {
+            Matcher m = PAT_FIELD_VALUE.matcher(keyValue);
+            if (!m.matches()) {
+                throw new IllegalArgumentException("'" + keyValue + "' is not in the format \"field=value\".");
+            }
+            params.put(m.group(1), m.group(2));
+        }
+        return params;
+    }
+
     public static void main(String[] stringArgs) {
         Arguments args = new Arguments();
         JCommander jc = null;
+
+        CommandUpdateVolume updateVolume = new CommandUpdateVolume();
 
         try {
             jc = new JCommander(args);
@@ -48,6 +73,7 @@ public class Main {
             jc.addCommand("getCspImages", new CommandGetCspImages(), "gci");
             jc.addCommand("getMachineTypes", new CommandGetMachineTypes(), "gmt");
             jc.addCommand("getVolumes", new CommandGetVolumes(), "gv");
+            jc.addCommand("updateVolume", updateVolume, "uv");
             jc.parse(stringArgs);
         } catch (ParameterException e) {
             System.err.println(e.getMessage());
@@ -94,6 +120,16 @@ public class Main {
             for (Volume v : service.getVolumes()) {
                 System.out.println(v);
             }
+        }
+        if (command.equals("updateVolume")) {
+            if (updateVolume.args.size() < 2) {
+                System.err.println("This command requires at least 2 arguments.");
+                System.exit(1);
+            }
+            String id = updateVolume.args.get(0);
+            List<String> fieldValues = updateVolume.args.subList(1, updateVolume.args.size());
+            Map<String, Object> elements = splitParams(fieldValues);
+            System.out.println(service.updateVolume(id, elements));
         }
     }
 }
