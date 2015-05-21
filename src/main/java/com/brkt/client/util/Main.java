@@ -4,16 +4,29 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.Parameters;
-import com.brkt.client.*;
+import com.brkt.client.BrktService;
+import com.brkt.client.CspImage;
+import com.brkt.client.ImageDefinition;
+import com.brkt.client.MachineType;
+import com.brkt.client.OperatingSystem;
+import com.brkt.client.Volume;
+import com.google.common.base.MoreObjects;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Main {
+
+    private Arguments args;
 
     static class Arguments {
         // Without this, JCommand will throw an unintuitive exception if the user specifies an
@@ -29,6 +42,9 @@ public class Main {
 
         @Parameter(names = { "--root-uri"}, required = true, description = "Server root URI, e.g. http://example.com")
         String rootUri;
+
+        @Parameter(names = { "--all-fields" }, description = "Print all fields")
+        boolean allFields;
 
         @Parameter(names = { "-h", "--help"}, help = true, description = "Show usage")
         boolean help;
@@ -86,19 +102,45 @@ public class Main {
         }
     }
 
-    public static void main(String[] args) {
-        try {
-            run(args);
-        } catch (BrktService.RuntimeHttpError e) {
-            System.err.println(String.format("%d %s", e.status, e.message));
-            if (e.payload.length > 0) {
-                System.err.println(new String(e.payload));
+    private static final Comparator<Field> FIELD_SORTER = new Comparator<Field>() {
+        @Override
+        public int compare(Field o1, Field o2) {
+            return o1.getName().compareToIgnoreCase(o2.getName());
+        }
+    };
+
+    private void printObject(Object obj) {
+        if (!this.args.allFields) {
+            System.out.println(obj);
+        } else {
+            MoreObjects.ToStringHelper helper = MoreObjects.toStringHelper(obj);
+
+            List<Field> fields = new ArrayList<Field>();
+
+            Class<?> i = obj.getClass();
+            while (i != null && i != Object.class) {
+                for (Field f : i.getDeclaredFields()) {
+                    if (!Modifier.isStatic(f.getModifiers())) {
+                        f.setAccessible(true);
+                        fields.add(f);
+                    }
+                }
+                i = i.getSuperclass();
             }
-            System.exit(1);
+
+            Collections.sort(fields, FIELD_SORTER);
+            for (Field f : fields) {
+                try {
+                    helper.add(f.getName(), f.get(obj));
+                } catch (IllegalAccessException e) {
+                    System.err.println(e);
+                }
+            }
+            System.out.println(helper);
         }
     }
 
-    private static void run(String[] stringArgs) {
+    private void run(String[] stringArgs) {
         Arguments args = new Arguments();
         JCommander jc = null;
 
@@ -129,6 +171,7 @@ public class Main {
             jc.usage();
             System.exit(0);
         }
+        this.args = args;
 
         String command = jc.getParsedCommand();
         if (command == null) {
@@ -140,53 +183,65 @@ public class Main {
                 .secretKey(args.secretKey).accessToken(args.token).build();
         BrktService service = new BrktService(client);
 
-        if (command.equals("getOperatingSystems")) {
+        if (command.equals("getAllOperatingSystems")) {
             for (OperatingSystem os : service.getOperatingSystems()) {
-                System.out.println(os);
+                printObject(os);
             }
         }
-        if (command.equals("getImageDefinitions")) {
+        if (command.equals("getAllImageDefinitions")) {
             for (ImageDefinition id : service.getImageDefinitions()) {
-                System.out.println(id);
+                printObject(id);
             }
         }
-        if (command.equals("getCspImages")) {
+        if (command.equals("getAllCspImages")) {
             for (CspImage ci : service.getCspImages()) {
-                System.out.println(ci);
+                printObject(ci);
             }
         }
-        if (command.equals("getMachineTypes")) {
+        if (command.equals("getAllMachineTypes")) {
             for (MachineType mt : service.getMachineTypes()) {
-                System.out.println(mt);
+                printObject(mt);
             }
         }
 
         // Volume.
         if (command.equals("getAllVolumes")) {
             for (Volume v : service.getAllVolumes()) {
-                System.out.println(v);
+                printObject(v);
             }
         }
         if (command.equals("getVolume")) {
             assertMinArgs(getVolume.args, 1);
             String id = getVolume.args.get(0);
-            System.out.println(service.getVolume(id));
+            printObject(service.getVolume(id));
         }
         if (command.equals("createVolume")) {
             assertMinArgs(createVolume.args, 1);
             Map<String, Object> elements = splitParams(createVolume.args, 0);
-            System.out.println(service.createVolume(elements));
+            printObject(service.createVolume(elements));
         }
         if (command.equals("updateVolume")) {
             assertMinArgs(updateVolume.args, 2);
             String id = updateVolume.args.get(0);
             Map<String, Object> elements = splitParams(updateVolume.args, 1);
-            System.out.println(service.updateVolume(id, elements));
+            printObject(service.updateVolume(id, elements));
         }
         if (command.equals("deleteVolume")) {
             assertMinArgs(deleteVolume.args, 1);
             String id = deleteVolume.args.get(0);
-            System.out.println(service.deleteVolume(id));
+            printObject(service.deleteVolume(id));
+        }
+    }
+
+    public static void main(String[] args) {
+        try {
+            new Main().run(args);
+        } catch (BrktService.RuntimeHttpError e) {
+            System.err.println(String.format("%d %s", e.status, e.message));
+            if (e.payload.length > 0) {
+                System.err.println(new String(e.payload));
+            }
+            System.exit(1);
         }
     }
 }
