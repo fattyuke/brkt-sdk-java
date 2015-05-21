@@ -24,6 +24,8 @@ public class BrktService {
     private static final Type TYPE_VOLUME_LIST =
             new TypeToken<ArrayList<Volume>>() {}.getType();
 
+    private static final String VOLUME_ROOT = "/v1/api/config/brktvolume";
+
     private final BrktRestClient client;
 
     /**
@@ -43,11 +45,13 @@ public class BrktService {
     public static class RuntimeHttpError extends RuntimeException {
         public final int status;
         public final String message;
+        public final byte[] payload;
 
         public RuntimeHttpError(BrktRestClient.HttpError cause) {
             super(cause);
             this.status = cause.status;
             this.message = cause.message;
+            this.payload = cause.payload;
         }
     }
 
@@ -84,6 +88,20 @@ public class BrktService {
         }
     }
 
+    /**
+     * Wraps {@link BrktRestClient#delete} and throws a {@link com.brkt.client.BrktService.RuntimeIoException}
+     * or {@link com.brkt.client.BrktService.RuntimeHttpError} if an error occurred.
+     */
+    private <T> T delete(String path, Class<T> myClass) {
+        try {
+            return client.delete(path, myClass);
+        } catch (IOException e) {
+            throw new RuntimeIoException(e);
+        } catch (BrktRestClient.HttpError e) {
+            throw new RuntimeHttpError(e);
+        }
+    }
+
     public List<OperatingSystem> getOperatingSystems() {
         return get("/v1/api/config/operatingsystem", TYPE_OPERATING_SYSTEM_LIST);
     }
@@ -100,8 +118,14 @@ public class BrktService {
         return get("/v1/api/config/machinetype", TYPE_MACHINE_TYPE_LIST);
     }
 
-    public List<Volume> getVolumes() {
-        return get("/v1/api/config/brktvolume", TYPE_VOLUME_LIST);
+    public List<Volume> getAllVolumes() {
+        return get(VOLUME_ROOT, TYPE_VOLUME_LIST);
+    }
+
+    public Volume getVolume(String volumeId) {
+        Preconditions.checkNotNull(volumeId);
+        String uri = String.format("%s/%s", VOLUME_ROOT, volumeId);
+        return get(uri, Volume.class);
     }
 
     public Volume updateVolume(String volumeId, String fieldName, Object value) {
@@ -110,6 +134,17 @@ public class BrktService {
     }
 
     public Volume updateVolume(String volumeId, Map<String, Object> elements) {
-        return post("/v1/api/config/brktvolume/" + volumeId, Volume.class, elements);
+        Preconditions.checkNotNull(volumeId);
+        String uri = String.format("%s/%s", VOLUME_ROOT, volumeId);
+        return post(uri, Volume.class, elements);
+    }
+
+    public Volume createVolume(Map<String, Object> elements) {
+        return post(VOLUME_ROOT, Volume.class, elements);
+    }
+
+    public Volume deleteVolume(String volumeId) {
+        String uri = String.format("%s/%s", VOLUME_ROOT, volumeId);
+        return delete(uri, Volume.class);
     }
 }

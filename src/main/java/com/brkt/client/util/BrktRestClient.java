@@ -68,11 +68,17 @@ public class BrktRestClient {
     public static class HttpError extends Exception {
         public final int status;
         public final String message;
+        public final byte[] payload;
 
-        public HttpError(int status, String message) {
+        public HttpError(int status, String message, byte[] payload) {
             super("" + status + " " + message);
             this.status = status;
             this.message = message;
+            if (payload == null) {
+                this.payload = BrktHttpClient.NO_CONTENT;
+            } else {
+                this.payload = payload;
+            }
         }
     }
 
@@ -109,28 +115,16 @@ public class BrktRestClient {
     public <T> T get(String path, Type type) throws IOException, HttpError {
         BrktHttpClient.Response response = httpClient.get(path);
         if (response.status / 100 != 2) {
-            throw new HttpError(response.status, response.message);
+            throw new HttpError(response.status, response.message, response.payload);
         }
         Reader reader = new InputStreamReader(new ByteArrayInputStream(response.payload));
         return gson.fromJson(reader, type);
     }
 
     /**
-     * Get the resource and deserialize to an object of the given type.
-     */
-    public <T> T get(String path, Class<T> myClass) throws IOException, HttpError {
-        BrktHttpClient.Response response = httpClient.get(path);
-        if (response.status / 100 != 2) {
-            throw new HttpError(response.status, response.message);
-        }
-        Reader reader = new InputStreamReader(new ByteArrayInputStream(response.payload));
-        return gson.fromJson(reader, myClass);
-    }
-
-    /**
      * Post an element map to the server and deserialize to an object of the given type.
      */
-    public <T> T post(String path, Class<T> myClass, Map<String, Object> elements)
+    public <T> T post(String path, Type type, Map<String, Object> elements)
             throws IOException, HttpError {
         byte[] requestPayload = BrktHttpClient.NO_CONTENT;
         if (elements != null) {
@@ -139,9 +133,26 @@ public class BrktRestClient {
         }
         BrktHttpClient.Response response = httpClient.post(path, requestPayload);
         if (response.status / 100 != 2) {
-            throw new HttpError(response.status, response.message);
+            throw new HttpError(response.status, response.message, response.payload);
         }
         Reader reader = new InputStreamReader(new ByteArrayInputStream(response.payload));
-        return gson.fromJson(reader, myClass);
+        return gson.fromJson(reader, type);
     }
+
+    /**
+     * Delete the resource.  If {@code myClass} is not {@code null}, deserialize
+     * to an object of the given type.
+     */
+    public <T> T delete(String path, Type type) throws IOException, HttpError {
+        BrktHttpClient.Response response = httpClient.delete(path);
+        if (response.status / 100 != 2) {
+            throw new HttpError(response.status, response.message, response.payload);
+        }
+        if (type != null) {
+            Reader reader = new InputStreamReader(new ByteArrayInputStream(response.payload));
+            return gson.fromJson(reader, type);
+        }
+        return null;
+    }
+
 }

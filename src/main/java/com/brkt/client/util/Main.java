@@ -34,23 +34,42 @@ public class Main {
         boolean help;
     }
 
-    @Parameters() static class CommandGetOperatingSystems {}
-    @Parameters() static class CommandGetImageDefinitions {}
-    @Parameters() static class CommandGetCspImages {}
-    @Parameters() static class CommandGetMachineTypes {}
-    @Parameters() static class CommandGetVolumes {}
+    @Parameters() static class CommandGetAllOperatingSystems {}
+    @Parameters() static class CommandGetAllImageDefinitions {}
+    @Parameters() static class CommandGetAllCspImages {}
+    @Parameters() static class CommandGetAllMachineTypes {}
+    @Parameters() static class CommandGetAllVolumes {}
+
+    @Parameters()
+    static class CommandGetVolume {
+        @Parameter(description = "<volumeId>")
+        List<String> args = Lists.newArrayList();
+    }
+
+    @Parameters()
+    static class CommandCreateVolume {
+        @Parameter(description = "<field1=value> [field2=value ...]")
+        List<String> args = Lists.newArrayList();
+    }
 
     @Parameters()
     static class CommandUpdateVolume {
-        @Parameter(description = "<volumeId> field1=value field2=value...")
+        @Parameter(description = "<volumeId> <field1=value> [field2=value ...]")
+        List<String> args = Lists.newArrayList();
+    }
+
+    @Parameters()
+    static class CommandDeleteVolume {
+        @Parameter(description = "<volumeId>")
         List<String> args = Lists.newArrayList();
     }
 
     private static final Pattern PAT_FIELD_VALUE = Pattern.compile("([^=]+)=(.*)");
 
-    static Map<String, Object> splitParams(List<String> paramStrings) {
+    static Map<String, Object> splitParams(List<String> paramStrings, int beginIndex) {
         Map<String, Object> params = Maps.newHashMap();
-        for (String keyValue : paramStrings) {
+        for (int i = beginIndex; i < paramStrings.size(); i++) {
+            String keyValue = paramStrings.get(i);
             Matcher m = PAT_FIELD_VALUE.matcher(keyValue);
             if (!m.matches()) {
                 throw new IllegalArgumentException("'" + keyValue + "' is not in the format \"field=value\".");
@@ -60,20 +79,45 @@ public class Main {
         return params;
     }
 
-    public static void main(String[] stringArgs) {
+    private static void assertMinArgs(List<String> args, int min) {
+        if (args.size() < min) {
+            System.err.println("This command requires " + min + " arguments.");
+            System.exit(1);
+        }
+    }
+
+    public static void main(String[] args) {
+        try {
+            run(args);
+        } catch (BrktService.RuntimeHttpError e) {
+            System.err.println(String.format("%d %s", e.status, e.message));
+            if (e.payload.length > 0) {
+                System.err.println(new String(e.payload));
+            }
+            System.exit(1);
+        }
+    }
+
+    private static void run(String[] stringArgs) {
         Arguments args = new Arguments();
         JCommander jc = null;
 
+        CommandGetVolume getVolume = new CommandGetVolume();
+        CommandCreateVolume createVolume = new CommandCreateVolume();
         CommandUpdateVolume updateVolume = new CommandUpdateVolume();
+        CommandDeleteVolume deleteVolume = new CommandDeleteVolume();
 
         try {
             jc = new JCommander(args);
-            jc.addCommand("getOperatingSystems", new CommandGetOperatingSystems(), "gos");
-            jc.addCommand("getImageDefinitions", new CommandGetImageDefinitions(), "gid");
-            jc.addCommand("getCspImages", new CommandGetCspImages(), "gci");
-            jc.addCommand("getMachineTypes", new CommandGetMachineTypes(), "gmt");
-            jc.addCommand("getVolumes", new CommandGetVolumes(), "gv");
+            jc.addCommand("getAllOperatingSystems", new CommandGetAllOperatingSystems(), "gaos");
+            jc.addCommand("getAllImageDefinitions", new CommandGetAllImageDefinitions(), "gaid");
+            jc.addCommand("getAllCspImages", new CommandGetAllCspImages(), "gaci");
+            jc.addCommand("getAllMachineTypes", new CommandGetAllMachineTypes(), "gamt");
+            jc.addCommand("getAllVolumes", new CommandGetAllVolumes(), "gav");
+            jc.addCommand("getVolume", getVolume, "gv");
+            jc.addCommand("createVolume", createVolume, "cv");
             jc.addCommand("updateVolume", updateVolume, "uv");
+            jc.addCommand("deleteVolume", deleteVolume, "dv");
             jc.parse(stringArgs);
         } catch (ParameterException e) {
             System.err.println(e.getMessage());
@@ -116,20 +160,33 @@ public class Main {
                 System.out.println(mt);
             }
         }
-        if (command.equals("getVolumes")) {
-            for (Volume v : service.getVolumes()) {
+
+        // Volume.
+        if (command.equals("getAllVolumes")) {
+            for (Volume v : service.getAllVolumes()) {
                 System.out.println(v);
             }
         }
+        if (command.equals("getVolume")) {
+            assertMinArgs(getVolume.args, 1);
+            String id = getVolume.args.get(0);
+            System.out.println(service.getVolume(id));
+        }
+        if (command.equals("createVolume")) {
+            assertMinArgs(createVolume.args, 1);
+            Map<String, Object> elements = splitParams(createVolume.args, 0);
+            System.out.println(service.createVolume(elements));
+        }
         if (command.equals("updateVolume")) {
-            if (updateVolume.args.size() < 2) {
-                System.err.println("This command requires at least 2 arguments.");
-                System.exit(1);
-            }
+            assertMinArgs(updateVolume.args, 2);
             String id = updateVolume.args.get(0);
-            List<String> fieldValues = updateVolume.args.subList(1, updateVolume.args.size());
-            Map<String, Object> elements = splitParams(fieldValues);
+            Map<String, Object> elements = splitParams(updateVolume.args, 1);
             System.out.println(service.updateVolume(id, elements));
+        }
+        if (command.equals("deleteVolume")) {
+            assertMinArgs(deleteVolume.args, 1);
+            String id = deleteVolume.args.get(0);
+            System.out.println(service.deleteVolume(id));
         }
     }
 }

@@ -2,6 +2,7 @@ package com.brkt.client.util;
 
 import com.google.common.base.Preconditions;
 import com.google.common.io.ByteStreams;
+import com.google.common.io.Closeables;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -19,7 +20,7 @@ public class BrktHttpClient {
     private final int timeoutMillis;
 
     private enum Method {
-        GET, POST
+        GET, POST, DELETE
     }
 
     public static class Response {
@@ -68,21 +69,24 @@ public class BrktHttpClient {
         return conn;
     }
 
+    private byte[] readPayload(HttpURLConnection conn) throws IOException {
+        InputStream in = null;
+        try {
+            if (conn.getResponseCode() / 100 == 2) {
+                in = conn.getInputStream();
+            } else {
+                in = conn.getErrorStream();
+            }
+            return ByteStreams.toByteArray(in);
+        } finally {
+            Closeables.closeQuietly(in);
+        }
+    }
+
     public Response get(String path) throws IOException {
         HttpURLConnection conn = newConnection(path, Method.GET);
         conn.connect();
-        int statusCode = conn.getResponseCode();
-        byte[] payload = NO_CONTENT;
-        if (statusCode / 100 == 2) {
-            InputStream in = null;
-            try {
-                in = conn.getInputStream();
-                payload = ByteStreams.toByteArray(in);
-            } finally {
-                Util.close(in);
-            }
-        }
-        return new Response(statusCode, conn.getResponseMessage(), payload);
+        return new Response(conn.getResponseCode(), conn.getResponseMessage(), readPayload(conn));
     }
 
     public Response post(String path, byte[] requestPayload) throws IOException {
@@ -92,19 +96,13 @@ public class BrktHttpClient {
             ByteStreams.copy(new ByteArrayInputStream(requestPayload), conn.getOutputStream());
         }
         conn.connect();
+        return new Response(conn.getResponseCode(), conn.getResponseMessage(), readPayload(conn));
+    }
 
-        int statusCode = conn.getResponseCode();
-        byte[] responsePayload = NO_CONTENT;
-        if (statusCode / 100 == 2) {
-            InputStream in = null;
-            try {
-                in = conn.getInputStream();
-                responsePayload = ByteStreams.toByteArray(in);
-            } finally {
-                Util.close(in);
-            }
-        }
-        return new Response(statusCode, conn.getResponseMessage(), responsePayload);
+    public Response delete(String path) throws IOException {
+        HttpURLConnection conn = newConnection(path, Method.DELETE);
+        conn.connect();
+        return new Response(conn.getResponseCode(), conn.getResponseMessage(), readPayload(conn));
     }
 
     public static class Builder {

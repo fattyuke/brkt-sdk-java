@@ -186,6 +186,7 @@ public class Volume extends BrktResource {
                 .add("name", getName())
                 .add("sizeInGb", sizeInGb)
                 .add("parentId", parent)
+                .add("requestedState", requestedState)
                 .toString();
     }
 }

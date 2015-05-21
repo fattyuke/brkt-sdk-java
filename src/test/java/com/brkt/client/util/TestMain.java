@@ -12,8 +12,8 @@ public class TestMain {
 
     @Test
     public void testSplitParams() {
-        List<String> paramStrings = Lists.newArrayList("a=b", "onetwothree=123");
-        Map<String, Object> params = Main.splitParams(paramStrings);
+        List<String> paramStrings = Lists.newArrayList("id123", "a=b", "onetwothree=123");
+        Map<String, Object> params = Main.splitParams(paramStrings, 1);
         assertEquals(2, params.size());
         assertEquals("b", params.get("a"));
         assertEquals("123", params.get("onetwothree"));
@@ -22,6 +22,6 @@ public class TestMain {
     @Test(expected = IllegalArgumentException.class)
     public void testSplitParamsException() {
         List<String> paramStrings = Lists.newArrayList("a=b", "abc");
-        Main.splitParams(paramStrings);
+        Main.splitParams(paramStrings, 0);
     }
 }
