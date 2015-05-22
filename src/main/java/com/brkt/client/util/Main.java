@@ -231,22 +231,22 @@ public class Main {
         BrktService service = new BrktService(client);
 
         if (command.equals("getAllOperatingSystems")) {
-            for (OperatingSystem os : service.getOperatingSystems()) {
+            for (OperatingSystem os : service.getAllOperatingSystems()) {
                 printObject(os);
             }
         }
         if (command.equals("getAllImageDefinitions")) {
-            for (ImageDefinition id : service.getImageDefinitions()) {
+            for (ImageDefinition id : service.getAllImageDefinitions()) {
                 printObject(id);
             }
         }
         if (command.equals("getAllCspImages")) {
-            for (CspImage ci : service.getCspImages()) {
+            for (CspImage ci : service.getAllCspImages()) {
                 printObject(ci);
             }
         }
         if (command.equals("getAllMachineTypes")) {
-            for (MachineType mt : service.getMachineTypes()) {
+            for (MachineType mt : service.getAllMachineTypes()) {
                 printObject(mt);
             }
         }

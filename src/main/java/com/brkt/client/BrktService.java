@@ -25,6 +25,8 @@ public class BrktService {
             new TypeToken<ArrayList<Volume>>() {}.getType();
     private static final Type TYPE_INSTANCE_LIST =
             new TypeToken<ArrayList<Instance>>() {}.getType();
+    private static final Type TYPE_WORKLOAD_LIST =
+            new TypeToken<ArrayList<Workload>>() {}.getType();
 
     private static final String VOLUME_ROOT = "/v1/api/config/brktvolume";
     private static final String INSTANCE_ROOT = "/v1/api/config/instance";
@@ -105,19 +107,19 @@ public class BrktService {
         }
     }
 
-    public List<OperatingSystem> getOperatingSystems() {
+    public List<OperatingSystem> getAllOperatingSystems() {
         return get("/v1/api/config/operatingsystem", TYPE_OPERATING_SYSTEM_LIST);
     }
 
-    public List<ImageDefinition> getImageDefinitions() {
+    public List<ImageDefinition> getAllImageDefinitions() {
         return get("/v1/api/config/imagedefinition", TYPE_IMAGE_DEFINITION_LIST);
     }
 
-    public List<CspImage> getCspImages() {
+    public List<CspImage> getAllCspImages() {
         return get("/v1/api/config/cspimage", TYPE_CSP_IMAGE_LIST);
     }
 
-    public List<MachineType> getMachineTypes() {
+    public List<MachineType> getAllMachineTypes() {
         return get("/v1/api/config/machinetype", TYPE_MACHINE_TYPE_LIST);
     }
 
