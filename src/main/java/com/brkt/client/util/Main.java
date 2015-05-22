@@ -7,6 +7,7 @@ import com.beust.jcommander.Parameters;
 import com.brkt.client.BrktService;
 import com.brkt.client.CspImage;
 import com.brkt.client.ImageDefinition;
+import com.brkt.client.Instance;
 import com.brkt.client.MachineType;
 import com.brkt.client.OperatingSystem;
 import com.brkt.client.Volume;
@@ -80,6 +81,14 @@ public class Main {
         List<String> args = Lists.newArrayList();
     }
 
+    @Parameters() static class CommandGetAllInstances {}
+
+    @Parameters()
+    static class CommandGetInstance {
+        @Parameter(description = "<instanceId>")
+        List<String> args = Lists.newArrayList();
+    }
+
     private static final Pattern PAT_FIELD_VALUE = Pattern.compile("([^=]+)=(.*)");
 
     static Map<String, Object> splitParams(List<String> paramStrings, int beginIndex) {
@@ -97,11 +106,25 @@ public class Main {
 
     private static void assertMinArgs(List<String> args, int min) {
         if (args.size() < min) {
-            System.err.println("This command requires " + min + " arguments.");
+            System.err.print("This command requires at least " + min + " argument");
+            if (min > 1) {
+                System.err.print("s");
+            }
+            System.err.println(".");
             System.exit(1);
         }
     }
 
+    private static void assertArgCount(List<String> args, int count) {
+        if (args.size() != count) {
+            System.err.print("This command requires " + count + " argument");
+            if (count > 1) {
+                System.err.print("s");
+            }
+            System.err.println(".");
+            System.exit(1);
+        }
+    }
     private static final Comparator<Field> FIELD_SORTER = new Comparator<Field>() {
         @Override
         public int compare(Field o1, Field o2) {
@@ -149,17 +172,24 @@ public class Main {
         CommandUpdateVolume updateVolume = new CommandUpdateVolume();
         CommandDeleteVolume deleteVolume = new CommandDeleteVolume();
 
+        CommandGetInstance getInstance = new CommandGetInstance();
+
         try {
             jc = new JCommander(args);
             jc.addCommand("getAllOperatingSystems", new CommandGetAllOperatingSystems(), "gaos");
             jc.addCommand("getAllImageDefinitions", new CommandGetAllImageDefinitions(), "gaid");
             jc.addCommand("getAllCspImages", new CommandGetAllCspImages(), "gaci");
             jc.addCommand("getAllMachineTypes", new CommandGetAllMachineTypes(), "gamt");
+
             jc.addCommand("getAllVolumes", new CommandGetAllVolumes(), "gav");
             jc.addCommand("getVolume", getVolume, "gv");
             jc.addCommand("createVolume", createVolume, "cv");
             jc.addCommand("updateVolume", updateVolume, "uv");
             jc.addCommand("deleteVolume", deleteVolume, "dv");
+
+            jc.addCommand("getAllInstances", new CommandGetAllInstances(), "gai");
+            jc.addCommand("getInstance", getInstance, "gi");
+
             jc.parse(stringArgs);
         } catch (ParameterException e) {
             System.err.println(e.getMessage());
@@ -211,7 +241,7 @@ public class Main {
             }
         }
         if (command.equals("getVolume")) {
-            assertMinArgs(getVolume.args, 1);
+            assertArgCount(getVolume.args, 1);
             String id = getVolume.args.get(0);
             printObject(service.getVolume(id));
         }
@@ -227,9 +257,21 @@ public class Main {
             printObject(service.updateVolume(id, elements));
         }
         if (command.equals("deleteVolume")) {
-            assertMinArgs(deleteVolume.args, 1);
+            assertArgCount(deleteVolume.args, 1);
             String id = deleteVolume.args.get(0);
             printObject(service.deleteVolume(id));
+        }
+
+        // Instance.
+        if (command.equals("getAllInstances")) {
+            for (Instance i : service.getAllInstances()) {
+                printObject(i);
+            }
+        }
+        if (command.equals("getInstance")) {
+            assertArgCount(getInstance.args, 1);
+            String id = getInstance.args.get(0);
+            printObject(service.getInstance(id));
         }
     }
 

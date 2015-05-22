@@ -23,8 +23,11 @@ public class BrktService {
             new TypeToken<ArrayList<MachineType>>() {}.getType();
     private static final Type TYPE_VOLUME_LIST =
             new TypeToken<ArrayList<Volume>>() {}.getType();
+    private static final Type TYPE_INSTANCE_LIST =
+            new TypeToken<ArrayList<Instance>>() {}.getType();
 
     private static final String VOLUME_ROOT = "/v1/api/config/brktvolume";
+    private static final String INSTANCE_ROOT = "/v1/api/config/instance";
 
     private final BrktRestClient client;
 
@@ -144,7 +147,18 @@ public class BrktService {
     }
 
     public Volume deleteVolume(String volumeId) {
+        Preconditions.checkNotNull(volumeId);
         String uri = String.format("%s/%s", VOLUME_ROOT, volumeId);
         return delete(uri, Volume.class);
+    }
+
+    public List<Instance> getAllInstances() {
+        return get(INSTANCE_ROOT, TYPE_INSTANCE_LIST);
+    }
+
+    public Instance getInstance(String instanceId) {
+        Preconditions.checkNotNull(instanceId);
+        String uri = String.format("%s/%s", INSTANCE_ROOT, instanceId);
+        return get(uri, Instance.class);
     }
 }
