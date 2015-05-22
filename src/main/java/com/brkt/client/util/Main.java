@@ -89,6 +89,18 @@ public class Main {
         List<String> args = Lists.newArrayList();
     }
 
+    @Parameters()
+    static class CommandUpdateInstance {
+        @Parameter(description = "<instanceId> <field1=value> [field2=value ...]")
+        List<String> args = Lists.newArrayList();
+    }
+
+    @Parameters()
+    static class CommandGetInstanceVolumes {
+        @Parameter(description = "<instanceId>")
+        List<String> args = Lists.newArrayList();
+    }
+
     private static final Pattern PAT_FIELD_VALUE = Pattern.compile("([^=]+)=(.*)");
 
     static Map<String, Object> splitParams(List<String> paramStrings, int beginIndex) {
@@ -125,6 +137,7 @@ public class Main {
             System.exit(1);
         }
     }
+
     private static final Comparator<Field> FIELD_SORTER = new Comparator<Field>() {
         @Override
         public int compare(Field o1, Field o2) {
@@ -173,6 +186,8 @@ public class Main {
         CommandDeleteVolume deleteVolume = new CommandDeleteVolume();
 
         CommandGetInstance getInstance = new CommandGetInstance();
+        CommandUpdateInstance updateInstance = new CommandUpdateInstance();
+        CommandGetInstanceVolumes getInstanceVolumes = new CommandGetInstanceVolumes();
 
         try {
             jc = new JCommander(args);
@@ -189,6 +204,8 @@ public class Main {
 
             jc.addCommand("getAllInstances", new CommandGetAllInstances(), "gai");
             jc.addCommand("getInstance", getInstance, "gi");
+            jc.addCommand("updateInstance", updateInstance, "ui");
+            jc.addCommand("getInstanceVolumes", getInstanceVolumes, "giv");
 
             jc.parse(stringArgs);
         } catch (ParameterException e) {
@@ -272,6 +289,19 @@ public class Main {
             assertArgCount(getInstance.args, 1);
             String id = getInstance.args.get(0);
             printObject(service.getInstance(id));
+        }
+        if (command.equals("updateInstance")) {
+            assertMinArgs(updateInstance.args, 2);
+            String id = updateInstance.args.get(0);
+            Map<String, Object> elements = splitParams(updateInstance.args, 1);
+            printObject(service.updateInstance(id, elements));
+        }
+        if (command.equals("getInstanceVolumes")) {
+            assertArgCount(getInstanceVolumes.args, 1);
+            String id = getInstanceVolumes.args.get(0);
+            for (Volume v : service.getInstanceVolumes(id)) {
+                printObject(v);
+            }
         }
     }
 

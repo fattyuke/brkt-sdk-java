@@ -161,4 +161,16 @@ public class BrktService {
         String uri = String.format("%s/%s", INSTANCE_ROOT, instanceId);
         return get(uri, Instance.class);
     }
+
+    public Instance updateInstance(String instanceId, Map<String, Object> elements) {
+        Preconditions.checkNotNull(instanceId);
+        String uri = String.format("%s/%s", INSTANCE_ROOT, instanceId);
+        return post(uri, Instance.class, elements);
+    }
+
+    public List<Volume> getInstanceVolumes(String instanceId) {
+        Preconditions.checkNotNull(instanceId);
+        String uri = String.format("%s/%s/brktvolumes", INSTANCE_ROOT, instanceId);
+        return get(uri, TYPE_VOLUME_LIST);
+    }
 }

@@ -8,6 +8,15 @@ import java.util.List;
 import java.util.Map;
 
 public class Instance extends BrktResource {
+
+    public static final String DESCRIPTION = "description";
+    public static final String LEASE_EXPIRE_TIME = "lease_expire_time";
+    public static final String LOAD_BALANCER = "load_balancer";
+    public static final String METADATA = "metadata";
+    public static final String NAME = "name";
+    public static final String SECURITY_GROUPS = "security_groups";
+    public static final String SERVICE_NAME = "service_name";
+
     private BigDecimal baseHourlyRate;
     private String billingGroup;
     private String computingCell;
