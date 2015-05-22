@@ -11,6 +11,7 @@ import com.brkt.client.Instance;
 import com.brkt.client.MachineType;
 import com.brkt.client.OperatingSystem;
 import com.brkt.client.Volume;
+import com.brkt.client.Workload;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -44,76 +45,11 @@ public class Main {
         @Parameter(names = { "--root-uri"}, required = true, description = "Server root URI, e.g. http://example.com")
         String rootUri;
 
-        @Parameter(names = { "--all-fields" }, description = "Print all fields")
+        @Parameter(names = { "--all-fields" }, description = "Print all fields on the returned objects.")
         boolean allFields;
 
         @Parameter(names = { "-h", "--help"}, help = true, description = "Show usage")
         boolean help;
-    }
-
-    @Parameters() static class CommandGetAllOperatingSystems {}
-    @Parameters() static class CommandGetAllImageDefinitions {}
-    @Parameters() static class CommandGetAllCspImages {}
-    @Parameters() static class CommandGetAllMachineTypes {}
-    @Parameters() static class CommandGetAllVolumes {}
-
-    @Parameters()
-    static class CommandGetVolume {
-        @Parameter(description = "<volumeId>")
-        List<String> args = Lists.newArrayList();
-    }
-
-    @Parameters()
-    static class CommandCreateVolume {
-        @Parameter(description = "<field1=value> [field2=value ...]")
-        List<String> args = Lists.newArrayList();
-    }
-
-    @Parameters()
-    static class CommandUpdateVolume {
-        @Parameter(description = "<volumeId> <field1=value> [field2=value ...]")
-        List<String> args = Lists.newArrayList();
-    }
-
-    @Parameters()
-    static class CommandDeleteVolume {
-        @Parameter(description = "<volumeId>")
-        List<String> args = Lists.newArrayList();
-    }
-
-    @Parameters() static class CommandGetAllInstances {}
-
-    @Parameters()
-    static class CommandGetInstance {
-        @Parameter(description = "<instanceId>")
-        List<String> args = Lists.newArrayList();
-    }
-
-    @Parameters()
-    static class CommandUpdateInstance {
-        @Parameter(description = "<instanceId> <field1=value> [field2=value ...]")
-        List<String> args = Lists.newArrayList();
-    }
-
-    @Parameters()
-    static class CommandGetInstanceVolumes {
-        @Parameter(description = "<instanceId>")
-        List<String> args = Lists.newArrayList();
-    }
-
-    private static final Pattern PAT_FIELD_VALUE = Pattern.compile("([^=]+)=(.*)");
-
-    static Map<String, Object> splitParams(List<String> paramStrings, int beginIndex) {
-        Map<String, Object> params = Maps.newHashMap();
-        for (int i = beginIndex; i < paramStrings.size(); i++) {
-            String keyValue = paramStrings.get(i);
-            Matcher m = PAT_FIELD_VALUE.matcher(keyValue);
-            if (!m.matches()) {
-                throw new IllegalArgumentException("'" + keyValue + "' is not in the format \"field=value\".");
-            }
-            params.put(m.group(1), m.group(2));
-        }
-        return params;
     }
 
     private static void assertMinArgs(List<String> args, int min) {
@@ -136,6 +72,61 @@ public class Main {
             System.err.println(".");
             System.exit(1);
         }
+    }
+
+    @Parameters() static class CommandWithNoArgs {}
+
+    @Parameters()
+    static class CommandWithId {
+        @Parameter(description = "<id>")
+        List<String> args = Lists.newArrayList();
+
+        String getId() {
+            assertArgCount(args, 1);
+            return args.get(0);
+        }
+    }
+
+    @Parameters()
+    static class CommandWithFieldValueList {
+        @Parameter(description = "<field1=value> [field2=value ...]")
+        List<String> args = Lists.newArrayList();
+
+        Map<String, Object> getElements() {
+            assertMinArgs(args, 1);
+            return splitParams(args, 0);
+        }
+    }
+
+    @Parameters()
+    static class CommandWithIdAndFieldValueList {
+        @Parameter(description = "<id> <field1=value> [field2=value ...]")
+        List<String> args = Lists.newArrayList();
+
+        String getId() {
+            assertMinArgs(args, 2);
+            return args.get(0);
+        }
+
+        Map<String, Object> getElements() {
+            assertMinArgs(args, 2);
+            return splitParams(args, 1);
+        }
+    }
+
+    private static final Pattern PAT_FIELD_VALUE = Pattern.compile("([^=]+)=(.*)");
+
+    static Map<String, Object> splitParams(List<String> paramStrings, int beginIndex) {
+        Map<String, Object> params = Maps.newHashMap();
+        for (int i = beginIndex; i < paramStrings.size(); i++) {
+            String keyValue = paramStrings.get(i);
+            Matcher m = PAT_FIELD_VALUE.matcher(keyValue);
+            if (!m.matches()) {
+                throw new IllegalArgumentException("'" + keyValue + "' is not in the format \"field=value\".");
+            }
+            params.put(m.group(1), m.group(2));
+        }
+        return params;
     }
 
     private static final Comparator<Field> FIELD_SORTER = new Comparator<Field>() {
@@ -180,32 +171,35 @@ public class Main {
         Arguments args = new Arguments();
         JCommander jc = null;
 
-        CommandGetVolume getVolume = new CommandGetVolume();
-        CommandCreateVolume createVolume = new CommandCreateVolume();
-        CommandUpdateVolume updateVolume = new CommandUpdateVolume();
-        CommandDeleteVolume deleteVolume = new CommandDeleteVolume();
-
-        CommandGetInstance getInstance = new CommandGetInstance();
-        CommandUpdateInstance updateInstance = new CommandUpdateInstance();
-        CommandGetInstanceVolumes getInstanceVolumes = new CommandGetInstanceVolumes();
+        CommandWithNoArgs noArgs = new CommandWithNoArgs();
+        CommandWithId idArg = new CommandWithId();
+        CommandWithFieldValueList fieldValues = new CommandWithFieldValueList();
+        CommandWithIdAndFieldValueList idAndFieldValues = new CommandWithIdAndFieldValueList();
 
         try {
             jc = new JCommander(args);
-            jc.addCommand("getAllOperatingSystems", new CommandGetAllOperatingSystems(), "gaos");
-            jc.addCommand("getAllImageDefinitions", new CommandGetAllImageDefinitions(), "gaid");
-            jc.addCommand("getAllCspImages", new CommandGetAllCspImages(), "gaci");
-            jc.addCommand("getAllMachineTypes", new CommandGetAllMachineTypes(), "gamt");
+            jc.addCommand("getAllOperatingSystems", noArgs, "gaos");
+            jc.addCommand("getAllImageDefinitions", noArgs, "gaid");
+            jc.addCommand("getAllCspImages", noArgs, "gaci");
+            jc.addCommand("getAllMachineTypes", noArgs, "gamt");
 
-            jc.addCommand("getAllVolumes", new CommandGetAllVolumes(), "gav");
-            jc.addCommand("getVolume", getVolume, "gv");
-            jc.addCommand("createVolume", createVolume, "cv");
-            jc.addCommand("updateVolume", updateVolume, "uv");
-            jc.addCommand("deleteVolume", deleteVolume, "dv");
+            jc.addCommand("getAllVolumes", noArgs, "gav");
+            jc.addCommand("getVolume", idArg, "gv");
+            jc.addCommand("createVolume", fieldValues, "cv");
+            jc.addCommand("updateVolume", idAndFieldValues, "uv");
+            jc.addCommand("deleteVolume", idArg, "dv");
 
-            jc.addCommand("getAllInstances", new CommandGetAllInstances(), "gai");
-            jc.addCommand("getInstance", getInstance, "gi");
-            jc.addCommand("updateInstance", updateInstance, "ui");
-            jc.addCommand("getInstanceVolumes", getInstanceVolumes, "giv");
+            jc.addCommand("getAllInstances", noArgs, "gai");
+            jc.addCommand("getInstance", idArg, "gi");
+            jc.addCommand("updateInstance", idAndFieldValues, "ui");
+            jc.addCommand("getInstanceVolumes", idArg, "giv");
+
+            jc.addCommand("getAllWorkloads", noArgs, "gaw");
+            jc.addCommand("getWorkload", idArg, "gw");
+            jc.addCommand("createWorkload", fieldValues, "cw");
+            jc.addCommand("updateWorkload", idAndFieldValues, "uw");
+            jc.addCommand("getWorkloadInstances", idArg, "gwi");
+            jc.addCommand("deleteWorkload", idArg, "dw");
 
             jc.parse(stringArgs);
         } catch (ParameterException e) {
@@ -258,24 +252,20 @@ public class Main {
             }
         }
         if (command.equals("getVolume")) {
-            assertArgCount(getVolume.args, 1);
-            String id = getVolume.args.get(0);
+            String id = idArg.getId();
             printObject(service.getVolume(id));
         }
         if (command.equals("createVolume")) {
-            assertMinArgs(createVolume.args, 1);
-            Map<String, Object> elements = splitParams(createVolume.args, 0);
+            Map<String, Object> elements = fieldValues.getElements();
             printObject(service.createVolume(elements));
         }
         if (command.equals("updateVolume")) {
-            assertMinArgs(updateVolume.args, 2);
-            String id = updateVolume.args.get(0);
-            Map<String, Object> elements = splitParams(updateVolume.args, 1);
+            String id = idAndFieldValues.getId();
+            Map<String, Object> elements = idAndFieldValues.getElements();
             printObject(service.updateVolume(id, elements));
         }
         if (command.equals("deleteVolume")) {
-            assertArgCount(deleteVolume.args, 1);
-            String id = deleteVolume.args.get(0);
+            String id = idArg.getId();
             printObject(service.deleteVolume(id));
         }
 
@@ -286,22 +276,49 @@ public class Main {
             }
         }
         if (command.equals("getInstance")) {
-            assertArgCount(getInstance.args, 1);
-            String id = getInstance.args.get(0);
+            String id = idArg.getId();
             printObject(service.getInstance(id));
         }
         if (command.equals("updateInstance")) {
-            assertMinArgs(updateInstance.args, 2);
-            String id = updateInstance.args.get(0);
-            Map<String, Object> elements = splitParams(updateInstance.args, 1);
+            String id = idAndFieldValues.getId();
+            Map<String, Object> elements = idAndFieldValues.getElements();
             printObject(service.updateInstance(id, elements));
         }
         if (command.equals("getInstanceVolumes")) {
-            assertArgCount(getInstanceVolumes.args, 1);
-            String id = getInstanceVolumes.args.get(0);
+            String id = idArg.getId();
             for (Volume v : service.getInstanceVolumes(id)) {
                 printObject(v);
             }
+        }
+
+        // Workload.
+        if (command.equals("getAllWorkloads")) {
+            for (Workload w : service.getAllWorkloads()) {
+                printObject(w);
+            }
+        }
+        if (command.equals("getWorkload")) {
+            String id = idArg.getId();
+            printObject(service.getWorkload(id));
+        }
+        if (command.equals("createWorkload")) {
+            Map<String, Object> elements = fieldValues.getElements();
+            printObject(service.createWorkload(elements));
+        }
+        if (command.equals("updateWorkload")) {
+            String id = idAndFieldValues.getId();
+            Map<String, Object> elements = idAndFieldValues.getElements();
+            printObject(service.updateWorkload(id, elements));
+        }
+        if (command.equals("getWorkloadInstances")) {
+            String id = idArg.getId();
+            for (Instance i : service.getWorkloadInstances(id)) {
+                printObject(i);
+            }
+        }
+        if (command.equals("deleteWorkload")) {
+            String id = idArg.getId();
+            printObject(service.deleteWorkload(id));
         }
     }
 

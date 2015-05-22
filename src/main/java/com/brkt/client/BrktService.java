@@ -30,6 +30,7 @@ public class BrktService {
 
     private static final String VOLUME_ROOT = "/v1/api/config/brktvolume";
     private static final String INSTANCE_ROOT = "/v1/api/config/instance";
+    private static final String WORKLOAD_ROOT = "/v2/api/config/workload";
 
     private final BrktRestClient client;
 
@@ -164,6 +165,11 @@ public class BrktService {
         return get(uri, Instance.class);
     }
 
+    public Instance updateInstance(String instanceId, String fieldName, Object value) {
+        Map<String, Object> elements = ImmutableMap.of(fieldName, value);
+        return updateInstance(instanceId, elements);
+    }
+
     public Instance updateInstance(String instanceId, Map<String, Object> elements) {
         Preconditions.checkNotNull(instanceId);
         String uri = String.format("%s/%s", INSTANCE_ROOT, instanceId);
@@ -174,5 +180,37 @@ public class BrktService {
         Preconditions.checkNotNull(instanceId);
         String uri = String.format("%s/%s/brktvolumes", INSTANCE_ROOT, instanceId);
         return get(uri, TYPE_VOLUME_LIST);
+    }
+
+    public List<Workload> getAllWorkloads() {
+        return get(WORKLOAD_ROOT, TYPE_WORKLOAD_LIST);
+    }
+
+    public Workload getWorkload(String workloadId) {
+        Preconditions.checkNotNull(workloadId);
+        String uri = String.format("%s/%s", WORKLOAD_ROOT, workloadId);
+        return get(uri, Workload.class);
+    }
+
+    public Workload createWorkload(Map<String, Object> elements) {
+        return post(WORKLOAD_ROOT, Workload.class, elements);
+    }
+
+    public Workload updateWorkload(String workloadId, Map<String, Object> elements) {
+        Preconditions.checkNotNull(workloadId);
+        String uri = String.format("%s/%s", WORKLOAD_ROOT, workloadId);
+        return post(uri, Workload.class, elements);
+    }
+
+    public List<Instance> getWorkloadInstances(String workloadId) {
+        Preconditions.checkNotNull(workloadId);
+        String uri = String.format("%s/%s/instance", WORKLOAD_ROOT, workloadId);
+        return get(uri, TYPE_INSTANCE_LIST);
+    }
+
+    public Workload deleteWorkload(String workloadId) {
+        Preconditions.checkNotNull(workloadId);
+        String uri = String.format("%s/%s", WORKLOAD_ROOT, workloadId);
+        return delete(uri, Workload.class);
     }
 }
