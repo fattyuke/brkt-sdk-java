@@ -12,6 +12,8 @@ import com.brkt.client.MachineType;
 import com.brkt.client.OperatingSystem;
 import com.brkt.client.Volume;
 import com.brkt.client.Workload;
+import com.google.common.base.CaseFormat;
+import com.google.common.base.Converter;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -74,6 +76,38 @@ public class Main {
         }
     }
 
+    /**
+     * Convert attributes in {@code key=value} format to a {@code Map} of key to value.
+     */
+    static Map<String, Object> splitAttrs(List<String> attrStrings, int beginIndex) {
+        Map<String, Object> params = Maps.newHashMap();
+        for (int i = beginIndex; i < attrStrings.size(); i++) {
+            String keyValue = attrStrings.get(i);
+            Matcher m = PAT_FIELD_VALUE.matcher(keyValue);
+            if (!m.matches()) {
+                throw new IllegalArgumentException("'" + keyValue + "' is not in the format \"field=value\".");
+            }
+            params.put(m.group(1), m.group(2));
+        }
+        return params;
+    }
+
+    private static final Converter<String, String> caseConverter =
+            CaseFormat.LOWER_CAMEL.converterTo(CaseFormat.LOWER_UNDERSCORE);
+
+    /**
+     * Convert keys in {@code attrs} from {@code camelCase} format to {@code underscore_format}.
+     * Return a new {@code Map} that uses the converted keys.
+     */
+    static Map<String, Object> convertKeysToUnderscore(Map<String, Object> attrs) {
+        Map<String, Object> converted = Maps.newHashMap();
+        for (Map.Entry<String, Object> entry : attrs.entrySet()) {
+            String newKey = caseConverter.convert(entry.getKey());
+            converted.put(newKey, entry.getValue());
+        }
+        return converted;
+    }
+
     @Parameters() static class CommandWithNoArgs {}
 
     @Parameters()
@@ -88,18 +122,18 @@ public class Main {
     }
 
     @Parameters()
-    static class CommandWithFieldValueList {
+    static class CommandWithAttrs {
         @Parameter(description = "<field1=value> [field2=value ...]")
         List<String> args = Lists.newArrayList();
 
-        Map<String, Object> getElements() {
+        Map<String, Object> getAttrs() {
             assertMinArgs(args, 1);
-            return splitParams(args, 0);
+            return convertKeysToUnderscore(splitAttrs(args, 0));
         }
     }
 
     @Parameters()
-    static class CommandWithIdAndFieldValueList {
+    static class CommandWithIdAndAttrs {
         @Parameter(description = "<id> <field1=value> [field2=value ...]")
         List<String> args = Lists.newArrayList();
 
@@ -108,26 +142,13 @@ public class Main {
             return args.get(0);
         }
 
-        Map<String, Object> getElements() {
+        Map<String, Object> getAttrs() {
             assertMinArgs(args, 2);
-            return splitParams(args, 1);
+            return convertKeysToUnderscore(splitAttrs(args, 1));
         }
     }
 
     private static final Pattern PAT_FIELD_VALUE = Pattern.compile("([^=]+)=(.*)");
-
-    static Map<String, Object> splitParams(List<String> paramStrings, int beginIndex) {
-        Map<String, Object> params = Maps.newHashMap();
-        for (int i = beginIndex; i < paramStrings.size(); i++) {
-            String keyValue = paramStrings.get(i);
-            Matcher m = PAT_FIELD_VALUE.matcher(keyValue);
-            if (!m.matches()) {
-                throw new IllegalArgumentException("'" + keyValue + "' is not in the format \"field=value\".");
-            }
-            params.put(m.group(1), m.group(2));
-        }
-        return params;
-    }
 
     private static final Comparator<Field> FIELD_SORTER = new Comparator<Field>() {
         @Override
@@ -173,8 +194,8 @@ public class Main {
 
         CommandWithNoArgs noArgs = new CommandWithNoArgs();
         CommandWithId idArg = new CommandWithId();
-        CommandWithFieldValueList fieldValues = new CommandWithFieldValueList();
-        CommandWithIdAndFieldValueList idAndFieldValues = new CommandWithIdAndFieldValueList();
+        CommandWithAttrs fieldValues = new CommandWithAttrs();
+        CommandWithIdAndAttrs idAndFieldValues = new CommandWithIdAndAttrs();
 
         try {
             jc = new JCommander(args);
@@ -256,13 +277,13 @@ public class Main {
             printObject(service.getVolume(id));
         }
         if (command.equals("createVolume")) {
-            Map<String, Object> elements = fieldValues.getElements();
-            printObject(service.createVolume(elements));
+            Map<String, Object> attrs = fieldValues.getAttrs();
+            printObject(service.createVolume(attrs));
         }
         if (command.equals("updateVolume")) {
             String id = idAndFieldValues.getId();
-            Map<String, Object> elements = idAndFieldValues.getElements();
-            printObject(service.updateVolume(id, elements));
+            Map<String, Object> attrs = idAndFieldValues.getAttrs();
+            printObject(service.updateVolume(id, attrs));
         }
         if (command.equals("deleteVolume")) {
             String id = idArg.getId();
@@ -281,8 +302,8 @@ public class Main {
         }
         if (command.equals("updateInstance")) {
             String id = idAndFieldValues.getId();
-            Map<String, Object> elements = idAndFieldValues.getElements();
-            printObject(service.updateInstance(id, elements));
+            Map<String, Object> attrs = idAndFieldValues.getAttrs();
+            printObject(service.updateInstance(id, attrs));
         }
         if (command.equals("getInstanceVolumes")) {
             String id = idArg.getId();
@@ -302,13 +323,13 @@ public class Main {
             printObject(service.getWorkload(id));
         }
         if (command.equals("createWorkload")) {
-            Map<String, Object> elements = fieldValues.getElements();
-            printObject(service.createWorkload(elements));
+            Map<String, Object> attrs = fieldValues.getAttrs();
+            printObject(service.createWorkload(attrs));
         }
         if (command.equals("updateWorkload")) {
             String id = idAndFieldValues.getId();
-            Map<String, Object> elements = idAndFieldValues.getElements();
-            printObject(service.updateWorkload(id, elements));
+            Map<String, Object> attrs = idAndFieldValues.getAttrs();
+            printObject(service.updateWorkload(id, attrs));
         }
         if (command.equals("getWorkloadInstances")) {
             String id = idArg.getId();
