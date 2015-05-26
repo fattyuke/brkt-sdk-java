@@ -19,6 +19,7 @@ package com.google.common.io;
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.VisibleForTesting;
 
+import javax.annotation.Nullable;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,7 +69,7 @@ public final class Closeables {
      * @throws IOException if {@code swallowIOException} is false and {@code close} throws an
      *     {@code IOException}.
      */
-    public static void close(/* @Nullable */ Closeable closeable,
+    public static void close(@Nullable Closeable closeable,
                              boolean swallowIOException) throws IOException {
         if (closeable == null) {
             return;
@@ -99,7 +100,7 @@ public final class Closeables {
      *     does nothing
      * @since 17.0
      */
-    public static void closeQuietly(/* @Nullable */ InputStream inputStream) {
+    public static void closeQuietly(@Nullable InputStream inputStream) {
         try {
             close(inputStream, true);
         } catch (IOException impossible) {
@@ -120,7 +121,7 @@ public final class Closeables {
      * @param reader the reader to be closed, or {@code null} in which case this method does nothing
      * @since 17.0
      */
-    public static void closeQuietly(/* @Nullable */ Reader reader) {
+    public static void closeQuietly(@Nullable Reader reader) {
         try {
             close(reader, true);
         } catch (IOException impossible) {

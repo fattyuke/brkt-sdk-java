@@ -20,6 +20,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.GwtCompatible;
 
+import javax.annotation.CheckReturnValue;
+import javax.annotation.Nullable;
+
 /**
  * Helper functions that operate on any {@code Object}, and are not already provided in
  * {@link java.util.Objects}.
@@ -46,8 +49,8 @@ public final class MoreObjects {
      * @throws NullPointerException if both {@code first} and {@code second} are null
      * @since 18.0 (since 3.0 as {@code Objects.firstNonNull()}).
      */
-    // @CheckReturnValue
-    public static <T> T firstNonNull(/* @Nullable */ T first, /* @Nullable */ T second) {
+    @CheckReturnValue
+    public static <T> T firstNonNull(@Nullable T first, @Nullable T second) {
         return first != null ? first : checkNotNull(second);
     }
 
@@ -90,7 +93,7 @@ public final class MoreObjects {
      *     class name
      * @since 18.0 (since 2.0 as {@code Objects.toStringHelper()}).
      */
-    // @CheckReturnValue
+    @CheckReturnValue
     public static ToStringHelper toStringHelper(Object self) {
         return new ToStringHelper(self.getClass().getSimpleName());
     }
@@ -105,7 +108,7 @@ public final class MoreObjects {
      * @param clazz the {@link Class} of the instance
      * @since 18.0 (since 7.0 as {@code Objects.toStringHelper()}).
      */
-    // @CheckReturnValue
+    @CheckReturnValue
     public static ToStringHelper toStringHelper(Class<?> clazz) {
         return new ToStringHelper(clazz.getSimpleName());
     }
@@ -118,7 +121,7 @@ public final class MoreObjects {
      * @param className the name of the instance type
      * @since 18.0 (since 7.0 as {@code Objects.toStringHelper()}).
      */
-    // @CheckReturnValue
+    @CheckReturnValue
     public static ToStringHelper toStringHelper(String className) {
         return new ToStringHelper(className);
     }
@@ -160,7 +163,7 @@ public final class MoreObjects {
          * is used, unless {@link #omitNullValues()} is called, in which case this
          * name/value pair will not be added.
          */
-        public ToStringHelper add(String name, /* @Nullable */ Object value) {
+        public ToStringHelper add(String name, @Nullable Object value) {
             return addHolder(name, value);
         }
 
@@ -230,7 +233,7 @@ public final class MoreObjects {
          * <p>It is strongly encouraged to use {@link #add(String, Object)} instead
          * and give value a readable name.
          */
-        public ToStringHelper addValue(/* @Nullable */ Object value) {
+        public ToStringHelper addValue(@Nullable Object value) {
             return addHolder(value);
         }
 
@@ -316,7 +319,7 @@ public final class MoreObjects {
          * limited reuse of the helper instance. The helper allows duplication of
          * properties (multiple name/value pairs with the same name can be added).
          */
-        // @CheckReturnValue
+        @CheckReturnValue
         @Override public String toString() {
             // create a copy to keep it consistent in case value changes
             boolean omitNullValuesSnapshot = omitNullValues;
@@ -344,13 +347,13 @@ public final class MoreObjects {
             return valueHolder;
         }
 
-        private ToStringHelper addHolder(/* @Nullable */ Object value) {
+        private ToStringHelper addHolder(@Nullable Object value) {
             ValueHolder valueHolder = addHolder();
             valueHolder.value = value;
             return this;
         }
 
-        private ToStringHelper addHolder(String name, /* @Nullable */ Object value) {
+        private ToStringHelper addHolder(String name, @Nullable Object value) {
             ValueHolder valueHolder = addHolder();
             valueHolder.value = value;
             valueHolder.name = checkNotNull(name);

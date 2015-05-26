@@ -18,6 +18,7 @@ package com.google.common.collect;
 
 import com.google.common.annotations.GwtCompatible;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -77,8 +78,8 @@ public final class Iterators {
      * @throws IllegalArgumentException if the iterator contains multiple
      *     elements.  The state of the iterator is unspecified.
      */
-    /* @Nullable */
-    public static <T> T getOnlyElement(Iterator<? extends T> iterator, /* @Nullable */ T defaultValue) {
+    @Nullable
+    public static <T> T getOnlyElement(Iterator<? extends T> iterator, @Nullable T defaultValue) {
         return iterator.hasNext() ? getOnlyElement(iterator) : defaultValue;
     }
 

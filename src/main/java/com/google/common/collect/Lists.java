@@ -19,6 +19,7 @@ package com.google.common.collect;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -187,7 +188,7 @@ public final class Lists {
      * @param rest an array of additional elements, possibly empty
      * @return an unmodifiable list containing the specified elements
      */
-    public static <E> List<E> asList(/* @Nullable */ E first, E[] rest) {
+    public static <E> List<E> asList(@Nullable E first, E[] rest) {
         return new OnePlusArrayList<E>(first, rest);
     }
 
@@ -197,7 +198,7 @@ public final class Lists {
         final E first;
         final E[] rest;
 
-        OnePlusArrayList(/* @Nullable */ E first, E[] rest) {
+        OnePlusArrayList(@Nullable E first, E[] rest) {
             this.first = first;
             this.rest = checkNotNull(rest);
         }
@@ -230,7 +231,7 @@ public final class Lists {
      * @return an unmodifiable list containing the specified elements
      */
     public static <E> List<E> asList(
-            /* @Nullable */ E first, /* @Nullable */ E second, E[] rest) {
+            @Nullable E first, @Nullable E second, E[] rest) {
         return new TwoPlusArrayList<E>(first, second, rest);
     }
 
@@ -241,7 +242,7 @@ public final class Lists {
         final E second;
         final E[] rest;
 
-        TwoPlusArrayList(/* @Nullable */ E first, /* @Nullable */ E second, E[] rest) {
+        TwoPlusArrayList(@Nullable E first, @Nullable E second, E[] rest) {
             this.first = first;
             this.second = second;
             this.rest = checkNotNull(rest);
