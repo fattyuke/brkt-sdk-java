@@ -124,6 +124,7 @@ public class BrktService {
         return get("/v1/api/config/machinetype", TYPE_MACHINE_TYPE_LIST);
     }
 
+    // Volume.
     public List<Volume> getAllVolumes() {
         return get(VOLUME_ROOT, TYPE_VOLUME_LIST);
     }
@@ -139,14 +140,14 @@ public class BrktService {
         return updateVolume(volumeId, elements);
     }
 
-    public Volume updateVolume(String volumeId, Map<String, Object> elements) {
+    public Volume updateVolume(String volumeId, Map<String, Object> attrs) {
         Preconditions.checkNotNull(volumeId);
         String uri = String.format("%s/%s", VOLUME_ROOT, volumeId);
-        return post(uri, Volume.class, elements);
+        return post(uri, Volume.class, attrs);
     }
 
-    public Volume createVolume(Map<String, Object> elements) {
-        return post(VOLUME_ROOT, Volume.class, elements);
+    public Volume createVolume(Map<String, Object> attrs) {
+        return post(VOLUME_ROOT, Volume.class, attrs);
     }
 
     public Volume deleteVolume(String volumeId) {
@@ -155,6 +156,7 @@ public class BrktService {
         return delete(uri, Volume.class);
     }
 
+    // Instance.
     public List<Instance> getAllInstances() {
         return get(INSTANCE_ROOT, TYPE_INSTANCE_LIST);
     }
@@ -170,10 +172,10 @@ public class BrktService {
         return updateInstance(instanceId, elements);
     }
 
-    public Instance updateInstance(String instanceId, Map<String, Object> elements) {
+    public Instance updateInstance(String instanceId, Map<String, Object> attrs) {
         Preconditions.checkNotNull(instanceId);
         String uri = String.format("%s/%s", INSTANCE_ROOT, instanceId);
-        return post(uri, Instance.class, elements);
+        return post(uri, Instance.class, attrs);
     }
 
     public List<Volume> getInstanceVolumes(String instanceId) {
@@ -182,6 +184,7 @@ public class BrktService {
         return get(uri, TYPE_VOLUME_LIST);
     }
 
+    // Workload.
     public List<Workload> getAllWorkloads() {
         return get(WORKLOAD_ROOT, TYPE_WORKLOAD_LIST);
     }
@@ -192,14 +195,14 @@ public class BrktService {
         return get(uri, Workload.class);
     }
 
-    public Workload createWorkload(Map<String, Object> elements) {
-        return post(WORKLOAD_ROOT, Workload.class, elements);
+    public Workload createWorkload(Map<String, Object> attrs) {
+        return post(WORKLOAD_ROOT, Workload.class, attrs);
     }
 
-    public Workload updateWorkload(String workloadId, Map<String, Object> elements) {
+    public Workload updateWorkload(String workloadId, Map<String, Object> attrs) {
         Preconditions.checkNotNull(workloadId);
         String uri = String.format("%s/%s", WORKLOAD_ROOT, workloadId);
-        return post(uri, Workload.class, elements);
+        return post(uri, Workload.class, attrs);
     }
 
     public List<Instance> getWorkloadInstances(String workloadId) {
@@ -212,5 +215,11 @@ public class BrktService {
         Preconditions.checkNotNull(workloadId);
         String uri = String.format("%s/%s", WORKLOAD_ROOT, workloadId);
         return delete(uri, Workload.class);
+    }
+
+    public Instance createWorkloadInstance(String workloadId, Map<String, Object> attrs) {
+        Preconditions.checkNotNull(workloadId);
+        String uri = String.format("%s/%s/instances", WORKLOAD_ROOT, workloadId);
+        return post(uri, Instance.class, attrs);
     }
 }
