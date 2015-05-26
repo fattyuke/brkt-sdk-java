@@ -28,8 +28,13 @@ public class BrktService {
     private static final Type TYPE_WORKLOAD_LIST =
             new TypeToken<ArrayList<Workload>>() {}.getType();
 
+    private static final String OPERATING_SYSTEM_ROOT = "/v1/api/config/operatingsystem";
+    private static final String IMAGE_DEFINITION_ROOT = "/v1/api/config/imagedefinition";
+    private static final String CSP_IMAGE_ROOT = "/v1/api/config/cspimage";
+    private static final String MACHINE_TYPE_ROOT = "/v1/api/config/machinetype";
     private static final String VOLUME_ROOT = "/v1/api/config/brktvolume";
-    private static final String INSTANCE_ROOT = "/v1/api/config/instance";
+    private static final String INSTANCE_ROOT = "/v2/api/config/instance";
+    private static final String V1_INSTANCE_ROOT = "/v1/api/config/instance";
     private static final String WORKLOAD_ROOT = "/v2/api/config/workload";
 
     private final BrktRestClient client;
@@ -109,19 +114,39 @@ public class BrktService {
     }
 
     public List<OperatingSystem> getAllOperatingSystems() {
-        return get("/v1/api/config/operatingsystem", TYPE_OPERATING_SYSTEM_LIST);
+        return get(OPERATING_SYSTEM_ROOT, TYPE_OPERATING_SYSTEM_LIST);
+    }
+
+    public OperatingSystem getOperatingSystem(String id) {
+        String uri = String.format("%s/%s", OPERATING_SYSTEM_ROOT, id);
+        return get(uri, OperatingSystem.class);
     }
 
     public List<ImageDefinition> getAllImageDefinitions() {
-        return get("/v1/api/config/imagedefinition", TYPE_IMAGE_DEFINITION_LIST);
+        return get(IMAGE_DEFINITION_ROOT, TYPE_IMAGE_DEFINITION_LIST);
+    }
+
+    public ImageDefinition getImageDefinition(String id) {
+        String uri = String.format("%s/%s", IMAGE_DEFINITION_ROOT, id);
+        return get(uri, ImageDefinition.class);
     }
 
     public List<CspImage> getAllCspImages() {
-        return get("/v1/api/config/cspimage", TYPE_CSP_IMAGE_LIST);
+        return get(CSP_IMAGE_ROOT, TYPE_CSP_IMAGE_LIST);
+    }
+
+    public CspImage getCspImage(String id) {
+        String uri = String.format("%s/%s", CSP_IMAGE_ROOT, id);
+        return get(uri, CspImage.class);
     }
 
     public List<MachineType> getAllMachineTypes() {
-        return get("/v1/api/config/machinetype", TYPE_MACHINE_TYPE_LIST);
+        return get(MACHINE_TYPE_ROOT, TYPE_MACHINE_TYPE_LIST);
+    }
+
+    public MachineType getMachineType(String id) {
+        String uri = String.format("%s/%s", MACHINE_TYPE_ROOT, id);
+        return get(uri, MachineType.class);
     }
 
     // Volume.
@@ -180,8 +205,12 @@ public class BrktService {
 
     public List<Volume> getInstanceVolumes(String instanceId) {
         Preconditions.checkNotNull(instanceId);
-        String uri = String.format("%s/%s/brktvolumes", INSTANCE_ROOT, instanceId);
+        String uri = String.format("%s/%s/brktvolumes", V1_INSTANCE_ROOT, instanceId);
         return get(uri, TYPE_VOLUME_LIST);
+    }
+
+    public Instance createInstance(Map<String, Object> attrs) {
+        return post(INSTANCE_ROOT, Instance.class, attrs);
     }
 
     // Workload.
@@ -215,11 +244,5 @@ public class BrktService {
         Preconditions.checkNotNull(workloadId);
         String uri = String.format("%s/%s", WORKLOAD_ROOT, workloadId);
         return delete(uri, Workload.class);
-    }
-
-    public Instance createWorkloadInstance(String workloadId, Map<String, Object> attrs) {
-        Preconditions.checkNotNull(workloadId);
-        String uri = String.format("%s/%s/instances", WORKLOAD_ROOT, workloadId);
-        return post(uri, Instance.class, attrs);
     }
 }

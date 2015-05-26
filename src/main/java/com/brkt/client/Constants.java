@@ -65,4 +65,22 @@ public class Constants {
             throw new IllegalArgumentException("Invalid Availability id: " + id);
         }
     }
+
+    public enum Provider {
+        AWS(1), GCE(2);
+
+        public final int id;
+
+        Provider(int id) { this.id = id; }
+
+        public static Provider getById(int id) {
+            if (id == 1) {
+                return AWS;
+            }
+            if (id == 2) {
+                return GCE;
+            }
+            throw new IllegalArgumentException("Invalid Provider id: " + id);
+        }
+    }
 }

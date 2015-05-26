@@ -194,31 +194,40 @@ public class Main {
 
         CommandWithNoArgs noArgs = new CommandWithNoArgs();
         CommandWithId idArg = new CommandWithId();
-        CommandWithAttrs fieldValues = new CommandWithAttrs();
-        CommandWithIdAndAttrs idAndFieldValues = new CommandWithIdAndAttrs();
+        CommandWithAttrs attrsArg = new CommandWithAttrs();
+        CommandWithIdAndAttrs idAndAttrsArg = new CommandWithIdAndAttrs();
 
         try {
             jc = new JCommander(args);
+
             jc.addCommand("getAllOperatingSystems", noArgs, "gaos");
+            jc.addCommand("getOperatingSystem", idArg, "gos");
+
             jc.addCommand("getAllImageDefinitions", noArgs, "gaid");
+            jc.addCommand("getImageDefinition", idArg, "gid");
+
             jc.addCommand("getAllCspImages", noArgs, "gaci");
+            jc.addCommand("getCspImage", idArg, "gci");
+
             jc.addCommand("getAllMachineTypes", noArgs, "gamt");
+            jc.addCommand("getMachineType", idArg, "gmt");
 
             jc.addCommand("getAllVolumes", noArgs, "gav");
             jc.addCommand("getVolume", idArg, "gv");
-            jc.addCommand("createVolume", fieldValues, "cv");
-            jc.addCommand("updateVolume", idAndFieldValues, "uv");
+            jc.addCommand("createVolume", attrsArg, "cv");
+            jc.addCommand("updateVolume", idAndAttrsArg, "uv");
             jc.addCommand("deleteVolume", idArg, "dv");
 
             jc.addCommand("getAllInstances", noArgs, "gai");
             jc.addCommand("getInstance", idArg, "gi");
-            jc.addCommand("updateInstance", idAndFieldValues, "ui");
+            jc.addCommand("updateInstance", idAndAttrsArg, "ui");
             jc.addCommand("getInstanceVolumes", idArg, "giv");
+            jc.addCommand("createInstance", attrsArg, "ci");
 
             jc.addCommand("getAllWorkloads", noArgs, "gaw");
             jc.addCommand("getWorkload", idArg, "gw");
-            jc.addCommand("createWorkload", fieldValues, "cw");
-            jc.addCommand("updateWorkload", idAndFieldValues, "uw");
+            jc.addCommand("createWorkload", attrsArg, "cw");
+            jc.addCommand("updateWorkload", idAndAttrsArg, "uw");
             jc.addCommand("getWorkloadInstances", idArg, "gwi");
             jc.addCommand("deleteWorkload", idArg, "dw");
 
@@ -245,25 +254,48 @@ public class Main {
                 .secretKey(args.secretKey).accessToken(args.token).build();
         BrktService service = new BrktService(client);
 
+        // Operating system.
         if (command.equals("getAllOperatingSystems")) {
             for (OperatingSystem os : service.getAllOperatingSystems()) {
                 printObject(os);
             }
         }
+        if (command.equals("getOperatingSystem")) {
+            String id = idArg.getId();
+            printObject(service.getOperatingSystem(id));
+        }
+
+        // Image definition.
         if (command.equals("getAllImageDefinitions")) {
             for (ImageDefinition id : service.getAllImageDefinitions()) {
                 printObject(id);
             }
         }
+        if (command.equals("getImageDefinition")) {
+            String id = idArg.getId();
+            printObject(service.getImageDefinition(id));
+        }
+
+        // CSP image.
         if (command.equals("getAllCspImages")) {
             for (CspImage ci : service.getAllCspImages()) {
                 printObject(ci);
             }
         }
+        if (command.equals("getCspImage")) {
+            String id = idArg.getId();
+            printObject(service.getCspImage(id));
+        }
+
+        // Machine type.
         if (command.equals("getAllMachineTypes")) {
             for (MachineType mt : service.getAllMachineTypes()) {
                 printObject(mt);
             }
+        }
+        if (command.equals("getMachineType")) {
+            String id = idArg.getId();
+            printObject(service.getMachineType(id));
         }
 
         // Volume.
@@ -277,12 +309,12 @@ public class Main {
             printObject(service.getVolume(id));
         }
         if (command.equals("createVolume")) {
-            Map<String, Object> attrs = fieldValues.getAttrs();
+            Map<String, Object> attrs = attrsArg.getAttrs();
             printObject(service.createVolume(attrs));
         }
         if (command.equals("updateVolume")) {
-            String id = idAndFieldValues.getId();
-            Map<String, Object> attrs = idAndFieldValues.getAttrs();
+            String id = idAndAttrsArg.getId();
+            Map<String, Object> attrs = idAndAttrsArg.getAttrs();
             printObject(service.updateVolume(id, attrs));
         }
         if (command.equals("deleteVolume")) {
@@ -301,8 +333,8 @@ public class Main {
             printObject(service.getInstance(id));
         }
         if (command.equals("updateInstance")) {
-            String id = idAndFieldValues.getId();
-            Map<String, Object> attrs = idAndFieldValues.getAttrs();
+            String id = idAndAttrsArg.getId();
+            Map<String, Object> attrs = idAndAttrsArg.getAttrs();
             printObject(service.updateInstance(id, attrs));
         }
         if (command.equals("getInstanceVolumes")) {
@@ -310,6 +342,10 @@ public class Main {
             for (Volume v : service.getInstanceVolumes(id)) {
                 printObject(v);
             }
+        }
+        if (command.equals("createInstance")) {
+            Map<String, Object> attrs = attrsArg.getAttrs();
+            printObject(service.createInstance(attrs));
         }
 
         // Workload.
@@ -323,12 +359,12 @@ public class Main {
             printObject(service.getWorkload(id));
         }
         if (command.equals("createWorkload")) {
-            Map<String, Object> attrs = fieldValues.getAttrs();
+            Map<String, Object> attrs = attrsArg.getAttrs();
             printObject(service.createWorkload(attrs));
         }
         if (command.equals("updateWorkload")) {
-            String id = idAndFieldValues.getId();
-            Map<String, Object> attrs = idAndFieldValues.getAttrs();
+            String id = idAndAttrsArg.getId();
+            Map<String, Object> attrs = idAndAttrsArg.getAttrs();
             printObject(service.updateWorkload(id, attrs));
         }
         if (command.equals("getWorkloadInstances")) {

@@ -17,24 +17,21 @@ public class Instance extends BrktResource {
     public static final String SECURITY_GROUPS = "security_groups";
     public static final String SERVICE_NAME = "service_name";
 
-    private BigDecimal baseHourlyRate;
     private String billingGroup;
-    private String computingCell;
     private Integer cpuCores;
     private CspImage cspImage;
     private BigDecimal dailyCost;
-    private String guestImageId;
-    private BigDecimal hourlyCost;
+    private Boolean encrypted;
+    private String imageDefinition;
     private String instanceTemplate;
     private Boolean internetAccessible;
     private String internetIpAddress;
     private String ipAddress;
     private Timestamp leaseExpireTime;
     private String loadBalancer;
+    private String machineType;
     private Map<String, String> metadata;
-    private BigDecimal monthlyCost;
-    private String nextImageId;
-    private String osImage;
+    private String platform;
     private Map<String, String> providerInstance;
     private BigDecimal ram;
     private Constants.RequestedState requestedState;
@@ -42,18 +39,10 @@ public class Instance extends BrktResource {
     private String serviceName;
     private String serviceNameFqdn;
     private String workload;
-    private Timestamp workloadLeaseExpireTime;
-
-    public BigDecimal getBaseHourlyRate() {
-        return baseHourlyRate;
-    }
+    private String zone;
 
     public String getBillingGroupId() {
         return billingGroup;
-    }
-
-    public String getComputingCellId() {
-        return computingCell;
     }
 
     public Integer getCpuCores() {
@@ -68,12 +57,12 @@ public class Instance extends BrktResource {
         return dailyCost;
     }
 
-    public String getGuestImageId() {
-        return guestImageId;
+    public Boolean isEncrypted() {
+        return encrypted;
     }
 
-    public BigDecimal getHourlyCost() {
-        return hourlyCost;
+    public String getImageDefinitionId() {
+        return imageDefinition;
     }
 
     public String getInstanceTemplateId() {
@@ -100,20 +89,16 @@ public class Instance extends BrktResource {
         return loadBalancer;
     }
 
+    public String getMachineTypeId() {
+        return machineType;
+    }
+
     public Map<String, String> getMetadata() {
         return metadata;
     }
 
-    public BigDecimal getMonthlyCost() {
-        return monthlyCost;
-    }
-
-    public String getNextImageId() {
-        return nextImageId;
-    }
-
-    public String getOsImage() {
-        return osImage;
+    public String getPlatform() {
+        return platform;
     }
 
     public Map<String, String> getProviderInstance() {
@@ -144,8 +129,8 @@ public class Instance extends BrktResource {
         return workload;
     }
 
-    public Timestamp getWorkloadLeaseExpireTime() {
-        return workloadLeaseExpireTime;
+    public String getZoneId() {
+        return zone;
     }
 
     public String toString() {
