@@ -8,17 +8,6 @@ import java.util.Map;
 
 public class Workload extends BrktResource {
 
-    public static final String BILLING_GROUP = "billing_group";
-    public static final String NAME = "name";
-    public static final String ZONE = "zone";
-    public static final String DESCRIPTION = "description";
-    public static final String ENABLE_SERVICE_DOMAIN = "enable_service_domain";
-    public static final String ID = "id";
-    public static final String LEASE_EXPIRE_TIME = "lease_expire_time";
-    public static final String MAX_COST = "max_cost";
-    public static final String METADATA = "metadata";
-    public static final String REQUESTED_STATE = "requested_state";
-
     private String billingGroup;
     private Boolean deleted;
     private Boolean enableServiceDomain;

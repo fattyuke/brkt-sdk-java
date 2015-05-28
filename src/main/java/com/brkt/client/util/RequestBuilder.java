@@ -1,0 +1,67 @@
+package com.brkt.client.util;
+
+import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+public class RequestBuilder {
+
+    public static class MissingFieldsError extends RuntimeException {
+        public final List<String> fieldNames;
+
+        public MissingFieldsError(Collection<String> fieldNames) {
+            if (fieldNames != null) {
+                this.fieldNames = ImmutableList.copyOf(fieldNames);
+            } else {
+                this.fieldNames = Collections.emptyList();
+            }
+        }
+
+        @Override
+        public String getMessage() {
+            return "Missing fields: " + Joiner.on(", ").join(fieldNames);
+        }
+    }
+
+    private Map<String, Object> attrs = Maps.newHashMap();
+    private Set<String> requiredFields = Sets.newHashSet();
+
+    public RequestBuilder requiredFields(String... fieldNames) {
+        if (fieldNames != null) {
+            requiredFields.addAll(Arrays.asList(fieldNames));
+        }
+        return this;
+    }
+
+    /**
+     * Add an attribute to this request.
+     */
+    public RequestBuilder attr(String fieldName, Object value) {
+        attrs.put(fieldName, value);
+        return this;
+    }
+
+    /**
+     * Build a {@code Map} that contains all of the added attributes.
+     *
+     * @throws com.brkt.client.util.RequestBuilder.MissingFieldsError
+     */
+    public Map<String, Object> build() {
+        // Check required fields.
+        Set<String> missingFields = Sets.newHashSet(requiredFields);
+        missingFields.removeAll(attrs.keySet());
+        if (!missingFields.isEmpty()) {
+            throw new MissingFieldsError(missingFields);
+        }
+
+        return attrs;
+    }
+}
