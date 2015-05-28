@@ -6,6 +6,10 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Map;
 
+/**
+ * Provides a type-safe way to assemble a request for creating
+ * or updating a workload.
+ */
 public class WorkloadRequestBuilder extends RequestBuilder {
 
     private final RequestBuilder reqBuilder = new RequestBuilder();
@@ -84,6 +88,7 @@ public class WorkloadRequestBuilder extends RequestBuilder {
      * Build a {@code Map} that contains all of the added attributes.
      *
      * @throws com.brkt.client.util.RequestBuilder.MissingFieldsError
+     * if any required fields are missing
      */
     public Map<String, Object> build() {
         return reqBuilder.build();

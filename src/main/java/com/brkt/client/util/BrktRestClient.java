@@ -13,6 +13,10 @@ import java.lang.reflect.Type;
 import java.sql.Timestamp;
 import java.util.Map;
 
+/**
+ * Sends a REST request to the Bracket service and deserializes the response
+ * into one or more Java objects.
+ */
 public class BrktRestClient {
 
     private final BrktHttpClient httpClient;

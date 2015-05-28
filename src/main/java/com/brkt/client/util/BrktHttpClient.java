@@ -10,6 +10,9 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * Sends an HTTP request to the Bracket service and returns the response payload.
+ */
 public class BrktHttpClient {
 
     public static final byte[] NO_CONTENT = new byte[0];

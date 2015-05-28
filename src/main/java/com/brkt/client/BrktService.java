@@ -11,6 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * High-level abstraction of the Bracket service.  Sends request to the
+ * service and returns responses as Java objects.
+ */
 public class BrktService {
 
     private static final Type TYPE_OPERATING_SYSTEM_LIST =
