@@ -75,7 +75,7 @@ public class WorkloadRequestBuilder extends RequestBuilder {
         return this;
     }
 
-    public WorkloadRequestBuilder requestedState(String state) {
+    public WorkloadRequestBuilder requestedState(Constants.RequestedState state) {
         reqBuilder.attr("requested_state", state);
         return this;
     }

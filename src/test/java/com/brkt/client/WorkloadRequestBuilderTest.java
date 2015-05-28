@@ -26,11 +26,11 @@ public class WorkloadRequestBuilderTest {
     @Test
     public void testRequest() {
         WorkloadRequestBuilder builder = WorkloadRequestBuilder.newUpdateRequest();
-        builder.name("New name").requestedState("DELETED");
+        builder.name("New name").requestedState(Constants.RequestedState.DELETED);
         Map<String, Object> attrs = builder.build();
 
         assertEquals(2, attrs.size());
         assertEquals("New name", attrs.get("name"));
-        assertEquals("DELETED", attrs.get("requested_state"));
+        assertEquals(Constants.RequestedState.DELETED, attrs.get("requested_state"));
     }
 }
