@@ -1,27 +1,26 @@
 package com.brkt.client.util;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class RequestBuilder {
 
     public static class MissingFieldsError extends RuntimeException {
-        public final List<String> fieldNames;
+        public final Set<String> fieldNames;
 
         public MissingFieldsError(Collection<String> fieldNames) {
             if (fieldNames != null) {
-                this.fieldNames = ImmutableList.copyOf(fieldNames);
+                this.fieldNames = ImmutableSet.copyOf(fieldNames);
             } else {
-                this.fieldNames = Collections.emptyList();
+                this.fieldNames = Collections.emptySet();
             }
         }
 
