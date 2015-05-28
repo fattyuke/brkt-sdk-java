@@ -75,9 +75,9 @@ public class BrktService {
      * Wraps {@link BrktRestClient#post} and throws a {@link com.brkt.client.BrktService.RuntimeIoException}
      * or {@link com.brkt.client.BrktService.RuntimeHttpError} if an error occurred.
      */
-    private <T> T post(String path, Class<T> myClass, Map<String, Object> elements) {
+    private <T> T post(String path, Class<T> myClass, Map<String, Object> attrs) {
         try {
-            return client.post(path, myClass, elements);
+            return client.post(path, myClass, attrs);
         } catch (IOException e) {
             throw new RuntimeIoException(e);
         } catch (BrktRestClient.HttpError e) {
@@ -161,8 +161,8 @@ public class BrktService {
     }
 
     public Volume updateVolume(String volumeId, String fieldName, Object value) {
-        Map<String, Object> elements = ImmutableMap.of(fieldName, value);
-        return updateVolume(volumeId, elements);
+        Map<String, Object> attrs = ImmutableMap.of(fieldName, value);
+        return updateVolume(volumeId, attrs);
     }
 
     public Volume updateVolume(String volumeId, Map<String, Object> attrs) {
@@ -193,8 +193,8 @@ public class BrktService {
     }
 
     public Instance updateInstance(String instanceId, String fieldName, Object value) {
-        Map<String, Object> elements = ImmutableMap.of(fieldName, value);
-        return updateInstance(instanceId, elements);
+        Map<String, Object> attrs = ImmutableMap.of(fieldName, value);
+        return updateInstance(instanceId, attrs);
     }
 
     public Instance updateInstance(String instanceId, Map<String, Object> attrs) {
@@ -228,6 +228,11 @@ public class BrktService {
         return post(WORKLOAD_ROOT, Workload.class, attrs);
     }
 
+    public Workload updateWorkload(String workloadId, String fieldName, Object value) {
+        Map<String, Object> attrs = ImmutableMap.of(fieldName, value);
+        return updateWorkload(workloadId, attrs);
+    }
+    
     public Workload updateWorkload(String workloadId, Map<String, Object> attrs) {
         Preconditions.checkNotNull(workloadId);
         String uri = String.format("%s/%s", WORKLOAD_ROOT, workloadId);
