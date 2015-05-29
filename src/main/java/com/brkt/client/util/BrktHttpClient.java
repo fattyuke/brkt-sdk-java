@@ -18,7 +18,7 @@ public class BrktHttpClient {
     public static final byte[] NO_CONTENT = new byte[0];
 
     private final String rootUri;
-    private final String secretKey;
+    private final String macKey;
     private final String accessToken;
     private final int timeoutMillis;
 
@@ -44,7 +44,7 @@ public class BrktHttpClient {
 
     private BrktHttpClient(Builder builder) {
         rootUri = builder.rootUri;
-        secretKey = builder.secretKey;
+        macKey = builder.macKey;
         accessToken = builder.accessToken;
         timeoutMillis = builder.timeoutMillis;
     }
@@ -61,7 +61,7 @@ public class BrktHttpClient {
             port = url.getDefaultPort();
         }
 
-        BrktAuth auth = new BrktAuth(url.getHost(), port, secretKey, accessToken);
+        BrktAuth auth = new BrktAuth(url.getHost(), port, macKey, accessToken);
         String authValue = auth.generateAuthHeader(method.toString(), path);
 
         conn.setRequestMethod(method.toString());
@@ -111,7 +111,7 @@ public class BrktHttpClient {
     public static class Builder {
         private String rootUri;
         private String accessToken;
-        private String secretKey;
+        private String macKey;
         private int timeoutMillis = 10000;
 
         public Builder(String baseUri) {
@@ -123,8 +123,8 @@ public class BrktHttpClient {
             return this;
         }
 
-        public Builder secretKey(String secretKey) {
-            this.secretKey = secretKey;
+        public Builder macKey(String macKey) {
+            this.macKey = macKey;
             return this;
         }
 
@@ -137,7 +137,7 @@ public class BrktHttpClient {
         public BrktHttpClient build() {
             Preconditions.checkNotNull(rootUri, "rootUri cannot be null");
             Preconditions.checkNotNull(accessToken, "accessToken cannot be null");
-            Preconditions.checkNotNull(secretKey, "secretKey cannot be null");
+            Preconditions.checkNotNull(macKey, "macKey cannot be null");
             return new BrktHttpClient(this);
         }
     }

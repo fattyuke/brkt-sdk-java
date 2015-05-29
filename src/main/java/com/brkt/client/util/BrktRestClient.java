@@ -30,7 +30,7 @@ public class BrktRestClient {
     public static class Builder {
         private String rootUri;
         private String accessToken;
-        private String secretKey;
+        private String macKey;
         private Integer timeoutMillis;
 
         public Builder (String rootUri) {
@@ -42,8 +42,8 @@ public class BrktRestClient {
             return this;
         }
 
-        public Builder secretKey(String secretKey) {
-            this.secretKey = secretKey;
+        public Builder macKey(String macKey) {
+            this.macKey = macKey;
             return this;
         }
 
@@ -55,10 +55,10 @@ public class BrktRestClient {
         public BrktRestClient build() {
             Preconditions.checkNotNull(rootUri, "rootUri cannot be null");
             Preconditions.checkNotNull(accessToken, "accessToken cannot be null");
-            Preconditions.checkNotNull(secretKey, "secretKey cannot be null");
+            Preconditions.checkNotNull(macKey, "macKey cannot be null");
 
             BrktHttpClient.Builder builder = new BrktHttpClient.Builder(rootUri)
-                    .secretKey(secretKey).accessToken(accessToken);
+                    .macKey(macKey).accessToken(accessToken);
             if (timeoutMillis != null) {
                 builder.timeoutMillis(timeoutMillis);
             }

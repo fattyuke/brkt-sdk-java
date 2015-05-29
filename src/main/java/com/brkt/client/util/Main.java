@@ -41,8 +41,8 @@ public class Main {
         @Parameter(names = { "--token" }, required = true, description = "Auth token")
         String token;
 
-        @Parameter(names = { "--key" }, required = true, description = "Secret key")
-        String secretKey;
+        @Parameter(names = { "--key" }, required = true, description = "MAC key")
+        String macKey;
 
         @Parameter(names = { "--root-uri"}, required = true, description = "Server root URI, e.g. http://example.com")
         String rootUri;
@@ -251,7 +251,7 @@ public class Main {
         }
 
         BrktRestClient client = new BrktRestClient.Builder(args.rootUri)
-                .secretKey(args.secretKey).accessToken(args.token).build();
+                .macKey(args.macKey).accessToken(args.token).build();
         BrktService service = new BrktService(client);
 
         // Operating system.

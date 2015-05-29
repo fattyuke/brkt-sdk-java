@@ -12,7 +12,7 @@ import java.util.UUID;
 public class BrktAuth {
     private final String hostname;
     private final int port;
-    private final String secretKey;
+    private final String macKey;
     private final String accessToken;
 
     public static class CryptoException extends RuntimeException {
@@ -21,10 +21,10 @@ public class BrktAuth {
         }
     }
 
-    public BrktAuth(String hostname, int port, String secretKey, String accessToken) {
+    public BrktAuth(String hostname, int port, String macKey, String accessToken) {
         this.hostname = hostname;
         this.port = port;
-        this.secretKey = secretKey;
+        this.macKey = macKey;
         this.accessToken = accessToken;
     }
 
@@ -57,7 +57,7 @@ public class BrktAuth {
         String message = String.format(
                 "%d\n%s\n%s\n%s\n%s\n%d\n\n",
                 currentTimeSeconds, nonce, httpMethod.toUpperCase(), path.toLowerCase(), hostname, port);
-        String signature = BrktAuth.computeSignature(message, this.secretKey);
+        String signature = BrktAuth.computeSignature(message, this.macKey);
         return String.format(
                 "MAC id=\"%s\", ts=\"%d\", nonce=\"%s\", mac=\"%s\"",
                 accessToken, currentTimeSeconds, nonce, signature);
