@@ -5,6 +5,7 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.Parameters;
 import com.brkt.client.BrktService;
+import com.brkt.client.ComputingCell;
 import com.brkt.client.CspImage;
 import com.brkt.client.ImageDefinition;
 import com.brkt.client.Instance;
@@ -202,9 +203,11 @@ public class Main {
 
             jc.addCommand("getAllOperatingSystems", noArgs, "gaos");
             jc.addCommand("getOperatingSystem", idArg, "gos");
+            jc.addCommand("getOperatingSystemImageDefinitions", idArg, "gosid");
 
             jc.addCommand("getAllImageDefinitions", noArgs, "gaid");
             jc.addCommand("getImageDefinition", idArg, "gid");
+            jc.addCommand("getImageDefinitionCspImages", idArg, "gidci");
 
             jc.addCommand("getAllCspImages", noArgs, "gaci");
             jc.addCommand("getCspImage", idArg, "gci");
@@ -212,17 +215,24 @@ public class Main {
             jc.addCommand("getAllMachineTypes", noArgs, "gamt");
             jc.addCommand("getMachineType", idArg, "gmt");
 
+            jc.addCommand("getAllComputingCells", noArgs, "gacc");
+            jc.addCommand("getComputingCell", idArg, "gcc");
+            jc.addCommand("getComputingCellVolumes", idArg, "gccv");
+            jc.addCommand("updateComputingCell", idAndAttrsArg, "ucc");
+
             jc.addCommand("getAllVolumes", noArgs, "gav");
             jc.addCommand("getVolume", idArg, "gv");
             jc.addCommand("createVolume", attrsArg, "cv");
             jc.addCommand("updateVolume", idAndAttrsArg, "uv");
             jc.addCommand("deleteVolume", idArg, "dv");
+            jc.addCommand("getVolumeChildren", idArg, "gvc");
 
             jc.addCommand("getAllInstances", noArgs, "gai");
             jc.addCommand("getInstance", idArg, "gi");
             jc.addCommand("updateInstance", idAndAttrsArg, "ui");
             jc.addCommand("getInstanceVolumes", idArg, "giv");
             jc.addCommand("createInstance", attrsArg, "ci");
+            jc.addCommand("deleteInstance", idArg, "di");
 
             jc.addCommand("getAllWorkloads", noArgs, "gaw");
             jc.addCommand("getWorkload", idArg, "gw");
@@ -264,6 +274,12 @@ public class Main {
             String id = idArg.getId();
             printObject(service.getOperatingSystem(id));
         }
+        if (command.equals("getOperatingSystemImageDefinitions")) {
+            String id = idArg.getId();
+            for (ImageDefinition imageDef : service.getOperatingSystemImageDefinitions(id)) {
+                printObject(imageDef);
+            }
+        }
 
         // Image definition.
         if (command.equals("getAllImageDefinitions")) {
@@ -274,6 +290,12 @@ public class Main {
         if (command.equals("getImageDefinition")) {
             String id = idArg.getId();
             printObject(service.getImageDefinition(id));
+        }
+        if (command.equals("getImageDefinitionCspImages")) {
+            String id = idArg.getId();
+            for (CspImage ci : service.getImageDefinitionCspImages(id)) {
+                printObject(ci);
+            }
         }
 
         // CSP image.
@@ -298,6 +320,28 @@ public class Main {
             printObject(service.getMachineType(id));
         }
 
+        // Computing cell.
+        if (command.equals("getAllComputingCells")) {
+            for (ComputingCell cc : service.getAllComputingCells()) {
+                printObject(cc);
+            }
+        }
+        if (command.equals("getComputingCell")) {
+            String id = idArg.getId();
+            printObject(service.getComputingCell(id));
+        }
+        if (command.equals("getComputingCellVolumes")) {
+            String id = idArg.getId();
+            for (Volume v : service.getComputingCellVolumes(id)) {
+                printObject(v);
+            }
+        }
+        if (command.equals("updateComputingCell")) {
+            String id = idAndAttrsArg.getId();
+            Map<String, Object> attrs = idAndAttrsArg.getAttrs();
+            printObject(service.updateComputingCell(id, attrs));
+        }
+
         // Volume.
         if (command.equals("getAllVolumes")) {
             for (Volume v : service.getAllVolumes()) {
@@ -320,6 +364,12 @@ public class Main {
         if (command.equals("deleteVolume")) {
             String id = idArg.getId();
             printObject(service.deleteVolume(id));
+        }
+        if (command.equals("getVolumeChildren")) {
+            String id = idArg.getId();
+            for (Volume v : service.getVolumeChildren(id)) {
+                printObject(v);
+            }
         }
 
         // Instance.
@@ -346,6 +396,10 @@ public class Main {
         if (command.equals("createInstance")) {
             Map<String, Object> attrs = attrsArg.getAttrs();
             printObject(service.createInstance(attrs));
+        }
+        if (command.equals("deleteInstance")) {
+            String id = idArg.getId();
+            printObject(service.deleteInstance(id));
         }
 
         // Workload.
@@ -384,7 +438,7 @@ public class Main {
             new Main().run(args);
         } catch (BrktService.RuntimeHttpError e) {
             System.err.println(String.format("%d %s", e.status, e.message));
-            if (e.payload.length > 0) {
+            if (e.status != 404 && e.payload.length > 0) {
                 System.err.println(new String(e.payload));
             }
             System.exit(1);

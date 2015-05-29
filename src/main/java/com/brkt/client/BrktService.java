@@ -17,29 +17,32 @@ import java.util.Map;
  */
 public class BrktService {
 
-    private static final Type TYPE_OPERATING_SYSTEM_LIST =
+    public static final Type TYPE_OPERATING_SYSTEM_LIST =
             new TypeToken<ArrayList<OperatingSystem>>() {}.getType();
-    private static final Type TYPE_IMAGE_DEFINITION_LIST =
+    public static final Type TYPE_IMAGE_DEFINITION_LIST =
             new TypeToken<ArrayList<ImageDefinition>>() {}.getType();
-    private static final Type TYPE_CSP_IMAGE_LIST =
+    public static final Type TYPE_CSP_IMAGE_LIST =
             new TypeToken<ArrayList<CspImage>>() {}.getType();
-    private static final Type TYPE_MACHINE_TYPE_LIST =
+    public static final Type TYPE_MACHINE_TYPE_LIST =
             new TypeToken<ArrayList<MachineType>>() {}.getType();
-    private static final Type TYPE_VOLUME_LIST =
+    public static final Type TYPE_COMPUTING_CELL_LIST =
+            new TypeToken<ArrayList<ComputingCell>>() {}.getType();
+    public static final Type TYPE_VOLUME_LIST =
             new TypeToken<ArrayList<Volume>>() {}.getType();
-    private static final Type TYPE_INSTANCE_LIST =
+    public static final Type TYPE_INSTANCE_LIST =
             new TypeToken<ArrayList<Instance>>() {}.getType();
-    private static final Type TYPE_WORKLOAD_LIST =
+    public static final Type TYPE_WORKLOAD_LIST =
             new TypeToken<ArrayList<Workload>>() {}.getType();
 
-    private static final String OPERATING_SYSTEM_ROOT = "/v1/api/config/operatingsystem";
-    private static final String IMAGE_DEFINITION_ROOT = "/v1/api/config/imagedefinition";
-    private static final String CSP_IMAGE_ROOT = "/v1/api/config/cspimage";
-    private static final String MACHINE_TYPE_ROOT = "/v1/api/config/machinetype";
-    private static final String VOLUME_ROOT = "/v1/api/config/brktvolume";
-    private static final String INSTANCE_ROOT = "/v2/api/config/instance";
-    private static final String V1_INSTANCE_ROOT = "/v1/api/config/instance";
-    private static final String WORKLOAD_ROOT = "/v2/api/config/workload";
+    public static final String OPERATING_SYSTEM_ROOT = "/v1/api/config/operatingsystem";
+    public static final String IMAGE_DEFINITION_ROOT = "/v1/api/config/imagedefinition";
+    public static final String CSP_IMAGE_ROOT = "/v1/api/config/cspimage";
+    public static final String MACHINE_TYPE_ROOT = "/v1/api/config/machinetype";
+    public static final String COMPUTING_CELL_ROOT = "/v1/api/config/computingcell";
+    public static final String VOLUME_ROOT = "/v1/api/config/brktvolume";
+    public static final String INSTANCE_ROOT = "/v2/api/config/instance";
+    public static final String V1_INSTANCE_ROOT = "/v1/api/config/instance";
+    public static final String WORKLOAD_ROOT = "/v2/api/config/workload";
 
     private final BrktRestClient client;
 
@@ -117,24 +120,41 @@ public class BrktService {
         }
     }
 
+    // Operating system.
     public List<OperatingSystem> getAllOperatingSystems() {
         return get(OPERATING_SYSTEM_ROOT, TYPE_OPERATING_SYSTEM_LIST);
     }
 
     public OperatingSystem getOperatingSystem(String id) {
+        Preconditions.checkNotNull(id);
         String uri = String.format("%s/%s", OPERATING_SYSTEM_ROOT, id);
         return get(uri, OperatingSystem.class);
     }
 
+    public List<ImageDefinition> getOperatingSystemImageDefinitions(String osId) {
+        Preconditions.checkNotNull(osId);
+        String uri = String.format("%s/%s/imagedefinitions", OPERATING_SYSTEM_ROOT, osId);
+        return get(uri, TYPE_IMAGE_DEFINITION_LIST);
+    }
+
+    // Image definition.
     public List<ImageDefinition> getAllImageDefinitions() {
         return get(IMAGE_DEFINITION_ROOT, TYPE_IMAGE_DEFINITION_LIST);
     }
 
     public ImageDefinition getImageDefinition(String id) {
+        Preconditions.checkNotNull(id);
         String uri = String.format("%s/%s", IMAGE_DEFINITION_ROOT, id);
         return get(uri, ImageDefinition.class);
     }
 
+    public List<CspImage> getImageDefinitionCspImages(String imageDefinitionId) {
+        Preconditions.checkNotNull(imageDefinitionId);
+        String uri = String.format("%s/%s/cspimages", IMAGE_DEFINITION_ROOT, imageDefinitionId);
+        return get(uri, TYPE_CSP_IMAGE_LIST);
+    }
+
+    // CSP image.
     public List<CspImage> getAllCspImages() {
         return get(CSP_IMAGE_ROOT, TYPE_CSP_IMAGE_LIST);
     }
@@ -144,6 +164,7 @@ public class BrktService {
         return get(uri, CspImage.class);
     }
 
+    // Machine type.
     public List<MachineType> getAllMachineTypes() {
         return get(MACHINE_TYPE_ROOT, TYPE_MACHINE_TYPE_LIST);
     }
@@ -151,6 +172,34 @@ public class BrktService {
     public MachineType getMachineType(String id) {
         String uri = String.format("%s/%s", MACHINE_TYPE_ROOT, id);
         return get(uri, MachineType.class);
+    }
+
+    // Computing cell.
+    public List<ComputingCell> getAllComputingCells() {
+        return get(COMPUTING_CELL_ROOT, TYPE_COMPUTING_CELL_LIST);
+    }
+
+    public ComputingCell getComputingCell(String computingCellId) {
+        Preconditions.checkNotNull(computingCellId);
+        String uri = String.format("%s/%s", COMPUTING_CELL_ROOT, computingCellId);
+        return get(uri, ComputingCell.class);
+    }
+
+    public ComputingCell updateComputingCell(String computingCellId, Map<String, Object> attrs) {
+        Preconditions.checkNotNull(computingCellId);
+        String uri = String.format("%s/%s", COMPUTING_CELL_ROOT, computingCellId);
+        return post(uri, ComputingCell.class, attrs);
+    }
+
+    public ComputingCell updateComputingCell(String computingCellId, String fieldName, Object value) {
+        Map<String, Object> attrs = ImmutableMap.of(fieldName, value);
+        return updateComputingCell(computingCellId, attrs);
+    }
+
+    public List<Volume> getComputingCellVolumes(String computingCellId) {
+        Preconditions.checkNotNull(computingCellId);
+        String uri = String.format("%s/%s/brktvolumes", COMPUTING_CELL_ROOT, computingCellId);
+        return get(uri, TYPE_VOLUME_LIST);
     }
 
     // Volume.
@@ -185,6 +234,12 @@ public class BrktService {
         return delete(uri, Volume.class);
     }
 
+    public List<Volume> getVolumeChildren(String volumeId) {
+        Preconditions.checkNotNull(volumeId);
+        String uri = String.format("%s/%s/children", VOLUME_ROOT, volumeId);
+        return get(uri, TYPE_VOLUME_LIST);
+    }
+
     // Instance.
     public List<Instance> getAllInstances() {
         return get(INSTANCE_ROOT, TYPE_INSTANCE_LIST);
@@ -211,6 +266,12 @@ public class BrktService {
         Preconditions.checkNotNull(instanceId);
         String uri = String.format("%s/%s/brktvolumes", V1_INSTANCE_ROOT, instanceId);
         return get(uri, TYPE_VOLUME_LIST);
+    }
+
+    public Instance deleteInstance(String instanceId) {
+        Preconditions.checkNotNull(instanceId);
+        String uri = String.format("%s/%s", INSTANCE_ROOT, instanceId);
+        return delete(uri, Instance.class);
     }
 
     public Instance createInstance(Map<String, Object> attrs) {
