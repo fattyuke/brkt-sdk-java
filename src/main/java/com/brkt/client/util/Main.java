@@ -4,6 +4,7 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.Parameters;
+import com.brkt.client.BillingGroup;
 import com.brkt.client.BrktService;
 import com.brkt.client.ComputingCell;
 import com.brkt.client.CspImage;
@@ -215,6 +216,12 @@ public class Main {
             jc.addCommand("getAllMachineTypes", noArgs, "gamt");
             jc.addCommand("getMachineType", idArg, "gmt");
 
+            jc.addCommand("getAllBillingGroups", noArgs, "gabg");
+            jc.addCommand("getBillingGroup", idArg, "gbg");
+            jc.addCommand("createBillingGroup", attrsArg, "cbg");
+            jc.addCommand("updateBillingGroup", idAndAttrsArg, "ubg");
+            jc.addCommand("deleteBillingGroup", idArg, "dbg");
+
             jc.addCommand("getAllComputingCells", noArgs, "gacc");
             jc.addCommand("getComputingCell", idArg, "gcc");
             jc.addCommand("getComputingCellVolumes", idArg, "gccv");
@@ -321,6 +328,30 @@ public class Main {
         if (command.equals("getMachineType")) {
             String id = idArg.getId();
             printObject(service.getMachineType(id));
+        }
+
+        // Billing group.
+        if (command.equals("getAllBillingGroups")) {
+            for (BillingGroup bg : service.getAllBillingGroups()) {
+                printObject(bg);
+            }
+        }
+        if (command.equals("getBillingGroup")) {
+            String id = idArg.getId();
+            printObject(service.getBillingGroup(id));
+        }
+        if (command.equals("createBillingGroup")) {
+            Map<String, Object> attrs = attrsArg.getAttrs();
+            printObject(service.createBillingGroup(attrs));
+        }
+        if (command.equals("updateBillingGroup")) {
+            String id = idAndAttrsArg.getId();
+            Map<String, Object> attrs = idAndAttrsArg.getAttrs();
+            printObject(service.updateBillingGroup(id, attrs));
+        }
+        if (command.equals("deleteBillingGroup")) {
+            String id = idArg.getId();
+            service.deleteBillingGroup(id);
         }
 
         // Computing cell.

@@ -25,6 +25,8 @@ public class BrktService {
             new TypeToken<ArrayList<CspImage>>() {}.getType();
     public static final Type TYPE_MACHINE_TYPE_LIST =
             new TypeToken<ArrayList<MachineType>>() {}.getType();
+    public static final Type TYPE_BILLING_GROUP_LIST =
+            new TypeToken<ArrayList<BillingGroup>>() {}.getType();
     public static final Type TYPE_COMPUTING_CELL_LIST =
             new TypeToken<ArrayList<ComputingCell>>() {}.getType();
     public static final Type TYPE_VOLUME_LIST =
@@ -38,6 +40,7 @@ public class BrktService {
     public static final String IMAGE_DEFINITION_ROOT = "/v1/api/config/imagedefinition";
     public static final String CSP_IMAGE_ROOT = "/v1/api/config/cspimage";
     public static final String MACHINE_TYPE_ROOT = "/v1/api/config/machinetype";
+    public static final String BILLING_GROUP_ROOT = "/v1/api/config/billinggroup";
     public static final String COMPUTING_CELL_ROOT = "/v1/api/config/computingcell";
     public static final String VOLUME_ROOT = "/v1/api/config/brktvolume";
     public static final String INSTANCE_ROOT = "/v2/api/config/instance";
@@ -172,6 +175,33 @@ public class BrktService {
     public MachineType getMachineType(String id) {
         String uri = String.format("%s/%s", MACHINE_TYPE_ROOT, id);
         return get(uri, MachineType.class);
+    }
+
+    // Billing group.
+    public List<BillingGroup> getAllBillingGroups() {
+        return get(BILLING_GROUP_ROOT, TYPE_BILLING_GROUP_LIST);
+    }
+
+    public BillingGroup getBillingGroup(String id) {
+        Preconditions.checkNotNull(id);
+        String uri = String.format("%s/%s", BILLING_GROUP_ROOT, id);
+        return get(uri, BillingGroup.class);
+    }
+
+    public BillingGroup createBillingGroup(Map<String, Object> attrs) {
+        return post(BILLING_GROUP_ROOT, BillingGroup.class, attrs);
+    }
+
+    public BillingGroup updateBillingGroup(String id, Map<String, Object> attrs) {
+        Preconditions.checkNotNull(id);
+        String uri = String.format("%s/%s", BILLING_GROUP_ROOT, id);
+        return post(uri, BillingGroup.class, attrs);
+    }
+
+    public void deleteBillingGroup(String id) {
+        Preconditions.checkNotNull(id);
+        String uri = String.format("%s/%s", BILLING_GROUP_ROOT, id);
+        delete(uri, BillingGroup.class);
     }
 
     // Computing cell.
