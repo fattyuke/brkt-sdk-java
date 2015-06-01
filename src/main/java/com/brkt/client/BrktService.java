@@ -240,6 +240,18 @@ public class BrktService {
         return get(uri, TYPE_VOLUME_LIST);
     }
 
+    public Volume snapshotVolume(String volumeId, Map<String, Object> attrs) {
+        Preconditions.checkNotNull(volumeId);
+        String uri = String.format("%s/%s/snapshot", VOLUME_ROOT, volumeId);
+        return post(uri, Volume.class, attrs);
+    }
+
+    public Volume cloneVolume(String volumeId, Map<String, Object> attrs) {
+        Preconditions.checkNotNull(volumeId);
+        String uri = String.format("%s/%s/clone", VOLUME_ROOT, volumeId);
+        return post(uri, Volume.class, attrs);
+    }
+
     // Instance.
     public List<Instance> getAllInstances() {
         return get(INSTANCE_ROOT, TYPE_INSTANCE_LIST);
@@ -276,6 +288,12 @@ public class BrktService {
 
     public Instance createInstance(Map<String, Object> attrs) {
         return post(INSTANCE_ROOT, Instance.class, attrs);
+    }
+
+    public InstanceReboot rebootInstance(String instanceId) {
+        Preconditions.checkNotNull(instanceId);
+        String uri = String.format("%s/%s/reboot", INSTANCE_ROOT, instanceId);
+        return post(uri, InstanceReboot.class, null);
     }
 
     // Workload.

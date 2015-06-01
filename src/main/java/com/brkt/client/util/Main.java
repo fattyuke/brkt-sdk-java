@@ -226,6 +226,8 @@ public class Main {
             jc.addCommand("updateVolume", idAndAttrsArg, "uv");
             jc.addCommand("deleteVolume", idArg, "dv");
             jc.addCommand("getVolumeChildren", idArg, "gvc");
+            jc.addCommand("snapshotVolume", idAndAttrsArg, "sv");
+            jc.addCommand("cloneVolume", idAndAttrsArg);
 
             jc.addCommand("getAllInstances", noArgs, "gai");
             jc.addCommand("getInstance", idArg, "gi");
@@ -233,6 +235,7 @@ public class Main {
             jc.addCommand("getInstanceVolumes", idArg, "giv");
             jc.addCommand("createInstance", attrsArg, "ci");
             jc.addCommand("deleteInstance", idArg, "di");
+            jc.addCommand("rebootInstance", idArg, "ri");
 
             jc.addCommand("getAllWorkloads", noArgs, "gaw");
             jc.addCommand("getWorkload", idArg, "gw");
@@ -371,6 +374,16 @@ public class Main {
                 printObject(v);
             }
         }
+        if (command.equals("snapshotVolume")) {
+            String id = idAndAttrsArg.getId();
+            Map<String, Object> attrs = idAndAttrsArg.getAttrs();
+            printObject(service.snapshotVolume(id, attrs));
+        }
+        if (command.equals("cloneVolume")) {
+            String id = idAndAttrsArg.getId();
+            Map<String, Object> attrs = idAndAttrsArg.getAttrs();
+            printObject(service.cloneVolume(id, attrs));
+        }
 
         // Instance.
         if (command.equals("getAllInstances")) {
@@ -400,6 +413,10 @@ public class Main {
         if (command.equals("deleteInstance")) {
             String id = idArg.getId();
             printObject(service.deleteInstance(id));
+        }
+        if (command.equals("rebootInstance")) {
+            String id = idArg.getId();
+            printObject(service.rebootInstance(id));
         }
 
         // Workload.

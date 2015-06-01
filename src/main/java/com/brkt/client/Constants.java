@@ -83,4 +83,8 @@ public class Constants {
             throw new IllegalArgumentException("Invalid Provider id: " + id);
         }
     }
+
+    public enum RebootStatus {
+        DISPATCHED, FINISHED, FAILED
+    }
 }
