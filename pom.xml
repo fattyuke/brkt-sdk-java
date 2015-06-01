@@ -35,6 +35,7 @@
                             <artifactSet>
                                 <excludes>
                                     <exclude>junit:junit</exclude>
+                                    <exclude>com.google.code.findbugs:jsr305</exclude>
                                 </excludes>
                             </artifactSet>
                             <transformers>
