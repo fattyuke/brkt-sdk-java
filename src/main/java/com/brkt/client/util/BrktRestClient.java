@@ -128,11 +128,11 @@ public class BrktRestClient {
     /**
      * Post an element map to the server and deserialize to an object of the given type.
      */
-    public <T> T post(String path, Type type, Map<String, Object> elements)
+    public <T> T post(String path, Type type, Map<String, Object> attrs)
             throws IOException, HttpError {
         byte[] requestPayload = BrktHttpClient.NO_CONTENT;
-        if (elements != null) {
-            String json = gson.toJson(elements);
+        if (attrs != null) {
+            String json = gson.toJson(attrs);
             requestPayload = json.getBytes();
         }
         BrktHttpClient.Response response = httpClient.post(path, requestPayload);
