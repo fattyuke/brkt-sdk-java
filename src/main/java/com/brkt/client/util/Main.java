@@ -17,6 +17,7 @@ import com.brkt.client.SecurityGroup;
 import com.brkt.client.SecurityGroupRule;
 import com.brkt.client.Volume;
 import com.brkt.client.Workload;
+import com.brkt.client.Zone;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Converter;
 import com.google.common.base.MoreObjects;
@@ -248,6 +249,10 @@ public class Main {
             jc.addCommand("getAllNetworks", noArgs, "gan");
             jc.addCommand("getNetwork", idArg, "gn");
 
+            jc.addCommand("getAllZones", noArgs, "gaz");
+            jc.addCommand("getNetworkZones", idArg, "gnz");
+            jc.addCommand("getZone", idArg, "gz");
+
             jc.addCommand("getAllSecurityGroups", noArgs, "gasg");
             jc.addCommand("getSecurityGroup", idArg, "gsg");
             jc.addCommand("createSecurityGroup", cmdCsg, "csg");
@@ -403,6 +408,23 @@ public class Main {
             printObject(service.getNetwork(id));
         }
 
+        // Zone.
+        if (command.equals("getAllZones")) {
+            for (Zone z : service.getAllZones()) {
+                printObject(z);
+            }
+        }
+        if (command.equals("getNetworkZones")) {
+            String id = idArg.getId();
+            for (Zone z : service.getNetworkZones(id)) {
+                printObject(z);
+            }
+        }
+        if (command.equals("getZone")) {
+            String id = idArg.getId();
+            printObject(service.getZone(id));
+        }
+        
         // Security group.
         if (command.equals("getAllSecurityGroups")) {
             for (SecurityGroup sg : service.getAllSecurityGroups()) {

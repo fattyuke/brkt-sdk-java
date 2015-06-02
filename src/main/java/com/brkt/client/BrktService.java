@@ -29,6 +29,8 @@ public class BrktService {
             new TypeToken<ArrayList<BillingGroup>>() {}.getType();
     public static final Type TYPE_NETWORK_LIST =
             new TypeToken<ArrayList<Network>>() {}.getType();
+    public static final Type TYPE_ZONE_LIST =
+            new TypeToken<ArrayList<Zone>>() {}.getType();
     public static final Type TYPE_SECURITY_GROUP_LIST =
             new TypeToken<ArrayList<SecurityGroup>>() {}.getType();
     public static final Type TYPE_SECURITY_GROUP_RULE_LIST =
@@ -48,6 +50,7 @@ public class BrktService {
     public static final String MACHINE_TYPE_ROOT = "/v1/api/config/machinetype";
     public static final String BILLING_GROUP_ROOT = "/v1/api/config/billinggroup";
     public static final String NETWORK_ROOT = "/v1/api/config/network";
+    public static final String ZONE_ROOT = "/v1/api/config/zone";
     public static final String SECURITY_GROUP_ROOT = "/v1/api/config/securitygroup";
     public static final String SECURITY_GROUP_RULE_ROOT = "/v1/api/config/securitygrouprule";
     public static final String COMPUTING_CELL_ROOT = "/v1/api/config/computingcell";
@@ -229,6 +232,23 @@ public class BrktService {
         return get(uri, Network.class);
     }
 
+    // Zone.
+    public List<Zone> getAllZones() {
+        return get(ZONE_ROOT, TYPE_ZONE_LIST);
+    }
+
+    public List<Zone> getNetworkZones(String networkId) {
+        Preconditions.checkNotNull(networkId);
+        String uri = String.format("%s/%s/zones", NETWORK_ROOT, networkId);
+        return get(uri, TYPE_ZONE_LIST);
+    }
+
+    public Zone getZone(String id) {
+        Preconditions.checkNotNull(id);
+        String uri = String.format("%s/%s", ZONE_ROOT, id);
+        return get(uri, Zone.class);
+    }
+
     // Security group.
     public List<SecurityGroup> getAllSecurityGroups() {
         return get(SECURITY_GROUP_ROOT, TYPE_SECURITY_GROUP_LIST);
@@ -249,6 +269,11 @@ public class BrktService {
         Preconditions.checkNotNull(id);
         String uri = String.format("%s/%s", SECURITY_GROUP_ROOT, id);
         return post(uri, SecurityGroup.class, attrs);
+    }
+
+    public SecurityGroup updateSecurityGroup(String id, String fieldName, Object value) {
+        Map<String, Object> attrs = ImmutableMap.of(fieldName, value);
+        return updateSecurityGroup(id, attrs);
     }
 
     public SecurityGroup deleteSecurityGroup(String id) {
