@@ -26,8 +26,11 @@ public class ComputingCell extends BrktResource {
         return metadata;
     }
 
-    public Network getNetwork() {
-        return network;
+    public String getNetworkId() {
+        if (network != null) {
+            return network.getId();
+        }
+        return null;
     }
 
     public Constants.Provider getProvider() {

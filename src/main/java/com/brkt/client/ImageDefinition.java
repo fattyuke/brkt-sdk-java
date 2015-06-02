@@ -21,8 +21,11 @@ public class ImageDefinition extends BrktResource {
         return metadata;
     }
 
-    public OperatingSystem getOs() {
-        return os;
+    public String getOperatingSystemId() {
+        if (os != null) {
+            return os.getId();
+        }
+        return null;
     }
 
     public Map<String, String> getOsSettings() {

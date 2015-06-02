@@ -25,11 +25,8 @@ public class Volume extends BrktResource {
     private String billingGroup;
     private String bracketVolumeTemplate;
     private String computingCell;
-    private BigDecimal cost;
-    private BigDecimal dailyCost;
     private Boolean deleted;
     private Boolean expired;
-    private BigDecimal hourlyCost;
     private String instance;
     private Integer iops;
     private Integer iopsMax;
@@ -40,7 +37,6 @@ public class Volume extends BrktResource {
     private Map<String, String> metadata;
     private Integer minIops;
     private Integer minSize;
-    private BigDecimal monthlyCost;
     private String parent;
     private Map<String, String> providerBrktVolume;
     private Integer remainingGb;
@@ -88,24 +84,12 @@ public class Volume extends BrktResource {
         return computingCell;
     }
 
-    public BigDecimal getCost() {
-        return cost;
-    }
-
-    public BigDecimal getDailyCost() {
-        return dailyCost;
-    }
-
     public Boolean getDeleted() {
         return deleted;
     }
 
     public Boolean getExpired() {
         return expired;
-    }
-
-    public BigDecimal getHourlyCost() {
-        return hourlyCost;
     }
 
     public String getInstanceId() {
@@ -146,10 +130,6 @@ public class Volume extends BrktResource {
 
     public Integer getMinSize() {
         return minSize;
-    }
-
-    public BigDecimal getMonthlyCost() {
-        return monthlyCost;
     }
 
     public String getParent() {

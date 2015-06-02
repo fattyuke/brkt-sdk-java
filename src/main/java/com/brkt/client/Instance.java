@@ -20,7 +20,6 @@ public class Instance extends BrktResource {
     private String billingGroup;
     private Integer cpuCores;
     private CspImage cspImage;
-    private BigDecimal dailyCost;
     private Boolean encrypted;
     private String imageDefinition;
     private String instanceTemplate;
@@ -49,12 +48,11 @@ public class Instance extends BrktResource {
         return cpuCores;
     }
 
-    public CspImage getCspImage() {
-        return cspImage;
-    }
-
-    public BigDecimal getDailyCost() {
-        return dailyCost;
+    public String getCspImageId() {
+        if (cspImage != null) {
+            return cspImage.getId();
+        }
+        return null;
     }
 
     public Boolean isEncrypted() {

@@ -15,8 +15,11 @@ public class CspImage extends BrktResource {
         return provider;
     }
 
-    public ImageDefinition getImageDefinition() {
-        return imageDefinition;
+    public String getImageDefinitionId() {
+        if (imageDefinition != null) {
+            return imageDefinition.getId();
+        }
+        return null;
     }
 
     public String getCspImageId() {
@@ -35,9 +38,6 @@ public class CspImage extends BrktResource {
         MoreObjects.ToStringHelper helper = MoreObjects.toStringHelper(this)
                 .add("id", getId())
                 .add("state", state);
-        if (imageDefinition != null) {
-            helper.add("imageDefinitionName", imageDefinition.getName());
-        }
         return helper.toString();
     }
 }
