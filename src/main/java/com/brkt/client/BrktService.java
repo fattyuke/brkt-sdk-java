@@ -43,6 +43,8 @@ public class BrktService {
             new TypeToken<ArrayList<Instance>>() {}.getType();
     public static final Type TYPE_WORKLOAD_LIST =
             new TypeToken<ArrayList<Workload>>() {}.getType();
+    public static final Type TYPE_LOAD_BALANCER_LIST =
+            new TypeToken<ArrayList<LoadBalancer>>() {}.getType();
 
     public static final String OPERATING_SYSTEM_ROOT = "/v1/api/config/operatingsystem";
     public static final String IMAGE_DEFINITION_ROOT = "/v1/api/config/imagedefinition";
@@ -58,6 +60,7 @@ public class BrktService {
     public static final String INSTANCE_ROOT = "/v2/api/config/instance";
     public static final String V1_INSTANCE_ROOT = "/v1/api/config/instance";
     public static final String WORKLOAD_ROOT = "/v2/api/config/workload";
+    public static final String LOAD_BALANCER_ROOT = "/v1/api/config/loadbalancer";
 
     private final BrktRestClient client;
 
@@ -470,5 +473,37 @@ public class BrktService {
         Preconditions.checkNotNull(workloadId);
         String uri = String.format("%s/%s", WORKLOAD_ROOT, workloadId);
         return delete(uri, Workload.class);
+    }
+
+    // Load balancer.
+    public List<LoadBalancer> getAllLoadBalancers() {
+        return get(LOAD_BALANCER_ROOT, TYPE_LOAD_BALANCER_LIST);
+    }
+
+    public LoadBalancer getLoadBalancer(String id) {
+        Preconditions.checkNotNull(id);
+        String uri = String.format("%s/%s", LOAD_BALANCER_ROOT, id);
+        return get(uri, LoadBalancer.class);
+    }
+
+    public LoadBalancer createLoadBalancer(Map<String, Object> attrs) {
+        return post(LOAD_BALANCER_ROOT, LoadBalancer.class, attrs);
+    }
+
+    public LoadBalancer updateLoadBalancer(String id, Map<String, Object> attrs) {
+        Preconditions.checkNotNull(id);
+        String uri = String.format("%s/%s", LOAD_BALANCER_ROOT, id);
+        return post(uri, LoadBalancer.class, attrs);
+    }
+
+    public LoadBalancer updateLoadBalancer(String id, String fieldName, Object value) {
+        Map<String, Object> attrs = ImmutableMap.of(fieldName, value);
+        return updateLoadBalancer(id, attrs);
+    }
+
+    public LoadBalancer deleteLoadBalancer(String id) {
+        Preconditions.checkNotNull(id);
+        String uri = String.format("%s/%s", LOAD_BALANCER_ROOT, id);
+        return delete(uri, LoadBalancer.class);
     }
 }

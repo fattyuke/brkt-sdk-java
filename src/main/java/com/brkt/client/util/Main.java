@@ -10,6 +10,7 @@ import com.brkt.client.ComputingCell;
 import com.brkt.client.CspImage;
 import com.brkt.client.ImageDefinition;
 import com.brkt.client.Instance;
+import com.brkt.client.LoadBalancer;
 import com.brkt.client.MachineType;
 import com.brkt.client.Network;
 import com.brkt.client.OperatingSystem;
@@ -294,6 +295,12 @@ public class Main {
             jc.addCommand("getWorkloadInstances", idArg, "gwi");
             jc.addCommand("deleteWorkload", idArg, "dw");
 
+            jc.addCommand("getAllLoadBalancers", noArgs, "galb");
+            jc.addCommand("getLoadBalancer", idArg, "glb");
+            jc.addCommand("createLoadBalancer", attrsArg, "clb");
+            jc.addCommand("updateLoadBalancer", idAndAttrsArg, "ulb");
+            jc.addCommand("deleteLoadBalancer", idArg, "dlb");
+
             jc.parse(stringArgs);
         } catch (ParameterException e) {
             System.err.println(e.getMessage());
@@ -424,7 +431,7 @@ public class Main {
             String id = idArg.getId();
             printObject(service.getZone(id));
         }
-        
+
         // Security group.
         if (command.equals("getAllSecurityGroups")) {
             for (SecurityGroup sg : service.getAllSecurityGroups()) {
@@ -600,6 +607,30 @@ public class Main {
         if (command.equals("deleteWorkload")) {
             String id = idArg.getId();
             printObject(service.deleteWorkload(id));
+        }
+
+        // Load balancer.
+        if (command.equals("getAllLoadBalancers")) {
+            for (LoadBalancer lb : service.getAllLoadBalancers()) {
+                printObject(lb);
+            }
+        }
+        if (command.equals("getLoadBalancer")) {
+            String id = idArg.getId();
+            printObject(service.getLoadBalancer(id));
+        }
+        if (command.equals("createLoadBalancer")) {
+            Map<String, Object> attrs = attrsArg.getAttrs();
+            printObject(service.createLoadBalancer(attrs));
+        }
+        if (command.equals("updateLoadBalancer")) {
+            String id = idAndAttrsArg.getId();
+            Map<String, Object> attrs = idAndAttrsArg.getAttrs();
+            printObject(service.updateLoadBalancer(id, attrs));
+        }
+        if (command.equals("deleteLoadBalancer")) {
+            String id = idArg.getId();
+            printObject(service.deleteLoadBalancer(id));
         }
     }
 
