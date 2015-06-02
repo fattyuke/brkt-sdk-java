@@ -27,6 +27,12 @@ public class BrktService {
             new TypeToken<ArrayList<MachineType>>() {}.getType();
     public static final Type TYPE_BILLING_GROUP_LIST =
             new TypeToken<ArrayList<BillingGroup>>() {}.getType();
+    public static final Type TYPE_NETWORK_LIST =
+            new TypeToken<ArrayList<Network>>() {}.getType();
+    public static final Type TYPE_SECURITY_GROUP_LIST =
+            new TypeToken<ArrayList<SecurityGroup>>() {}.getType();
+    public static final Type TYPE_SECURITY_GROUP_RULE_LIST =
+            new TypeToken<ArrayList<SecurityGroupRule>>() {}.getType();
     public static final Type TYPE_COMPUTING_CELL_LIST =
             new TypeToken<ArrayList<ComputingCell>>() {}.getType();
     public static final Type TYPE_VOLUME_LIST =
@@ -41,6 +47,9 @@ public class BrktService {
     public static final String CSP_IMAGE_ROOT = "/v1/api/config/cspimage";
     public static final String MACHINE_TYPE_ROOT = "/v1/api/config/machinetype";
     public static final String BILLING_GROUP_ROOT = "/v1/api/config/billinggroup";
+    public static final String NETWORK_ROOT = "/v1/api/config/network";
+    public static final String SECURITY_GROUP_ROOT = "/v1/api/config/securitygroup";
+    public static final String SECURITY_GROUP_RULE_ROOT = "/v1/api/config/securitygrouprule";
     public static final String COMPUTING_CELL_ROOT = "/v1/api/config/computingcell";
     public static final String VOLUME_ROOT = "/v1/api/config/brktvolume";
     public static final String INSTANCE_ROOT = "/v2/api/config/instance";
@@ -198,10 +207,84 @@ public class BrktService {
         return post(uri, BillingGroup.class, attrs);
     }
 
+    public BillingGroup updateBillingGroup(String id, String fieldName, Object value) {
+        Map<String, Object> attrs = ImmutableMap.of(fieldName, value);
+        return updateBillingGroup(id, attrs);
+    }
+
     public void deleteBillingGroup(String id) {
         Preconditions.checkNotNull(id);
         String uri = String.format("%s/%s", BILLING_GROUP_ROOT, id);
         delete(uri, BillingGroup.class);
+    }
+
+    // Network.
+    public List<Network> getAllNetworks() {
+        return get(NETWORK_ROOT, TYPE_NETWORK_LIST);
+    }
+
+    public Network getNetwork(String id) {
+        Preconditions.checkNotNull(id);
+        String uri = String.format("%s/%s", NETWORK_ROOT, id);
+        return get(uri, Network.class);
+    }
+
+    // Security group.
+    public List<SecurityGroup> getAllSecurityGroups() {
+        return get(SECURITY_GROUP_ROOT, TYPE_SECURITY_GROUP_LIST);
+    }
+
+    public SecurityGroup getSecurityGroup(String id) {
+        Preconditions.checkNotNull(id);
+        String uri = String.format("%s/%s", SECURITY_GROUP_ROOT, id);
+        return get(uri, SecurityGroup.class);
+    }
+
+    public SecurityGroup createSecurityGroup(String networkId, Map<String, Object> attrs) {
+        String uri = String.format("%s/%s/securitygroups", NETWORK_ROOT, networkId);
+        return post(uri, SecurityGroup.class, attrs);
+    }
+
+    public SecurityGroup updateSecurityGroup(String id, Map<String, Object> attrs) {
+        Preconditions.checkNotNull(id);
+        String uri = String.format("%s/%s", SECURITY_GROUP_ROOT, id);
+        return post(uri, SecurityGroup.class, attrs);
+    }
+
+    public SecurityGroup deleteSecurityGroup(String id) {
+        Preconditions.checkNotNull(id);
+        String uri = String.format("%s/%s", SECURITY_GROUP_ROOT, id);
+        return delete(uri, SecurityGroup.class);
+    }
+
+    // Security group rules.
+    public List<SecurityGroupRule> getRulesForSecurityGroup(String securityGroupId) {
+        Preconditions.checkNotNull(securityGroupId);
+        String uri = String.format("%s/%s/rules", SECURITY_GROUP_ROOT, securityGroupId);
+        return get(uri, TYPE_SECURITY_GROUP_RULE_LIST);
+    }
+
+    public SecurityGroupRule getSecurityGroupRule(String ruleId) {
+        Preconditions.checkNotNull(ruleId);
+        String uri = String.format("%s/%s", SECURITY_GROUP_RULE_ROOT, ruleId);
+        return get(uri, SecurityGroupRule.class);
+    }
+
+    public SecurityGroupRule createSecurityGroupRule(String securityGroupId, Map<String, Object> attrs) {
+        String uri = String.format("%s/%s/rules", SECURITY_GROUP_ROOT, securityGroupId);
+        return post(uri, SecurityGroupRule.class, attrs);
+    }
+
+    public SecurityGroupRule updateSecurityGroupRule(String ruleId, Map<String, Object> attrs) {
+        Preconditions.checkNotNull(ruleId);
+        String uri = String.format("%s/%s", SECURITY_GROUP_RULE_ROOT, ruleId);
+        return post(uri, SecurityGroupRule.class, attrs);
+    }
+
+    public SecurityGroupRule deleteSecurityGroupRule(String ruleId) {
+        Preconditions.checkNotNull(ruleId);
+        String uri = String.format("%s/%s", SECURITY_GROUP_RULE_ROOT, ruleId);
+        return delete(uri, SecurityGroupRule.class);
     }
 
     // Computing cell.

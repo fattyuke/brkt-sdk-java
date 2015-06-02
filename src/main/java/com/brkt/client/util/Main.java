@@ -11,7 +11,10 @@ import com.brkt.client.CspImage;
 import com.brkt.client.ImageDefinition;
 import com.brkt.client.Instance;
 import com.brkt.client.MachineType;
+import com.brkt.client.Network;
 import com.brkt.client.OperatingSystem;
+import com.brkt.client.SecurityGroup;
+import com.brkt.client.SecurityGroupRule;
 import com.brkt.client.Volume;
 import com.brkt.client.Workload;
 import com.google.common.base.CaseFormat;
@@ -56,21 +59,10 @@ public class Main {
         boolean help;
     }
 
-    private static void assertMinArgs(List<String> args, int min) {
+    private static void assertMinArgCount(List<String> args, int min) {
         if (args.size() < min) {
             System.err.print("This command requires at least " + min + " argument");
             if (min > 1) {
-                System.err.print("s");
-            }
-            System.err.println(".");
-            System.exit(1);
-        }
-    }
-
-    private static void assertArgCount(List<String> args, int count) {
-        if (args.size() != count) {
-            System.err.print("This command requires " + count + " argument");
-            if (count > 1) {
                 System.err.print("s");
             }
             System.err.println(".");
@@ -97,6 +89,16 @@ public class Main {
     private static final Converter<String, String> caseConverter =
             CaseFormat.LOWER_CAMEL.converterTo(CaseFormat.LOWER_UNDERSCORE);
 
+    private static String getIdArg(List<String> args) {
+        assertMinArgCount(args, 1);
+        return args.get(0);
+    }
+
+    private static Map<String, Object> getAttrArgs(List<String> args, int start) {
+        assertMinArgCount(args, start);
+        return convertKeysToUnderscore(splitAttrs(args, start));
+    }
+
     /**
      * Convert keys in {@code attrs} from {@code camelCase} format to {@code underscore_format}.
      * Return a new {@code Map} that uses the converted keys.
@@ -118,8 +120,7 @@ public class Main {
         List<String> args = Lists.newArrayList();
 
         String getId() {
-            assertArgCount(args, 1);
-            return args.get(0);
+            return getIdArg(args);
         }
     }
 
@@ -129,8 +130,7 @@ public class Main {
         List<String> args = Lists.newArrayList();
 
         Map<String, Object> getAttrs() {
-            assertMinArgs(args, 1);
-            return convertKeysToUnderscore(splitAttrs(args, 0));
+            return getAttrArgs(args, 0);
         }
     }
 
@@ -140,14 +140,31 @@ public class Main {
         List<String> args = Lists.newArrayList();
 
         String getId() {
-            assertMinArgs(args, 2);
-            return args.get(0);
+            return getIdArg(args);
         }
 
         Map<String, Object> getAttrs() {
-            assertMinArgs(args, 2);
-            return convertKeysToUnderscore(splitAttrs(args, 1));
+            return getAttrArgs(args, 1);
         }
+    }
+
+    // Commands with custom descriptions or behavior.
+    @Parameters()
+    static class CommandCreateSecurityGroup {
+        @Parameter(description = "<networkId> <field1=value> [field2=value ...]")
+        List<String> args = Lists.newArrayList();
+    }
+
+    @Parameters()
+    static class CommandCreateSecurityGroupRule {
+        @Parameter(description = "<securityGroupId> <field1=value> [field2=value ...]")
+        List<String> args = Lists.newArrayList();
+    }
+
+    @Parameters()
+    static class CommandGetRulesForSecurityGroup {
+        @Parameter(description = "<securityGroupId>")
+        List<String> args = Lists.newArrayList();
     }
 
     private static final Pattern PAT_FIELD_VALUE = Pattern.compile("([^=]+)=(.*)");
@@ -194,10 +211,16 @@ public class Main {
         Arguments args = new Arguments();
         JCommander jc = null;
 
+        // General-purpose commands.
         CommandWithNoArgs noArgs = new CommandWithNoArgs();
         CommandWithId idArg = new CommandWithId();
         CommandWithAttrs attrsArg = new CommandWithAttrs();
         CommandWithIdAndAttrs idAndAttrsArg = new CommandWithIdAndAttrs();
+
+        // Specialized commands.
+        CommandCreateSecurityGroup cmdCsg = new CommandCreateSecurityGroup();
+        CommandGetRulesForSecurityGroup cmdGrfsg = new CommandGetRulesForSecurityGroup();
+        CommandCreateSecurityGroupRule cmdCsgr = new CommandCreateSecurityGroupRule();
 
         try {
             jc = new JCommander(args);
@@ -221,6 +244,21 @@ public class Main {
             jc.addCommand("createBillingGroup", attrsArg, "cbg");
             jc.addCommand("updateBillingGroup", idAndAttrsArg, "ubg");
             jc.addCommand("deleteBillingGroup", idArg, "dbg");
+
+            jc.addCommand("getAllNetworks", noArgs, "gan");
+            jc.addCommand("getNetwork", idArg, "gn");
+
+            jc.addCommand("getAllSecurityGroups", noArgs, "gasg");
+            jc.addCommand("getSecurityGroup", idArg, "gsg");
+            jc.addCommand("createSecurityGroup", cmdCsg, "csg");
+            jc.addCommand("updateSecurityGroup", idAndAttrsArg, "usg");
+            jc.addCommand("deleteSecurityGroup", idArg, "dsg");
+
+            jc.addCommand("getRulesForSecurityGroup", cmdGrfsg, "grfsg");
+            jc.addCommand("getSecurityGroupRule", idArg, "gsgr");
+            jc.addCommand("createSecurityGroupRule", cmdCsgr, "csgr");
+            jc.addCommand("updateSecurityGroupRule", idAndAttrsArg, "usgr");
+            jc.addCommand("deleteSecurityGroupRule", idArg, "dsgr");
 
             jc.addCommand("getAllComputingCells", noArgs, "gacc");
             jc.addCommand("getComputingCell", idArg, "gcc");
@@ -352,6 +390,68 @@ public class Main {
         if (command.equals("deleteBillingGroup")) {
             String id = idArg.getId();
             service.deleteBillingGroup(id);
+        }
+
+        // Network.
+        if (command.equals("getAllNetworks")) {
+            for (Network n : service.getAllNetworks()) {
+                printObject(n);
+            }
+        }
+        if (command.equals("getNetwork")) {
+            String id = idArg.getId();
+            printObject(service.getNetwork(id));
+        }
+
+        // Security group.
+        if (command.equals("getAllSecurityGroups")) {
+            for (SecurityGroup sg : service.getAllSecurityGroups()) {
+                printObject(sg);
+            }
+        }
+        if (command.equals("getSecurityGroup")) {
+            String id = idArg.getId();
+            printObject(service.getSecurityGroup(id));
+        }
+        if (command.equals("createSecurityGroup")) {
+            String networkId = getIdArg(cmdCsg.args);
+            Map<String, Object> attrs = getAttrArgs(cmdCsg.args, 1);
+            printObject(service.createSecurityGroup(networkId, attrs));
+        }
+        if (command.equals("updateSecurityGroup")) {
+            String id = idAndAttrsArg.getId();
+            Map<String, Object> attrs = idAndAttrsArg.getAttrs();
+            printObject(service.updateSecurityGroup(id, attrs));
+        }
+        if (command.equals("deleteSecurityGroup")) {
+            String id = idArg.getId();
+            printObject(service.deleteSecurityGroup(id));
+        }
+
+        // Security group rules.
+        if (command.equals("getRulesForSecurityGroup")) {
+            String id = getIdArg(cmdGrfsg.args);
+            for (SecurityGroupRule r : service.getRulesForSecurityGroup(id)) {
+                printObject(r);
+            }
+        }
+        if (command.equals("getSecurityGroupRule")) {
+            String id = idArg.getId();
+            printObject(service.getSecurityGroupRule(id));
+        }
+        if (command.equals("createSecurityGroupRule")) {
+            String id = getIdArg(cmdCsgr.args);
+            Map<String, Object> attrs = getAttrArgs(cmdCsgr.args, 1);
+            printObject(service.createSecurityGroupRule(id, attrs));
+        }
+        if (command.equals("updateSecurityGroupRule")) {
+            String id = idAndAttrsArg.getId();
+            Map<String, Object> attrs = idAndAttrsArg.getAttrs();
+            printObject(service.updateSecurityGroupRule(id, attrs));
+        }
+        if (command.equals("deleteSecurityGroupRule")) {
+            String id = idArg.getId();
+            printObject(service.deleteSecurityGroupRule(id));
         }
 
         // Computing cell.
