@@ -3,11 +3,9 @@ package com.brkt.client;
 import com.brkt.client.util.BrktRestClient;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,54 +14,6 @@ import java.util.Map;
  * service and returns responses as Java objects.
  */
 public class BrktService {
-
-    public static final Type TYPE_OPERATING_SYSTEM_LIST =
-            new TypeToken<ArrayList<OperatingSystem>>() {}.getType();
-    public static final Type TYPE_IMAGE_DEFINITION_LIST =
-            new TypeToken<ArrayList<ImageDefinition>>() {}.getType();
-    public static final Type TYPE_CSP_IMAGE_LIST =
-            new TypeToken<ArrayList<CspImage>>() {}.getType();
-    public static final Type TYPE_MACHINE_TYPE_LIST =
-            new TypeToken<ArrayList<MachineType>>() {}.getType();
-    public static final Type TYPE_BILLING_GROUP_LIST =
-            new TypeToken<ArrayList<BillingGroup>>() {}.getType();
-    public static final Type TYPE_NETWORK_LIST =
-            new TypeToken<ArrayList<Network>>() {}.getType();
-    public static final Type TYPE_ZONE_LIST =
-            new TypeToken<ArrayList<Zone>>() {}.getType();
-    public static final Type TYPE_SECURITY_GROUP_LIST =
-            new TypeToken<ArrayList<SecurityGroup>>() {}.getType();
-    public static final Type TYPE_SECURITY_GROUP_RULE_LIST =
-            new TypeToken<ArrayList<SecurityGroupRule>>() {}.getType();
-    public static final Type TYPE_COMPUTING_CELL_LIST =
-            new TypeToken<ArrayList<ComputingCell>>() {}.getType();
-    public static final Type TYPE_VOLUME_LIST =
-            new TypeToken<ArrayList<Volume>>() {}.getType();
-    public static final Type TYPE_INSTANCE_LIST =
-            new TypeToken<ArrayList<Instance>>() {}.getType();
-    public static final Type TYPE_WORKLOAD_LIST =
-            new TypeToken<ArrayList<Workload>>() {}.getType();
-    public static final Type TYPE_LOAD_BALANCER_LIST =
-            new TypeToken<ArrayList<LoadBalancer>>() {}.getType();
-    public static final Type TYPE_LOAD_BALANCER_LISTENER_LIST =
-            new TypeToken<ArrayList<LoadBalancerListener>>() {}.getType();
-
-    public static final String OPERATING_SYSTEM_ROOT = "/v1/api/config/operatingsystem";
-    public static final String IMAGE_DEFINITION_ROOT = "/v1/api/config/imagedefinition";
-    public static final String CSP_IMAGE_ROOT = "/v1/api/config/cspimage";
-    public static final String MACHINE_TYPE_ROOT = "/v1/api/config/machinetype";
-    public static final String BILLING_GROUP_ROOT = "/v1/api/config/billinggroup";
-    public static final String NETWORK_ROOT = "/v1/api/config/network";
-    public static final String ZONE_ROOT = "/v1/api/config/zone";
-    public static final String SECURITY_GROUP_ROOT = "/v1/api/config/securitygroup";
-    public static final String SECURITY_GROUP_RULE_ROOT = "/v1/api/config/securitygrouprule";
-    public static final String COMPUTING_CELL_ROOT = "/v1/api/config/computingcell";
-    public static final String VOLUME_ROOT = "/v1/api/config/brktvolume";
-    public static final String INSTANCE_ROOT = "/v2/api/config/instance";
-    public static final String V1_INSTANCE_ROOT = "/v1/api/config/instance";
-    public static final String WORKLOAD_ROOT = "/v2/api/config/workload";
-    public static final String LOAD_BALANCER_ROOT = "/v1/api/config/loadbalancer";
-    public static final String LOAD_BALANCER_LISTENER_ROOT = "/v1/api/config/loadbalancer/listener";
 
     private final BrktRestClient client;
 
@@ -143,76 +93,76 @@ public class BrktService {
 
     // Operating system.
     public List<OperatingSystem> getAllOperatingSystems() {
-        return get(OPERATING_SYSTEM_ROOT, TYPE_OPERATING_SYSTEM_LIST);
+        return get(Constants.OPERATING_SYSTEM_ROOT, Constants.TYPE_OPERATING_SYSTEM_LIST);
     }
 
     public OperatingSystem getOperatingSystem(String id) {
         Preconditions.checkNotNull(id);
-        String uri = String.format("%s/%s", OPERATING_SYSTEM_ROOT, id);
+        String uri = String.format("%s/%s", Constants.OPERATING_SYSTEM_ROOT, id);
         return get(uri, OperatingSystem.class);
     }
 
     public List<ImageDefinition> getOperatingSystemImageDefinitions(String osId) {
         Preconditions.checkNotNull(osId);
-        String uri = String.format("%s/%s/imagedefinitions", OPERATING_SYSTEM_ROOT, osId);
-        return get(uri, TYPE_IMAGE_DEFINITION_LIST);
+        String uri = String.format("%s/%s/imagedefinitions", Constants.OPERATING_SYSTEM_ROOT, osId);
+        return get(uri, Constants.TYPE_IMAGE_DEFINITION_LIST);
     }
 
     // Image definition.
     public List<ImageDefinition> getAllImageDefinitions() {
-        return get(IMAGE_DEFINITION_ROOT, TYPE_IMAGE_DEFINITION_LIST);
+        return get(Constants.IMAGE_DEFINITION_ROOT, Constants.TYPE_IMAGE_DEFINITION_LIST);
     }
 
     public ImageDefinition getImageDefinition(String id) {
         Preconditions.checkNotNull(id);
-        String uri = String.format("%s/%s", IMAGE_DEFINITION_ROOT, id);
+        String uri = String.format("%s/%s", Constants.IMAGE_DEFINITION_ROOT, id);
         return get(uri, ImageDefinition.class);
     }
 
     public List<CspImage> getImageDefinitionCspImages(String imageDefinitionId) {
         Preconditions.checkNotNull(imageDefinitionId);
-        String uri = String.format("%s/%s/cspimages", IMAGE_DEFINITION_ROOT, imageDefinitionId);
-        return get(uri, TYPE_CSP_IMAGE_LIST);
+        String uri = String.format("%s/%s/cspimages", Constants.IMAGE_DEFINITION_ROOT, imageDefinitionId);
+        return get(uri, Constants.TYPE_CSP_IMAGE_LIST);
     }
 
     // CSP image.
     public List<CspImage> getAllCspImages() {
-        return get(CSP_IMAGE_ROOT, TYPE_CSP_IMAGE_LIST);
+        return get(Constants.CSP_IMAGE_ROOT, Constants.TYPE_CSP_IMAGE_LIST);
     }
 
     public CspImage getCspImage(String id) {
-        String uri = String.format("%s/%s", CSP_IMAGE_ROOT, id);
+        String uri = String.format("%s/%s", Constants.CSP_IMAGE_ROOT, id);
         return get(uri, CspImage.class);
     }
 
     // Machine type.
     public List<MachineType> getAllMachineTypes() {
-        return get(MACHINE_TYPE_ROOT, TYPE_MACHINE_TYPE_LIST);
+        return get(Constants.MACHINE_TYPE_ROOT, Constants.TYPE_MACHINE_TYPE_LIST);
     }
 
     public MachineType getMachineType(String id) {
-        String uri = String.format("%s/%s", MACHINE_TYPE_ROOT, id);
+        String uri = String.format("%s/%s", Constants.MACHINE_TYPE_ROOT, id);
         return get(uri, MachineType.class);
     }
 
     // Billing group.
     public List<BillingGroup> getAllBillingGroups() {
-        return get(BILLING_GROUP_ROOT, TYPE_BILLING_GROUP_LIST);
+        return get(Constants.BILLING_GROUP_ROOT, Constants.TYPE_BILLING_GROUP_LIST);
     }
 
     public BillingGroup getBillingGroup(String id) {
         Preconditions.checkNotNull(id);
-        String uri = String.format("%s/%s", BILLING_GROUP_ROOT, id);
+        String uri = String.format("%s/%s", Constants.BILLING_GROUP_ROOT, id);
         return get(uri, BillingGroup.class);
     }
 
     public BillingGroup createBillingGroup(Map<String, Object> attrs) {
-        return post(BILLING_GROUP_ROOT, BillingGroup.class, attrs);
+        return post(Constants.BILLING_GROUP_ROOT, BillingGroup.class, attrs);
     }
 
     public BillingGroup updateBillingGroup(String id, Map<String, Object> attrs) {
         Preconditions.checkNotNull(id);
-        String uri = String.format("%s/%s", BILLING_GROUP_ROOT, id);
+        String uri = String.format("%s/%s", Constants.BILLING_GROUP_ROOT, id);
         return post(uri, BillingGroup.class, attrs);
     }
 
@@ -223,57 +173,57 @@ public class BrktService {
 
     public void deleteBillingGroup(String id) {
         Preconditions.checkNotNull(id);
-        String uri = String.format("%s/%s", BILLING_GROUP_ROOT, id);
+        String uri = String.format("%s/%s", Constants.BILLING_GROUP_ROOT, id);
         delete(uri, BillingGroup.class);
     }
 
     // Network.
     public List<Network> getAllNetworks() {
-        return get(NETWORK_ROOT, TYPE_NETWORK_LIST);
+        return get(Constants.NETWORK_ROOT, Constants.TYPE_NETWORK_LIST);
     }
 
     public Network getNetwork(String id) {
         Preconditions.checkNotNull(id);
-        String uri = String.format("%s/%s", NETWORK_ROOT, id);
+        String uri = String.format("%s/%s", Constants.NETWORK_ROOT, id);
         return get(uri, Network.class);
     }
 
     // Zone.
     public List<Zone> getAllZones() {
-        return get(ZONE_ROOT, TYPE_ZONE_LIST);
+        return get(Constants.ZONE_ROOT, Constants.TYPE_ZONE_LIST);
     }
 
     public List<Zone> getNetworkZones(String networkId) {
         Preconditions.checkNotNull(networkId);
-        String uri = String.format("%s/%s/zones", NETWORK_ROOT, networkId);
-        return get(uri, TYPE_ZONE_LIST);
+        String uri = String.format("%s/%s/zones", Constants.NETWORK_ROOT, networkId);
+        return get(uri, Constants.TYPE_ZONE_LIST);
     }
 
     public Zone getZone(String id) {
         Preconditions.checkNotNull(id);
-        String uri = String.format("%s/%s", ZONE_ROOT, id);
+        String uri = String.format("%s/%s", Constants.ZONE_ROOT, id);
         return get(uri, Zone.class);
     }
 
     // Security group.
     public List<SecurityGroup> getAllSecurityGroups() {
-        return get(SECURITY_GROUP_ROOT, TYPE_SECURITY_GROUP_LIST);
+        return get(Constants.SECURITY_GROUP_ROOT, Constants.TYPE_SECURITY_GROUP_LIST);
     }
 
     public SecurityGroup getSecurityGroup(String id) {
         Preconditions.checkNotNull(id);
-        String uri = String.format("%s/%s", SECURITY_GROUP_ROOT, id);
+        String uri = String.format("%s/%s", Constants.SECURITY_GROUP_ROOT, id);
         return get(uri, SecurityGroup.class);
     }
 
     public SecurityGroup createSecurityGroup(String networkId, Map<String, Object> attrs) {
-        String uri = String.format("%s/%s/securitygroups", NETWORK_ROOT, networkId);
+        String uri = String.format("%s/%s/securitygroups", Constants.NETWORK_ROOT, networkId);
         return post(uri, SecurityGroup.class, attrs);
     }
 
     public SecurityGroup updateSecurityGroup(String id, Map<String, Object> attrs) {
         Preconditions.checkNotNull(id);
-        String uri = String.format("%s/%s", SECURITY_GROUP_ROOT, id);
+        String uri = String.format("%s/%s", Constants.SECURITY_GROUP_ROOT, id);
         return post(uri, SecurityGroup.class, attrs);
     }
 
@@ -284,65 +234,65 @@ public class BrktService {
 
     public SecurityGroup deleteSecurityGroup(String id) {
         Preconditions.checkNotNull(id);
-        String uri = String.format("%s/%s", SECURITY_GROUP_ROOT, id);
+        String uri = String.format("%s/%s", Constants.SECURITY_GROUP_ROOT, id);
         return delete(uri, SecurityGroup.class);
     }
 
     // Security group rules.
     public List<SecurityGroupRule> getRulesForSecurityGroup(String securityGroupId) {
         Preconditions.checkNotNull(securityGroupId);
-        String uri = String.format("%s/%s/rules", SECURITY_GROUP_ROOT, securityGroupId);
-        return get(uri, TYPE_SECURITY_GROUP_RULE_LIST);
+        String uri = String.format("%s/%s/rules", Constants.SECURITY_GROUP_ROOT, securityGroupId);
+        return get(uri, Constants.TYPE_SECURITY_GROUP_RULE_LIST);
     }
 
     public SecurityGroupRule getSecurityGroupRule(String ruleId) {
         Preconditions.checkNotNull(ruleId);
-        String uri = String.format("%s/%s", SECURITY_GROUP_RULE_ROOT, ruleId);
+        String uri = String.format("%s/%s", Constants.SECURITY_GROUP_RULE_ROOT, ruleId);
         return get(uri, SecurityGroupRule.class);
     }
 
     public SecurityGroupRule createSecurityGroupRule(String securityGroupId, Map<String, Object> attrs) {
-        String uri = String.format("%s/%s/rules", SECURITY_GROUP_ROOT, securityGroupId);
+        String uri = String.format("%s/%s/rules", Constants.SECURITY_GROUP_ROOT, securityGroupId);
         return post(uri, SecurityGroupRule.class, attrs);
     }
 
     public SecurityGroupRule updateSecurityGroupRule(String ruleId, Map<String, Object> attrs) {
         Preconditions.checkNotNull(ruleId);
-        String uri = String.format("%s/%s", SECURITY_GROUP_RULE_ROOT, ruleId);
+        String uri = String.format("%s/%s", Constants.SECURITY_GROUP_RULE_ROOT, ruleId);
         return post(uri, SecurityGroupRule.class, attrs);
     }
 
     public SecurityGroupRule deleteSecurityGroupRule(String ruleId) {
         Preconditions.checkNotNull(ruleId);
-        String uri = String.format("%s/%s", SECURITY_GROUP_RULE_ROOT, ruleId);
+        String uri = String.format("%s/%s", Constants.SECURITY_GROUP_RULE_ROOT, ruleId);
         return delete(uri, SecurityGroupRule.class);
     }
 
     // Computing cell.
     public List<ComputingCell> getAllComputingCells() {
-        return get(COMPUTING_CELL_ROOT, TYPE_COMPUTING_CELL_LIST);
+        return get(Constants.COMPUTING_CELL_ROOT, Constants.TYPE_COMPUTING_CELL_LIST);
     }
 
     public ComputingCell getComputingCell(String computingCellId) {
         Preconditions.checkNotNull(computingCellId);
-        String uri = String.format("%s/%s", COMPUTING_CELL_ROOT, computingCellId);
+        String uri = String.format("%s/%s", Constants.COMPUTING_CELL_ROOT, computingCellId);
         return get(uri, ComputingCell.class);
     }
 
     public List<Volume> getComputingCellVolumes(String computingCellId) {
         Preconditions.checkNotNull(computingCellId);
-        String uri = String.format("%s/%s/brktvolumes", COMPUTING_CELL_ROOT, computingCellId);
-        return get(uri, TYPE_VOLUME_LIST);
+        String uri = String.format("%s/%s/brktvolumes", Constants.COMPUTING_CELL_ROOT, computingCellId);
+        return get(uri, Constants.TYPE_VOLUME_LIST);
     }
 
     // Volume.
     public List<Volume> getAllVolumes() {
-        return get(VOLUME_ROOT, TYPE_VOLUME_LIST);
+        return get(Constants.VOLUME_ROOT, Constants.TYPE_VOLUME_LIST);
     }
 
     public Volume getVolume(String volumeId) {
         Preconditions.checkNotNull(volumeId);
-        String uri = String.format("%s/%s", VOLUME_ROOT, volumeId);
+        String uri = String.format("%s/%s", Constants.VOLUME_ROOT, volumeId);
         return get(uri, Volume.class);
     }
 
@@ -353,46 +303,46 @@ public class BrktService {
 
     public Volume updateVolume(String volumeId, Map<String, Object> attrs) {
         Preconditions.checkNotNull(volumeId);
-        String uri = String.format("%s/%s", VOLUME_ROOT, volumeId);
+        String uri = String.format("%s/%s", Constants.VOLUME_ROOT, volumeId);
         return post(uri, Volume.class, attrs);
     }
 
     public Volume createVolume(Map<String, Object> attrs) {
-        return post(VOLUME_ROOT, Volume.class, attrs);
+        return post(Constants.VOLUME_ROOT, Volume.class, attrs);
     }
 
     public Volume deleteVolume(String volumeId) {
         Preconditions.checkNotNull(volumeId);
-        String uri = String.format("%s/%s", VOLUME_ROOT, volumeId);
+        String uri = String.format("%s/%s", Constants.VOLUME_ROOT, volumeId);
         return delete(uri, Volume.class);
     }
 
     public List<Volume> getVolumeChildren(String volumeId) {
         Preconditions.checkNotNull(volumeId);
-        String uri = String.format("%s/%s/children", VOLUME_ROOT, volumeId);
-        return get(uri, TYPE_VOLUME_LIST);
+        String uri = String.format("%s/%s/children", Constants.VOLUME_ROOT, volumeId);
+        return get(uri, Constants.TYPE_VOLUME_LIST);
     }
 
     public Volume snapshotVolume(String volumeId, Map<String, Object> attrs) {
         Preconditions.checkNotNull(volumeId);
-        String uri = String.format("%s/%s/snapshot", VOLUME_ROOT, volumeId);
+        String uri = String.format("%s/%s/snapshot", Constants.VOLUME_ROOT, volumeId);
         return post(uri, Volume.class, attrs);
     }
 
     public Volume cloneVolume(String volumeId, Map<String, Object> attrs) {
         Preconditions.checkNotNull(volumeId);
-        String uri = String.format("%s/%s/clone", VOLUME_ROOT, volumeId);
+        String uri = String.format("%s/%s/clone", Constants.VOLUME_ROOT, volumeId);
         return post(uri, Volume.class, attrs);
     }
 
     // Instance.
     public List<Instance> getAllInstances() {
-        return get(INSTANCE_ROOT, TYPE_INSTANCE_LIST);
+        return get(Constants.INSTANCE_ROOT, Constants.TYPE_INSTANCE_LIST);
     }
 
     public Instance getInstance(String instanceId) {
         Preconditions.checkNotNull(instanceId);
-        String uri = String.format("%s/%s", INSTANCE_ROOT, instanceId);
+        String uri = String.format("%s/%s", Constants.INSTANCE_ROOT, instanceId);
         return get(uri, Instance.class);
     }
 
@@ -403,45 +353,45 @@ public class BrktService {
 
     public Instance updateInstance(String instanceId, Map<String, Object> attrs) {
         Preconditions.checkNotNull(instanceId);
-        String uri = String.format("%s/%s", INSTANCE_ROOT, instanceId);
+        String uri = String.format("%s/%s", Constants.INSTANCE_ROOT, instanceId);
         return post(uri, Instance.class, attrs);
     }
 
     public List<Volume> getInstanceVolumes(String instanceId) {
         Preconditions.checkNotNull(instanceId);
-        String uri = String.format("%s/%s/brktvolumes", V1_INSTANCE_ROOT, instanceId);
-        return get(uri, TYPE_VOLUME_LIST);
+        String uri = String.format("%s/%s/brktvolumes", Constants.V1_INSTANCE_ROOT, instanceId);
+        return get(uri, Constants.TYPE_VOLUME_LIST);
     }
 
     public Instance deleteInstance(String instanceId) {
         Preconditions.checkNotNull(instanceId);
-        String uri = String.format("%s/%s", INSTANCE_ROOT, instanceId);
+        String uri = String.format("%s/%s", Constants.INSTANCE_ROOT, instanceId);
         return delete(uri, Instance.class);
     }
 
     public Instance createInstance(Map<String, Object> attrs) {
-        return post(INSTANCE_ROOT, Instance.class, attrs);
+        return post(Constants.INSTANCE_ROOT, Instance.class, attrs);
     }
 
     public InstanceReboot rebootInstance(String instanceId) {
         Preconditions.checkNotNull(instanceId);
-        String uri = String.format("%s/%s/reboot", INSTANCE_ROOT, instanceId);
+        String uri = String.format("%s/%s/reboot", Constants.INSTANCE_ROOT, instanceId);
         return post(uri, InstanceReboot.class, null);
     }
 
     // Workload.
     public List<Workload> getAllWorkloads() {
-        return get(WORKLOAD_ROOT, TYPE_WORKLOAD_LIST);
+        return get(Constants.WORKLOAD_ROOT, Constants.TYPE_WORKLOAD_LIST);
     }
 
     public Workload getWorkload(String workloadId) {
         Preconditions.checkNotNull(workloadId);
-        String uri = String.format("%s/%s", WORKLOAD_ROOT, workloadId);
+        String uri = String.format("%s/%s", Constants.WORKLOAD_ROOT, workloadId);
         return get(uri, Workload.class);
     }
 
     public Workload createWorkload(Map<String, Object> attrs) {
-        return post(WORKLOAD_ROOT, Workload.class, attrs);
+        return post(Constants.WORKLOAD_ROOT, Workload.class, attrs);
     }
 
     public Workload updateWorkload(String workloadId, String fieldName, Object value) {
@@ -451,40 +401,40 @@ public class BrktService {
     
     public Workload updateWorkload(String workloadId, Map<String, Object> attrs) {
         Preconditions.checkNotNull(workloadId);
-        String uri = String.format("%s/%s", WORKLOAD_ROOT, workloadId);
+        String uri = String.format("%s/%s", Constants.WORKLOAD_ROOT, workloadId);
         return post(uri, Workload.class, attrs);
     }
 
     public List<Instance> getWorkloadInstances(String workloadId) {
         Preconditions.checkNotNull(workloadId);
-        String uri = String.format("%s/%s/instance", WORKLOAD_ROOT, workloadId);
-        return get(uri, TYPE_INSTANCE_LIST);
+        String uri = String.format("%s/%s/instance", Constants.WORKLOAD_ROOT, workloadId);
+        return get(uri, Constants.TYPE_INSTANCE_LIST);
     }
 
     public Workload deleteWorkload(String workloadId) {
         Preconditions.checkNotNull(workloadId);
-        String uri = String.format("%s/%s", WORKLOAD_ROOT, workloadId);
+        String uri = String.format("%s/%s", Constants.WORKLOAD_ROOT, workloadId);
         return delete(uri, Workload.class);
     }
 
     // Load balancer.
     public List<LoadBalancer> getAllLoadBalancers() {
-        return get(LOAD_BALANCER_ROOT, TYPE_LOAD_BALANCER_LIST);
+        return get(Constants.LOAD_BALANCER_ROOT, Constants.TYPE_LOAD_BALANCER_LIST);
     }
 
     public LoadBalancer getLoadBalancer(String id) {
         Preconditions.checkNotNull(id);
-        String uri = String.format("%s/%s", LOAD_BALANCER_ROOT, id);
+        String uri = String.format("%s/%s", Constants.LOAD_BALANCER_ROOT, id);
         return get(uri, LoadBalancer.class);
     }
 
     public LoadBalancer createLoadBalancer(Map<String, Object> attrs) {
-        return post(LOAD_BALANCER_ROOT, LoadBalancer.class, attrs);
+        return post(Constants.LOAD_BALANCER_ROOT, LoadBalancer.class, attrs);
     }
 
     public LoadBalancer updateLoadBalancer(String id, Map<String, Object> attrs) {
         Preconditions.checkNotNull(id);
-        String uri = String.format("%s/%s", LOAD_BALANCER_ROOT, id);
+        String uri = String.format("%s/%s", Constants.LOAD_BALANCER_ROOT, id);
         return post(uri, LoadBalancer.class, attrs);
     }
 
@@ -495,28 +445,28 @@ public class BrktService {
 
     public LoadBalancer deleteLoadBalancer(String id) {
         Preconditions.checkNotNull(id);
-        String uri = String.format("%s/%s", LOAD_BALANCER_ROOT, id);
+        String uri = String.format("%s/%s", Constants.LOAD_BALANCER_ROOT, id);
         return delete(uri, LoadBalancer.class);
     }
 
     // Load balancer listener.
     public List<LoadBalancerListener> getAllLoadBalancerListeners() {
-        return get(LOAD_BALANCER_LISTENER_ROOT, TYPE_LOAD_BALANCER_LISTENER_LIST);
+        return get(Constants.LOAD_BALANCER_LISTENER_ROOT, Constants.TYPE_LOAD_BALANCER_LISTENER_LIST);
     }
 
     public LoadBalancerListener getLoadBalancerListener(String id) {
         Preconditions.checkNotNull(id);
-        String uri = String.format("%s/%s", LOAD_BALANCER_LISTENER_ROOT, id);
+        String uri = String.format("%s/%s", Constants.LOAD_BALANCER_LISTENER_ROOT, id);
         return get(uri, LoadBalancerListener.class);
     }
 
     public LoadBalancerListener createLoadBalancerListener(Map<String, Object> attrs) {
-        return post(LOAD_BALANCER_LISTENER_ROOT, LoadBalancerListener.class, attrs);
+        return post(Constants.LOAD_BALANCER_LISTENER_ROOT, LoadBalancerListener.class, attrs);
     }
 
     public LoadBalancerListener updateLoadBalancerListener(String id, Map<String, Object> attrs) {
         Preconditions.checkNotNull(id);
-        String uri = String.format("%s/%s", LOAD_BALANCER_LISTENER_ROOT, id);
+        String uri = String.format("%s/%s", Constants.LOAD_BALANCER_LISTENER_ROOT, id);
         return post(uri, LoadBalancerListener.class, attrs);
     }
 
@@ -527,7 +477,7 @@ public class BrktService {
 
     public LoadBalancerListener deleteLoadBalancerListener(String id) {
         Preconditions.checkNotNull(id);
-        String uri = String.format("%s/%s", LOAD_BALANCER_LISTENER_ROOT, id);
+        String uri = String.format("%s/%s", Constants.LOAD_BALANCER_LISTENER_ROOT, id);
         return delete(uri, LoadBalancerListener.class);
     }
 }
