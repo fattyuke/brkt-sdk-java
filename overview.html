@@ -1,0 +1,38 @@
+<html>
+<head/>
+<body>
+<h2>Intro</h2>
+
+<p>The <strong>Bracket Java SDK</strong> is a Java library for interacting with the Bracket
+REST API.  The caller has the flexibility of making high-level calls that
+return Java objects, or lower-level calls that return the response payload
+as a <code>Map</code> of JSON elements or <code>byte[]</code>.</p>
+
+<h2>Sample Code</h2>
+
+<p>Here's some sample code that retrieves the list of image definitions
+from the server:</p>
+
+<pre><code>BrktRestClient client = new BrktRestClient.Builder(args.rootUri)
+    .macKey(args.macKey).accessToken(args.token).build();
+BrktService service = new BrktService(client);
+for (ImageDefinition id : service.getImageDefinitions) {
+    System.out.println(id);
+}
+</code></pre>
+
+<h2>Components</h2>
+
+<ul>
+<li><p>{@link com.brkt.client.util.BrktHttpClient} is an HTTP-level interface to
+the Bracket service.  It uses {@link com.brkt.client.util.BrktAuth} to
+generate the <code>Authorization</code> OAuth2 header based on the user's MAC key and
+access token.</p></li>
+<li><p>{@link com.brkt.client.util.BrktRestClient} is a higher-level client.
+It accepts a request as a Java <code>Map</code> and uses the <code>Gson</code> library to
+deserialize the server response to a plain Java object.</p></li>
+<li><p>{@link com.brkt.client.BrktService} contains high-level methods for
+interacting with the Bracket service.</p></li>
+</ul>
+</body>
+</html>

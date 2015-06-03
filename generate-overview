@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# This script generates overview.html from overview.md.
+
+echo "<html>
+<head/>
+<body>" > overview.html
+markdown overview.md >> overview.html
+echo "</body>
+</html>" >> overview.html
