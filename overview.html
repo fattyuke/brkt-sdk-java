@@ -17,10 +17,10 @@ from the server:</p>
 String macKey = "6e08558938f346038c61716ccb98dacf";
 String accessToken = "60435a8b84104e25bbe13ad7b63f8695";
 
-BrktRestClient client = new BrktRestClient.Builder(rootUri)
+{@link com.brkt.client.util.BrktRestClient} client = new {@link com.brkt.client.util.BrktRestClient.Builder}(rootUri)
     .macKey(macKey).accessToken(accessToken).build();
-BrktService service = new BrktService(client);
-for (ImageDefinition id : service.getAllImageDefinitions()) {
+{@link com.brkt.client.BrktService} service = new BrktService(client);
+for ({@link com.brkt.client.ImageDefinition} id : service.getAllImageDefinitions()) {
     System.out.println(id);
 }
 </code></pre>
