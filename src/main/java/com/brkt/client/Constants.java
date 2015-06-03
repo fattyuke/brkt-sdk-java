@@ -87,4 +87,8 @@ public class Constants {
     public enum RebootStatus {
         DISPATCHED, FINISHED, FAILED
     }
+
+    public enum Protocol {
+        TCP, HTTP
+    }
 }

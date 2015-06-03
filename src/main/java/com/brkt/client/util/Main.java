@@ -11,6 +11,7 @@ import com.brkt.client.CspImage;
 import com.brkt.client.ImageDefinition;
 import com.brkt.client.Instance;
 import com.brkt.client.LoadBalancer;
+import com.brkt.client.LoadBalancerListener;
 import com.brkt.client.MachineType;
 import com.brkt.client.Network;
 import com.brkt.client.OperatingSystem;
@@ -300,6 +301,12 @@ public class Main {
             jc.addCommand("createLoadBalancer", attrsArg, "clb");
             jc.addCommand("updateLoadBalancer", idAndAttrsArg, "ulb");
             jc.addCommand("deleteLoadBalancer", idArg, "dlb");
+
+            jc.addCommand("getAllLoadBalancerListeners", noArgs, "galbl");
+            jc.addCommand("getLoadBalancerListener", idArg, "glbl");
+            jc.addCommand("createLoadBalancerListener", attrsArg, "clbl");
+            jc.addCommand("updateLoadBalancerListener", idAndAttrsArg, "ulbl");
+            jc.addCommand("deleteLoadBalancerListener", idArg, "dlbl");
 
             jc.parse(stringArgs);
         } catch (ParameterException e) {
@@ -631,6 +638,30 @@ public class Main {
         if (command.equals("deleteLoadBalancer")) {
             String id = idArg.getId();
             printObject(service.deleteLoadBalancer(id));
+        }
+
+        // Load balancer listener.
+        if (command.equals("getAllLoadBalancerListeners")) {
+            for (LoadBalancerListener lbl : service.getAllLoadBalancerListeners()) {
+                printObject(lbl);
+            }
+        }
+        if (command.equals("getLoadBalancerListener")) {
+            String id = idArg.getId();
+            printObject(service.getLoadBalancerListener(id));
+        }
+        if (command.equals("createLoadBalancerListener")) {
+            Map<String, Object> attrs = attrsArg.getAttrs();
+            printObject(service.createLoadBalancerListener(attrs));
+        }
+        if (command.equals("updateLoadBalancerListener")) {
+            String id = idAndAttrsArg.getId();
+            Map<String, Object> attrs = idAndAttrsArg.getAttrs();
+            printObject(service.updateLoadBalancerListener(id, attrs));
+        }
+        if (command.equals("deleteLoadBalancerListener")) {
+            String id = idArg.getId();
+            printObject(service.deleteLoadBalancerListener(id));
         }
     }
 

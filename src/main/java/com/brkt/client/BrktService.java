@@ -45,6 +45,8 @@ public class BrktService {
             new TypeToken<ArrayList<Workload>>() {}.getType();
     public static final Type TYPE_LOAD_BALANCER_LIST =
             new TypeToken<ArrayList<LoadBalancer>>() {}.getType();
+    public static final Type TYPE_LOAD_BALANCER_LISTENER_LIST =
+            new TypeToken<ArrayList<LoadBalancerListener>>() {}.getType();
 
     public static final String OPERATING_SYSTEM_ROOT = "/v1/api/config/operatingsystem";
     public static final String IMAGE_DEFINITION_ROOT = "/v1/api/config/imagedefinition";
@@ -61,6 +63,7 @@ public class BrktService {
     public static final String V1_INSTANCE_ROOT = "/v1/api/config/instance";
     public static final String WORKLOAD_ROOT = "/v2/api/config/workload";
     public static final String LOAD_BALANCER_ROOT = "/v1/api/config/loadbalancer";
+    public static final String LOAD_BALANCER_LISTENER_ROOT = "/v1/api/config/loadbalancer/listener";
 
     private final BrktRestClient client;
 
@@ -505,5 +508,37 @@ public class BrktService {
         Preconditions.checkNotNull(id);
         String uri = String.format("%s/%s", LOAD_BALANCER_ROOT, id);
         return delete(uri, LoadBalancer.class);
+    }
+
+    // Load balancer listener.
+    public List<LoadBalancerListener> getAllLoadBalancerListeners() {
+        return get(LOAD_BALANCER_LISTENER_ROOT, TYPE_LOAD_BALANCER_LISTENER_LIST);
+    }
+
+    public LoadBalancerListener getLoadBalancerListener(String id) {
+        Preconditions.checkNotNull(id);
+        String uri = String.format("%s/%s", LOAD_BALANCER_LISTENER_ROOT, id);
+        return get(uri, LoadBalancerListener.class);
+    }
+
+    public LoadBalancerListener createLoadBalancerListener(Map<String, Object> attrs) {
+        return post(LOAD_BALANCER_LISTENER_ROOT, LoadBalancerListener.class, attrs);
+    }
+
+    public LoadBalancerListener updateLoadBalancerListener(String id, Map<String, Object> attrs) {
+        Preconditions.checkNotNull(id);
+        String uri = String.format("%s/%s", LOAD_BALANCER_LISTENER_ROOT, id);
+        return post(uri, LoadBalancerListener.class, attrs);
+    }
+
+    public LoadBalancerListener updateLoadBalancerListener(String id, String fieldName, Object value) {
+        Map<String, Object> attrs = ImmutableMap.of(fieldName, value);
+        return updateLoadBalancerListener(id, attrs);
+    }
+
+    public LoadBalancerListener deleteLoadBalancerListener(String id) {
+        Preconditions.checkNotNull(id);
+        String uri = String.format("%s/%s", LOAD_BALANCER_LISTENER_ROOT, id);
+        return delete(uri, LoadBalancerListener.class);
     }
 }
