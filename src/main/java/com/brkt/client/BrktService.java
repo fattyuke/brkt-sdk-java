@@ -329,17 +329,6 @@ public class BrktService {
         return get(uri, ComputingCell.class);
     }
 
-    public ComputingCell updateComputingCell(String computingCellId, Map<String, Object> attrs) {
-        Preconditions.checkNotNull(computingCellId);
-        String uri = String.format("%s/%s", COMPUTING_CELL_ROOT, computingCellId);
-        return post(uri, ComputingCell.class, attrs);
-    }
-
-    public ComputingCell updateComputingCell(String computingCellId, String fieldName, Object value) {
-        Map<String, Object> attrs = ImmutableMap.of(fieldName, value);
-        return updateComputingCell(computingCellId, attrs);
-    }
-
     public List<Volume> getComputingCellVolumes(String computingCellId) {
         Preconditions.checkNotNull(computingCellId);
         String uri = String.format("%s/%s/brktvolumes", COMPUTING_CELL_ROOT, computingCellId);

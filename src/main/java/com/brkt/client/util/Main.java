@@ -270,7 +270,6 @@ public class Main {
             jc.addCommand("getAllComputingCells", noArgs, "gacc");
             jc.addCommand("getComputingCell", idArg, "gcc");
             jc.addCommand("getComputingCellVolumes", idArg, "gccv");
-            jc.addCommand("updateComputingCell", idAndAttrsArg, "ucc");
 
             jc.addCommand("getAllVolumes", noArgs, "gav");
             jc.addCommand("getVolume", idArg, "gv");
@@ -505,11 +504,6 @@ public class Main {
             for (Volume v : service.getComputingCellVolumes(id)) {
                 printObject(v);
             }
-        }
-        if (command.equals("updateComputingCell")) {
-            String id = idAndAttrsArg.getId();
-            Map<String, Object> attrs = idAndAttrsArg.getAttrs();
-            printObject(service.updateComputingCell(id, attrs));
         }
 
         // Volume.
