@@ -9,8 +9,7 @@ as a `Map` of JSON elements or `byte[]`.
 Sample Code
 -----------
 
-Here's some sample code that retrieves the list of image definitions
-from the server:
+Here's some sample code that updates the name of a billing group:
 
     String rootUri = "http://10.95.0.10";
     String macKey = "6e08558938f346038c61716ccb98dacf";
@@ -19,8 +18,18 @@ from the server:
     {@link com.brkt.client.util.BrktRestClient} client = new {@link com.brkt.client.util.BrktRestClient.Builder}(rootUri)
         .macKey(macKey).accessToken(accessToken).build();
     {@link com.brkt.client.BrktService} service = new BrktService(client);
-    for ({@link com.brkt.client.ImageDefinition} id : service.getAllImageDefinitions()) {
-        System.out.println(id);
+
+    {@link com.brkt.client.BillingGroup} engineering = null;
+    for (BillingGroup bg : service.getAllBillingGroups()) {
+        if (bg.getName().equals("Engineering")) {
+            engineering = bg;
+        }
+    }
+
+    if (engineering != null) {
+        Map<String, Object> attrs = {@link com.brkt.client.BillingGroupRequestBuilder#newUpdateRequest}
+            .name("Product Development").build();
+        service.updateBillingGroup(engineering.getId(), attrs);
     }
 
 Components
