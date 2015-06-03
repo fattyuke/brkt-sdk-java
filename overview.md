@@ -12,10 +12,14 @@ Sample Code
 Here's some sample code that retrieves the list of image definitions
 from the server:
 
-    BrktRestClient client = new BrktRestClient.Builder(args.rootUri)
-        .macKey(args.macKey).accessToken(args.token).build();
+    String rootUri = "http://10.95.0.10";
+    String macKey = "6e08558938f346038c61716ccb98dacf";
+    String accessToken = "60435a8b84104e25bbe13ad7b63f8695";
+
+    BrktRestClient client = new BrktRestClient.Builder(rootUri)
+        .macKey(macKey).accessToken(accessToken).build();
     BrktService service = new BrktService(client);
-    for (ImageDefinition id : service.getImageDefinitions) {
+    for (ImageDefinition id : service.getAllImageDefinitions()) {
         System.out.println(id);
     }
 
