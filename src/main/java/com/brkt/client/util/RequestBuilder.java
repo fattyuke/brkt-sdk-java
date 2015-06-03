@@ -11,6 +11,11 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Builds a {@code Map} of attributes that represents the request payload.
+ * Throws {@link MissingFieldsError} if the caller attempts to build a request
+ * and doesn't specify all required fields.
+ */
 public class RequestBuilder {
 
     public static class MissingFieldsError extends RuntimeException {
