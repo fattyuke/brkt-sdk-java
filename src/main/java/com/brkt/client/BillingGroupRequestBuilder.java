@@ -15,7 +15,7 @@ public class BillingGroupRequestBuilder extends RequestBuilder {
 
     private BillingGroupRequestBuilder(boolean forCreate) {
         if (forCreate) {
-            reqBuilder.requiredFields("customer", "name");
+            reqBuilder.requiredFields("name");
         }
     }
 
