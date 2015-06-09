@@ -34,7 +34,7 @@ public class InstanceRequestBuilder extends RequestBuilder {
         return new InstanceRequestBuilder(false);
     }
 
-    public InstanceRequestBuilder cloudinitId(String id) {
+    public InstanceRequestBuilder cloudInitId(String id) {
         reqBuilder.attr("cloudinit", id);
         return this;
     }

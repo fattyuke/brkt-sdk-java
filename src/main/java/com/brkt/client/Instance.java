@@ -18,6 +18,7 @@ public class Instance extends BrktResource {
     public static final String SERVICE_NAME = "service_name";
 
     private String billingGroup;
+    private String cloudinit;
     private Integer cpuCores;
     private CspImage cspImage;
     private Boolean encrypted;
@@ -42,6 +43,10 @@ public class Instance extends BrktResource {
 
     public String getBillingGroupId() {
         return billingGroup;
+    }
+
+    public String getCloudInitId() {
+        return cloudinit;
     }
 
     public Integer getCpuCores() {

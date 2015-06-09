@@ -335,6 +335,38 @@ public class BrktService {
         return post(uri, Volume.class, attrs);
     }
 
+    // CloudInit.
+    public List<CloudInit> getAllCloudInits() {
+        return get(Constants.CLOUD_INIT_ROOT, Constants.TYPE_CLOUD_INIT_LIST);
+    }
+
+    public CloudInit getCloudInit(String id) {
+        Preconditions.checkNotNull(id);
+        String uri = String.format("%s/%s", Constants.CLOUD_INIT_ROOT, id);
+        return get(uri, CloudInit.class);
+    }
+
+    public CloudInit createCloudInit(Map<String, Object> attrs) {
+        return post(Constants.CLOUD_INIT_ROOT, CloudInit.class, attrs);
+    }
+
+    public CloudInit updateCloudInit(String id, Map<String, Object> attrs) {
+        Preconditions.checkNotNull(id);
+        String uri = String.format("%s/%s", Constants.CLOUD_INIT_ROOT, id);
+        return post(uri, CloudInit.class, attrs);
+    }
+
+    public CloudInit updateCloudInit(String id, String fieldName, Object value) {
+        Map<String, Object> attrs = ImmutableMap.of(fieldName, value);
+        return updateCloudInit(id, attrs);
+    }
+
+    public CloudInit deleteCloudInit(String id) {
+        Preconditions.checkNotNull(id);
+        String uri = String.format("%s/%s", Constants.CLOUD_INIT_ROOT, id);
+        return delete(uri, CloudInit.class);
+    }
+
     // Instance.
     public List<Instance> getAllInstances() {
         return get(Constants.INSTANCE_ROOT, Constants.TYPE_INSTANCE_LIST);

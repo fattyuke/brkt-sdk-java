@@ -29,6 +29,8 @@ public class Constants {
             new TypeToken<ArrayList<ComputingCell>>() {}.getType();
     public static final Type TYPE_VOLUME_LIST =
             new TypeToken<ArrayList<Volume>>() {}.getType();
+    public static final Type TYPE_CLOUD_INIT_LIST =
+            new TypeToken<ArrayList<CloudInit>>() {}.getType();
     public static final Type TYPE_INSTANCE_LIST =
             new TypeToken<ArrayList<Instance>>() {}.getType();
     public static final Type TYPE_WORKLOAD_LIST =
@@ -37,7 +39,7 @@ public class Constants {
             new TypeToken<ArrayList<LoadBalancer>>() {}.getType();
     public static final Type TYPE_LOAD_BALANCER_LISTENER_LIST =
             new TypeToken<ArrayList<LoadBalancerListener>>() {}.getType();
-    
+
     public static final String OPERATING_SYSTEM_ROOT = "/v1/api/config/operatingsystem";
     public static final String IMAGE_DEFINITION_ROOT = "/v1/api/config/imagedefinition";
     public static final String CSP_IMAGE_ROOT = "/v1/api/config/cspimage";
@@ -49,6 +51,7 @@ public class Constants {
     public static final String SECURITY_GROUP_RULE_ROOT = "/v1/api/config/securitygrouprule";
     public static final String COMPUTING_CELL_ROOT = "/v1/api/config/computingcell";
     public static final String VOLUME_ROOT = "/v1/api/config/brktvolume";
+    public static final String CLOUD_INIT_ROOT = "/v1/api/config/cloudinit";
     public static final String INSTANCE_ROOT = "/v2/api/config/instance";
     public static final String V1_INSTANCE_ROOT = "/v1/api/config/instance";
     public static final String WORKLOAD_ROOT = "/v2/api/config/workload";
@@ -143,5 +146,9 @@ public class Constants {
 
     public enum Protocol {
         TCP, HTTP
+    }
+
+    public enum DeploymentType {
+        DEFAULT, CONFIGURED, ADVANCED
     }
 }

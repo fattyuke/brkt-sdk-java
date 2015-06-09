@@ -6,6 +6,7 @@ import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.Parameters;
 import com.brkt.client.BillingGroup;
 import com.brkt.client.BrktService;
+import com.brkt.client.CloudInit;
 import com.brkt.client.ComputingCell;
 import com.brkt.client.CspImage;
 import com.brkt.client.ImageDefinition;
@@ -236,8 +237,8 @@ public class Main {
             jc.addCommand("getImageDefinition", idArg, "gid");
             jc.addCommand("getImageDefinitionCspImages", idArg, "gidci");
 
-            jc.addCommand("getAllCspImages", noArgs, "gaci");
-            jc.addCommand("getCspImage", idArg, "gci");
+            jc.addCommand("getAllCspImages", noArgs);
+            jc.addCommand("getCspImage", idArg);
 
             jc.addCommand("getAllMachineTypes", noArgs, "gamt");
             jc.addCommand("getMachineType", idArg, "gmt");
@@ -279,6 +280,12 @@ public class Main {
             jc.addCommand("getVolumeChildren", idArg, "gvc");
             jc.addCommand("snapshotVolume", idAndAttrsArg, "sv");
             jc.addCommand("cloneVolume", idAndAttrsArg);
+
+            jc.addCommand("getAllCloudInits", noArgs, "gaci");
+            jc.addCommand("getCloudInit", idArg, "gci");
+            jc.addCommand("createCloudInit", attrsArg, "cci");
+            jc.addCommand("updateCloudInit", idAndAttrsArg, "uci");
+            jc.addCommand("deleteCloudInit", idArg, "dci");
 
             jc.addCommand("getAllInstances", noArgs, "gai");
             jc.addCommand("getInstance", idArg, "gi");
@@ -544,6 +551,30 @@ public class Main {
             String id = idAndAttrsArg.getId();
             Map<String, Object> attrs = idAndAttrsArg.getAttrs();
             printObject(service.cloneVolume(id, attrs));
+        }
+
+        // CloudInit.
+        if (command.equals("getAllCloudInits")) {
+            for (CloudInit ci : service.getAllCloudInits()) {
+                printObject(ci);
+            }
+        }
+        if (command.equals("getCloudInit")) {
+            String id = idArg.getId();
+            printObject(service.getCloudInit(id));
+        }
+        if (command.equals("createCloudInit")) {
+            Map<String, Object> attrs = attrsArg.getAttrs();
+            printObject(service.createCloudInit(attrs));
+        }
+        if (command.equals("updateCloudInit")) {
+            String id = idAndAttrsArg.getId();
+            Map<String, Object> attrs = idAndAttrsArg.getAttrs();
+            printObject(service.updateCloudInit(id, attrs));
+        }
+        if (command.equals("deleteCloudInit")) {
+            String id = idArg.getId();
+            printObject(service.deleteCloudInit(id));
         }
 
         // Instance.
