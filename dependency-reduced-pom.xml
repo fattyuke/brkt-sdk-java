@@ -55,6 +55,7 @@
           <excludePackageNames>com.google</excludePackageNames>
           <doctitle>Bracket Computing Java SDK 1.0</doctitle>
           <overview>overview.html</overview>
+          <notimestamp>true</notimestamp>
         </configuration>
       </plugin>
     </plugins>
