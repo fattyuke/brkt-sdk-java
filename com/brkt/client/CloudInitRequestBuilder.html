@@ -4,7 +4,7 @@
 <HEAD>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <TITLE>
-InstanceRequestBuilder (brkt-java-sdk 1.0-SNAPSHOT API)
+CloudInitRequestBuilder (brkt-java-sdk 1.0-SNAPSHOT API)
 </TITLE>
 
 
@@ -14,7 +14,7 @@ InstanceRequestBuilder (brkt-java-sdk 1.0-SNAPSHOT API)
 function windowTitle()
 {
     if (location.href.indexOf('is-external=true') == -1) {
-        parent.document.title="InstanceRequestBuilder (brkt-java-sdk 1.0-SNAPSHOT API)";
+        parent.document.title="CloudInitRequestBuilder (brkt-java-sdk 1.0-SNAPSHOT API)";
     }
 }
 </SCRIPT>
@@ -39,7 +39,7 @@ function windowTitle()
   <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../overview-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
   <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
-  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="class-use/InstanceRequestBuilder.html"><FONT CLASS="NavBarFont1"><B>Use</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="class-use/CloudInitRequestBuilder.html"><FONT CLASS="NavBarFont1"><B>Use</B></FONT></A>&nbsp;</TD>
   <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT CLASS="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
   <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../deprecated-list.html"><FONT CLASS="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
   <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../index-all.html"><FONT CLASS="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
@@ -54,11 +54,11 @@ function windowTitle()
 
 <TR>
 <TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="../../../com/brkt/client/InstanceReboot.html" title="class in com.brkt.client"><B>PREV CLASS</B></A>&nbsp;
-&nbsp;<A HREF="../../../com/brkt/client/LoadBalancer.html" title="class in com.brkt.client"><B>NEXT CLASS</B></A></FONT></TD>
+&nbsp;<A HREF="../../../com/brkt/client/CloudInit.html" title="class in com.brkt.client"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../com/brkt/client/ComputingCell.html" title="class in com.brkt.client"><B>NEXT CLASS</B></A></FONT></TD>
 <TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
-  <A HREF="../../../index.html?com/brkt/client/InstanceRequestBuilder.html" target="_top"><B>FRAMES</B></A>  &nbsp;
-&nbsp;<A HREF="InstanceRequestBuilder.html" target="_top"><B>NO FRAMES</B></A>  &nbsp;
+  <A HREF="../../../index.html?com/brkt/client/CloudInitRequestBuilder.html" target="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="CloudInitRequestBuilder.html" target="_top"><B>NO FRAMES</B></A>  &nbsp;
 &nbsp;<SCRIPT type="text/javascript">
   <!--
   if(window==top) {
@@ -89,20 +89,20 @@ DETAIL:&nbsp;FIELD&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_detail">METHO
 <FONT SIZE="-1">
 com.brkt.client</FONT>
 <BR>
-Class InstanceRequestBuilder</H2>
+Class CloudInitRequestBuilder</H2>
 <PRE>
 <A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">java.lang.Object</A>
   <IMG SRC="../../../resources/inherit.gif" ALT="extended by "><A HREF="../../../com/brkt/client/util/RequestBuilder.html" title="class in com.brkt.client.util">com.brkt.client.util.RequestBuilder</A>
-      <IMG SRC="../../../resources/inherit.gif" ALT="extended by "><B>com.brkt.client.InstanceRequestBuilder</B>
+      <IMG SRC="../../../resources/inherit.gif" ALT="extended by "><B>com.brkt.client.CloudInitRequestBuilder</B>
 </PRE>
 <HR>
 <DL>
-<DT><PRE>public class <B>InstanceRequestBuilder</B><DT>extends <A HREF="../../../com/brkt/client/util/RequestBuilder.html" title="class in com.brkt.client.util">RequestBuilder</A></DL>
+<DT><PRE>public class <B>CloudInitRequestBuilder</B><DT>extends <A HREF="../../../com/brkt/client/util/RequestBuilder.html" title="class in com.brkt.client.util">RequestBuilder</A></DL>
 </PRE>
 
 <P>
 Provides a type-safe way to assemble a request for creating
- or updating a instance.
+ or updating a CloudInit.
 <P>
 
 <P>
@@ -140,111 +140,79 @@ Provides a type-safe way to assemble a request for creating
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>&nbsp;<A HREF="http://docs.oracle.com/javase/6/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</A>&lt;<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>,<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&gt;</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../../../com/brkt/client/InstanceRequestBuilder.html#build()">build</A></B>()</CODE>
+<TD><CODE><B><A HREF="../../../com/brkt/client/CloudInitRequestBuilder.html#build()">build</A></B>()</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Build a <code>Map</code> that contains all of the added attributes.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>&nbsp;<A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="class in com.brkt.client">InstanceRequestBuilder</A></CODE></FONT></TD>
-<TD><CODE><B><A HREF="../../../com/brkt/client/InstanceRequestBuilder.html#cloudInitId(java.lang.String)">cloudInitId</A></B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;id)</CODE>
+<CODE>&nbsp;<A HREF="../../../com/brkt/client/CloudInitRequestBuilder.html" title="class in com.brkt.client">CloudInitRequestBuilder</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../com/brkt/client/CloudInitRequestBuilder.html#cloudConfig(java.lang.String)">cloudConfig</A></B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;cloudConfig)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>&nbsp;<A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="class in com.brkt.client">InstanceRequestBuilder</A></CODE></FONT></TD>
-<TD><CODE><B><A HREF="../../../com/brkt/client/InstanceRequestBuilder.html#description(java.lang.String)">description</A></B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;description)</CODE>
+<CODE>&nbsp;<A HREF="../../../com/brkt/client/CloudInitRequestBuilder.html" title="class in com.brkt.client">CloudInitRequestBuilder</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../com/brkt/client/CloudInitRequestBuilder.html#deploymentType(com.brkt.client.Constants.DeploymentType)">deploymentType</A></B>(<A HREF="../../../com/brkt/client/Constants.DeploymentType.html" title="enum in com.brkt.client">Constants.DeploymentType</A>&nbsp;type)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>&nbsp;<A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="class in com.brkt.client">InstanceRequestBuilder</A></CODE></FONT></TD>
-<TD><CODE><B><A HREF="../../../com/brkt/client/InstanceRequestBuilder.html#encrypted(boolean)">encrypted</A></B>(boolean&nbsp;encrypted)</CODE>
+<CODE>&nbsp;<A HREF="../../../com/brkt/client/CloudInitRequestBuilder.html" title="class in com.brkt.client">CloudInitRequestBuilder</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../com/brkt/client/CloudInitRequestBuilder.html#description(java.lang.String)">description</A></B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;description)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>&nbsp;<A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="class in com.brkt.client">InstanceRequestBuilder</A></CODE></FONT></TD>
-<TD><CODE><B><A HREF="../../../com/brkt/client/InstanceRequestBuilder.html#id(java.lang.String)">id</A></B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;id)</CODE>
+<CODE>&nbsp;<A HREF="../../../com/brkt/client/CloudInitRequestBuilder.html" title="class in com.brkt.client">CloudInitRequestBuilder</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../com/brkt/client/CloudInitRequestBuilder.html#metadata(java.util.Map)">metadata</A></B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</A>&lt;<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>,<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&gt;&nbsp;metadata)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>&nbsp;<A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="class in com.brkt.client">InstanceRequestBuilder</A></CODE></FONT></TD>
-<TD><CODE><B><A HREF="../../../com/brkt/client/InstanceRequestBuilder.html#imageDefinitionId(java.lang.String)">imageDefinitionId</A></B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;id)</CODE>
+<CODE>&nbsp;<A HREF="../../../com/brkt/client/CloudInitRequestBuilder.html" title="class in com.brkt.client">CloudInitRequestBuilder</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../com/brkt/client/CloudInitRequestBuilder.html#name(java.lang.String)">name</A></B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;name)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>&nbsp;<A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="class in com.brkt.client">InstanceRequestBuilder</A></CODE></FONT></TD>
-<TD><CODE><B><A HREF="../../../com/brkt/client/InstanceRequestBuilder.html#loadBalancerId(java.lang.String)">loadBalancerId</A></B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;id)</CODE>
+<CODE>static&nbsp;<A HREF="../../../com/brkt/client/CloudInitRequestBuilder.html" title="class in com.brkt.client">CloudInitRequestBuilder</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../com/brkt/client/CloudInitRequestBuilder.html#newCreateRequest()">newCreateRequest</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Build a request for creating a CloudInit.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;<A HREF="../../../com/brkt/client/CloudInitRequestBuilder.html" title="class in com.brkt.client">CloudInitRequestBuilder</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../com/brkt/client/CloudInitRequestBuilder.html#newUpdateRequest()">newUpdateRequest</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Build a request for updating a CloudInit.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../com/brkt/client/CloudInitRequestBuilder.html" title="class in com.brkt.client">CloudInitRequestBuilder</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../com/brkt/client/CloudInitRequestBuilder.html#userData(java.lang.String)">userData</A></B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;userData)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>&nbsp;<A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="class in com.brkt.client">InstanceRequestBuilder</A></CODE></FONT></TD>
-<TD><CODE><B><A HREF="../../../com/brkt/client/InstanceRequestBuilder.html#machineTypeId(java.lang.String)">machineTypeId</A></B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;id)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>&nbsp;<A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="class in com.brkt.client">InstanceRequestBuilder</A></CODE></FONT></TD>
-<TD><CODE><B><A HREF="../../../com/brkt/client/InstanceRequestBuilder.html#metadata(java.util.Map)">metadata</A></B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</A>&lt;<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>,<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&gt;&nbsp;metadata)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>&nbsp;<A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="class in com.brkt.client">InstanceRequestBuilder</A></CODE></FONT></TD>
-<TD><CODE><B><A HREF="../../../com/brkt/client/InstanceRequestBuilder.html#name(java.lang.String)">name</A></B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;name)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>static&nbsp;<A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="class in com.brkt.client">InstanceRequestBuilder</A></CODE></FONT></TD>
-<TD><CODE><B><A HREF="../../../com/brkt/client/InstanceRequestBuilder.html#newCreateRequest()">newCreateRequest</A></B>()</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Build a request for creating a instance.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>static&nbsp;<A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="class in com.brkt.client">InstanceRequestBuilder</A></CODE></FONT></TD>
-<TD><CODE><B><A HREF="../../../com/brkt/client/InstanceRequestBuilder.html#newUpdateRequest()">newUpdateRequest</A></B>()</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Build a request for updating a instance.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>&nbsp;<A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="class in com.brkt.client">InstanceRequestBuilder</A></CODE></FONT></TD>
-<TD><CODE><B><A HREF="../../../com/brkt/client/InstanceRequestBuilder.html#securityGroupIds(java.util.Collection)">securityGroupIds</A></B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util">Collection</A>&lt;<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&gt;&nbsp;ids)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>&nbsp;<A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="class in com.brkt.client">InstanceRequestBuilder</A></CODE></FONT></TD>
-<TD><CODE><B><A HREF="../../../com/brkt/client/InstanceRequestBuilder.html#workloadId(java.lang.String)">workloadId</A></B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;id)</CODE>
+<CODE>&nbsp;<A HREF="../../../com/brkt/client/CloudInitRequestBuilder.html" title="class in com.brkt.client">CloudInitRequestBuilder</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../com/brkt/client/CloudInitRequestBuilder.html#userScript(java.lang.String)">userScript</A></B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;userScript)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
@@ -284,9 +252,9 @@ Provides a type-safe way to assemble a request for creating
 <A NAME="newCreateRequest()"><!-- --></A><H3>
 newCreateRequest</H3>
 <PRE>
-public static <A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="class in com.brkt.client">InstanceRequestBuilder</A> <B>newCreateRequest</B>()</PRE>
+public static <A HREF="../../../com/brkt/client/CloudInitRequestBuilder.html" title="class in com.brkt.client">CloudInitRequestBuilder</A> <B>newCreateRequest</B>()</PRE>
 <DL>
-<DD>Build a request for creating a instance.
+<DD>Build a request for creating a CloudInit.
 <P>
 <DD><DL>
 </DL>
@@ -297,9 +265,9 @@ public static <A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" tit
 <A NAME="newUpdateRequest()"><!-- --></A><H3>
 newUpdateRequest</H3>
 <PRE>
-public static <A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="class in com.brkt.client">InstanceRequestBuilder</A> <B>newUpdateRequest</B>()</PRE>
+public static <A HREF="../../../com/brkt/client/CloudInitRequestBuilder.html" title="class in com.brkt.client">CloudInitRequestBuilder</A> <B>newUpdateRequest</B>()</PRE>
 <DL>
-<DD>Build a request for updating a instance.
+<DD>Build a request for updating a CloudInit.
 <P>
 <DD><DL>
 </DL>
@@ -307,10 +275,21 @@ public static <A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" tit
 </DL>
 <HR>
 
-<A NAME="cloudInitId(java.lang.String)"><!-- --></A><H3>
-cloudInitId</H3>
+<A NAME="cloudConfig(java.lang.String)"><!-- --></A><H3>
+cloudConfig</H3>
 <PRE>
-public <A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="class in com.brkt.client">InstanceRequestBuilder</A> <B>cloudInitId</B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;id)</PRE>
+public <A HREF="../../../com/brkt/client/CloudInitRequestBuilder.html" title="class in com.brkt.client">CloudInitRequestBuilder</A> <B>cloudConfig</B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;cloudConfig)</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="deploymentType(com.brkt.client.Constants.DeploymentType)"><!-- --></A><H3>
+deploymentType</H3>
+<PRE>
+public <A HREF="../../../com/brkt/client/CloudInitRequestBuilder.html" title="class in com.brkt.client">CloudInitRequestBuilder</A> <B>deploymentType</B>(<A HREF="../../../com/brkt/client/Constants.DeploymentType.html" title="enum in com.brkt.client">Constants.DeploymentType</A>&nbsp;type)</PRE>
 <DL>
 <DD><DL>
 </DL>
@@ -321,62 +300,7 @@ public <A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="cla
 <A NAME="description(java.lang.String)"><!-- --></A><H3>
 description</H3>
 <PRE>
-public <A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="class in com.brkt.client">InstanceRequestBuilder</A> <B>description</B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;description)</PRE>
-<DL>
-<DD><DL>
-</DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="encrypted(boolean)"><!-- --></A><H3>
-encrypted</H3>
-<PRE>
-public <A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="class in com.brkt.client">InstanceRequestBuilder</A> <B>encrypted</B>(boolean&nbsp;encrypted)</PRE>
-<DL>
-<DD><DL>
-</DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="id(java.lang.String)"><!-- --></A><H3>
-id</H3>
-<PRE>
-public <A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="class in com.brkt.client">InstanceRequestBuilder</A> <B>id</B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;id)</PRE>
-<DL>
-<DD><DL>
-</DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="imageDefinitionId(java.lang.String)"><!-- --></A><H3>
-imageDefinitionId</H3>
-<PRE>
-public <A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="class in com.brkt.client">InstanceRequestBuilder</A> <B>imageDefinitionId</B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;id)</PRE>
-<DL>
-<DD><DL>
-</DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="loadBalancerId(java.lang.String)"><!-- --></A><H3>
-loadBalancerId</H3>
-<PRE>
-public <A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="class in com.brkt.client">InstanceRequestBuilder</A> <B>loadBalancerId</B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;id)</PRE>
-<DL>
-<DD><DL>
-</DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="machineTypeId(java.lang.String)"><!-- --></A><H3>
-machineTypeId</H3>
-<PRE>
-public <A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="class in com.brkt.client">InstanceRequestBuilder</A> <B>machineTypeId</B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;id)</PRE>
+public <A HREF="../../../com/brkt/client/CloudInitRequestBuilder.html" title="class in com.brkt.client">CloudInitRequestBuilder</A> <B>description</B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;description)</PRE>
 <DL>
 <DD><DL>
 </DL>
@@ -387,7 +311,7 @@ public <A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="cla
 <A NAME="metadata(java.util.Map)"><!-- --></A><H3>
 metadata</H3>
 <PRE>
-public <A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="class in com.brkt.client">InstanceRequestBuilder</A> <B>metadata</B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</A>&lt;<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>,<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&gt;&nbsp;metadata)</PRE>
+public <A HREF="../../../com/brkt/client/CloudInitRequestBuilder.html" title="class in com.brkt.client">CloudInitRequestBuilder</A> <B>metadata</B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</A>&lt;<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>,<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&gt;&nbsp;metadata)</PRE>
 <DL>
 <DD><DL>
 </DL>
@@ -398,7 +322,7 @@ public <A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="cla
 <A NAME="name(java.lang.String)"><!-- --></A><H3>
 name</H3>
 <PRE>
-public <A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="class in com.brkt.client">InstanceRequestBuilder</A> <B>name</B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;name)</PRE>
+public <A HREF="../../../com/brkt/client/CloudInitRequestBuilder.html" title="class in com.brkt.client">CloudInitRequestBuilder</A> <B>name</B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;name)</PRE>
 <DL>
 <DD><DL>
 </DL>
@@ -406,10 +330,10 @@ public <A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="cla
 </DL>
 <HR>
 
-<A NAME="securityGroupIds(java.util.Collection)"><!-- --></A><H3>
-securityGroupIds</H3>
+<A NAME="userData(java.lang.String)"><!-- --></A><H3>
+userData</H3>
 <PRE>
-public <A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="class in com.brkt.client">InstanceRequestBuilder</A> <B>securityGroupIds</B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util">Collection</A>&lt;<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&gt;&nbsp;ids)</PRE>
+public <A HREF="../../../com/brkt/client/CloudInitRequestBuilder.html" title="class in com.brkt.client">CloudInitRequestBuilder</A> <B>userData</B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;userData)</PRE>
 <DL>
 <DD><DL>
 </DL>
@@ -417,10 +341,10 @@ public <A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="cla
 </DL>
 <HR>
 
-<A NAME="workloadId(java.lang.String)"><!-- --></A><H3>
-workloadId</H3>
+<A NAME="userScript(java.lang.String)"><!-- --></A><H3>
+userScript</H3>
 <PRE>
-public <A HREF="../../../com/brkt/client/InstanceRequestBuilder.html" title="class in com.brkt.client">InstanceRequestBuilder</A> <B>workloadId</B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;id)</PRE>
+public <A HREF="../../../com/brkt/client/CloudInitRequestBuilder.html" title="class in com.brkt.client">CloudInitRequestBuilder</A> <B>userScript</B>(<A HREF="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;userScript)</PRE>
 <DL>
 <DD><DL>
 </DL>
@@ -460,7 +384,7 @@ public <A HREF="http://docs.oracle.com/javase/6/docs/api/java/util/Map.html?is-e
   <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../overview-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
   <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
-  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="class-use/InstanceRequestBuilder.html"><FONT CLASS="NavBarFont1"><B>Use</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="class-use/CloudInitRequestBuilder.html"><FONT CLASS="NavBarFont1"><B>Use</B></FONT></A>&nbsp;</TD>
   <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT CLASS="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
   <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../deprecated-list.html"><FONT CLASS="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
   <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../index-all.html"><FONT CLASS="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
@@ -475,11 +399,11 @@ public <A HREF="http://docs.oracle.com/javase/6/docs/api/java/util/Map.html?is-e
 
 <TR>
 <TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="../../../com/brkt/client/InstanceReboot.html" title="class in com.brkt.client"><B>PREV CLASS</B></A>&nbsp;
-&nbsp;<A HREF="../../../com/brkt/client/LoadBalancer.html" title="class in com.brkt.client"><B>NEXT CLASS</B></A></FONT></TD>
+&nbsp;<A HREF="../../../com/brkt/client/CloudInit.html" title="class in com.brkt.client"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../com/brkt/client/ComputingCell.html" title="class in com.brkt.client"><B>NEXT CLASS</B></A></FONT></TD>
 <TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
-  <A HREF="../../../index.html?com/brkt/client/InstanceRequestBuilder.html" target="_top"><B>FRAMES</B></A>  &nbsp;
-&nbsp;<A HREF="InstanceRequestBuilder.html" target="_top"><B>NO FRAMES</B></A>  &nbsp;
+  <A HREF="../../../index.html?com/brkt/client/CloudInitRequestBuilder.html" target="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="CloudInitRequestBuilder.html" target="_top"><B>NO FRAMES</B></A>  &nbsp;
 &nbsp;<SCRIPT type="text/javascript">
   <!--
   if(window==top) {
