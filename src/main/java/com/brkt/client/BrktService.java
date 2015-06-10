@@ -33,13 +33,11 @@ public class BrktService {
      */
     public static class RuntimeHttpError extends RuntimeException {
         public final int status;
-        public final String message;
         public final byte[] payload;
 
         public RuntimeHttpError(BrktRestClient.HttpError cause) {
-            super(cause);
+            super(cause.getMessage(), cause);
             this.status = cause.status;
-            this.message = cause.message;
             this.payload = cause.payload;
         }
     }

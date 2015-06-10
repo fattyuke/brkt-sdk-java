@@ -70,12 +70,22 @@ public class BrktRestClient {
      * Thrown when the server returns an unsuccessful HTTP status code.
      */
     public static class HttpError extends Exception {
+        /**
+         * The HTTP status code returned by the server.
+         */
         public final int status;
+
+        /**
+         * The message from the status line returned by the server.
+         */
         public final String message;
+
+        /**
+         * The payload returned by the server.
+         */
         public final byte[] payload;
 
         public HttpError(int status, String message, byte[] payload) {
-            super("" + status + " " + message);
             this.status = status;
             this.message = message;
             if (payload == null) {
@@ -83,6 +93,20 @@ public class BrktRestClient {
             } else {
                 this.payload = payload;
             }
+        }
+
+        @Override
+        public String getMessage() {
+            StringBuilder buf = new StringBuilder().append(status).append(' ').append(message);
+
+            // The payload doesn't provide anything useful for 404.
+            if (status != 404 && payload.length > 0) {
+                buf.append(' ').append(new String(payload));
+                if (buf.length() <= 200) {
+                    return buf.toString();
+                }
+            }
+            return buf.substring(0, 200) + "...";
         }
     }
 

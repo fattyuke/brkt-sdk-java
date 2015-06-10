@@ -694,10 +694,7 @@ public class Main {
         try {
             new Main().run(args);
         } catch (BrktService.RuntimeHttpError e) {
-            System.err.println(String.format("%d %s", e.status, e.message));
-            if (e.status != 404 && e.payload.length > 0) {
-                System.err.println(new String(e.payload));
-            }
+            System.err.println(e.getMessage());
             System.exit(1);
         }
     }
