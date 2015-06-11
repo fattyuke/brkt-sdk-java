@@ -97,14 +97,17 @@ public class BrktRestClient {
 
         @Override
         public String getMessage() {
-            StringBuilder buf = new StringBuilder().append(status).append(' ').append(message);
+            StringBuilder buf = new StringBuilder().append(status);
+            if (message != null) {
+                buf.append(' ').append(message);
+            }
 
             // The payload doesn't provide anything useful for 404.
             if (status != 404 && payload.length > 0) {
                 buf.append(' ').append(new String(payload));
-                if (buf.length() <= 200) {
-                    return buf.toString();
-                }
+            }
+            if (buf.length() <= 200) {
+                return buf.toString();
             }
             return buf.substring(0, 200) + "...";
         }

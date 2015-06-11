@@ -32,4 +32,29 @@ public class TestBrktRestClient {
         String iso8601 = jsonObj.get("timestamp").getAsString();
         assertEquals("2015-03-31T22:34:51.270Z", iso8601); // JodaTime doesn't handle nanoseconds.
     }
+
+    @Test
+    public void testHttpErrorMessage() {
+        // Null message.
+        BrktRestClient.HttpError error = new BrktRestClient.HttpError(400, null, null);
+        assertEquals("400", error.getMessage());
+
+        // Short message, no payload.
+        error = new BrktRestClient.HttpError(400, "Short message", null);
+        assertEquals("400 Short message", error.getMessage());
+
+        // Short message, payload.
+        error = new BrktRestClient.HttpError(400, "Short message", "{ 1: 2 }".getBytes());
+        assertEquals("400 Short message { 1: 2 }", error.getMessage());
+
+        // Long message.
+        byte[] payload = new byte[200];
+        for (int i = 0; i < 200; i++) {
+            payload[i] = 'x';
+        }
+        error = new BrktRestClient.HttpError(400, "Short message", payload);
+        String expected = "400 Short message " + new String(payload);
+        expected = expected.substring(0, 200) + "...";
+        assertEquals(expected, error.getMessage());
+    }
 }
