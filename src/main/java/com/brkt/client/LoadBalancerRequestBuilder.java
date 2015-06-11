@@ -12,26 +12,6 @@ public class LoadBalancerRequestBuilder extends RequestBuilder {
 
     private final RequestBuilder reqBuilder = new RequestBuilder();
 
-    private LoadBalancerRequestBuilder(boolean forCreate) {
-        if (forCreate) {
-            reqBuilder.requiredFields("name", "security_group", "workload");
-        }
-    }
-
-    /**
-     * Build a request for creating a load balancer.
-     */
-    public static LoadBalancerRequestBuilder newCreateRequest() {
-        return new LoadBalancerRequestBuilder(true);
-    }
-
-    /**
-     * Build a request for updating a load balancer.
-     */
-    public static LoadBalancerRequestBuilder newUpdateRequest() {
-        return new LoadBalancerRequestBuilder(false);
-    }
-
     public LoadBalancerRequestBuilder description(String description) {
         reqBuilder.attr("description", description);
         return this;

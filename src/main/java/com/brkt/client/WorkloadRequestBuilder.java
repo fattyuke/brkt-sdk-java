@@ -14,26 +14,6 @@ public class WorkloadRequestBuilder extends RequestBuilder {
 
     private final RequestBuilder reqBuilder = new RequestBuilder();
 
-    private WorkloadRequestBuilder(boolean forCreate) {
-        if (forCreate) {
-            reqBuilder.requiredFields("billing_group", "name", "zone");
-        }
-    }
-
-    /**
-     * Build a request for creating a workload.
-     */
-    public static WorkloadRequestBuilder newCreateRequest() {
-        return new WorkloadRequestBuilder(true);
-    }
-
-    /**
-     * Build a request for updating a workload.
-     */
-    public static WorkloadRequestBuilder newUpdateRequest() {
-        return new WorkloadRequestBuilder(false);
-    }
-
     public WorkloadRequestBuilder billingGroupId(String id) {
         reqBuilder.attr("billing_group", id);
         return this;

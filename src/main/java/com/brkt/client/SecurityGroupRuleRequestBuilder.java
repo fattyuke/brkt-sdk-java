@@ -13,26 +13,6 @@ public class SecurityGroupRuleRequestBuilder extends RequestBuilder {
 
     private final RequestBuilder reqBuilder = new RequestBuilder();
 
-    private SecurityGroupRuleRequestBuilder(boolean forCreate) {
-        if (forCreate) {
-            reqBuilder.requiredFields("ip_proto", "port_range_from", "port_range_to");
-        }
-    }
-
-    /**
-     * Build a request for creating a security group rule.
-     */
-    public static SecurityGroupRuleRequestBuilder newCreateRequest() {
-        return new SecurityGroupRuleRequestBuilder(true);
-    }
-
-    /**
-     * Build a request for updating a security group rule.
-     */
-    public static SecurityGroupRuleRequestBuilder newUpdateRequest() {
-        return new SecurityGroupRuleRequestBuilder(false);
-    }
-
     public SecurityGroupRuleRequestBuilder cidrIp(String cidrIp) {
         reqBuilder.attr("cidr_ip", cidrIp);
         return this;
