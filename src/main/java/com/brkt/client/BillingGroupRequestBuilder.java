@@ -13,26 +13,6 @@ public class BillingGroupRequestBuilder extends RequestBuilder {
 
     private final RequestBuilder reqBuilder = new RequestBuilder();
 
-    private BillingGroupRequestBuilder(boolean forCreate) {
-        if (forCreate) {
-            reqBuilder.requiredFields("name");
-        }
-    }
-
-    /**
-     * Build a request for creating a billing group.
-     */
-    public static BillingGroupRequestBuilder newCreateRequest() {
-        return new BillingGroupRequestBuilder(true);
-    }
-
-    /**
-     * Build a request for updating a billing group.
-     */
-    public static BillingGroupRequestBuilder newUpdateRequest() {
-        return new BillingGroupRequestBuilder(false);
-    }
-
     public BillingGroupRequestBuilder description(String description) {
         reqBuilder.attr("description", description);
         return this;

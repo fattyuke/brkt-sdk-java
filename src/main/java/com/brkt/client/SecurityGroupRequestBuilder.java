@@ -12,26 +12,6 @@ public class SecurityGroupRequestBuilder extends RequestBuilder {
 
     private final RequestBuilder reqBuilder = new RequestBuilder();
 
-    private SecurityGroupRequestBuilder(boolean forCreate) {
-        if (forCreate) {
-            reqBuilder.requiredFields("customer", "name");
-        }
-    }
-
-    /**
-     * Build a request for creating a security group.
-     */
-    public static SecurityGroupRequestBuilder newCreateRequest() {
-        return new SecurityGroupRequestBuilder(true);
-    }
-
-    /**
-     * Build a request for updating a security group.
-     */
-    public static SecurityGroupRequestBuilder newUpdateRequest() {
-        return new SecurityGroupRequestBuilder(false);
-    }
-
     public SecurityGroupRequestBuilder description(String description) {
         reqBuilder.attr("description", description);
         return this;

@@ -14,26 +14,6 @@ public class InstanceRequestBuilder extends RequestBuilder {
 
     private final RequestBuilder reqBuilder = new RequestBuilder();
 
-    private InstanceRequestBuilder(boolean forCreate) {
-        if (forCreate) {
-            reqBuilder.requiredFields("image_definition", "machine_type", "name", "workload");
-        }
-    }
-
-    /**
-     * Build a request for creating a instance.
-     */
-    public static InstanceRequestBuilder newCreateRequest() {
-        return new InstanceRequestBuilder(true);
-    }
-
-    /**
-     * Build a request for updating a instance.
-     */
-    public static InstanceRequestBuilder newUpdateRequest() {
-        return new InstanceRequestBuilder(false);
-    }
-
     public InstanceRequestBuilder cloudInitId(String id) {
         reqBuilder.attr("cloudinit", id);
         return this;
@@ -91,9 +71,6 @@ public class InstanceRequestBuilder extends RequestBuilder {
 
     /**
      * Build a {@code Map} that contains all of the added attributes.
-     *
-     * @throws com.brkt.client.util.RequestBuilder.MissingFieldsError
-     * if any required fields are missing
      */
     public Map<String, Object> build() {
         return reqBuilder.build();

@@ -13,26 +13,6 @@ public class VolumeRequestBuilder extends RequestBuilder {
 
     private final RequestBuilder reqBuilder = new RequestBuilder();
 
-    private VolumeRequestBuilder(boolean forCreate) {
-        if (forCreate) {
-            reqBuilder.requiredFields("billing_group", "computing_cell", "name", "iops", "size_in_gb");
-        }
-    }
-
-    /**
-     * Build a request for creating a volume.
-     */
-    public static VolumeRequestBuilder newCreateRequest() {
-        return new VolumeRequestBuilder(true);
-    }
-
-    /**
-     * Build a request for updating a volume.
-     */
-    public static VolumeRequestBuilder newUpdateRequest() {
-        return new VolumeRequestBuilder(false);
-    }
-
     public VolumeRequestBuilder autoSnapshotDurationDays(int days) {
         reqBuilder.attr("auto_snapshot_duration_days", days);
         return this;
