@@ -405,7 +405,7 @@ public class BrktService {
 
     public InstanceReboot rebootInstance(String instanceId) {
         Preconditions.checkNotNull(instanceId);
-        String uri = String.format("%s/%s/reboot", Constants.INSTANCE_ROOT, instanceId);
+        String uri = String.format("%s/%s/reboot", Constants.V1_INSTANCE_ROOT, instanceId);
         return post(uri, InstanceReboot.class, null);
     }
 
