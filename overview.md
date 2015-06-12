@@ -1,6 +1,3 @@
-Intro
------
-
 The **Bracket Java SDK** is a Java library for interacting with the Bracket
 REST API.  The caller has the flexibility of making high-level calls that
 return Java objects, or lower-level calls that return the response payload
