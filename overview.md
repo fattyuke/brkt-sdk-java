@@ -27,7 +27,7 @@ Here's some sample code that updates the name of a billing group:
     }
 
     if (engineering != null) {
-        Map<String, Object> attrs = {@link com.brkt.client.BillingGroupRequestBuilder#newUpdateRequest}
+        Map<String, Object> attrs = new {@link com.brkt.client.BillingGroupRequestBuilder}()
             .name("Product Development").build();
         service.updateBillingGroup(engineering.getId(), attrs);
     }

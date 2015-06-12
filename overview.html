@@ -28,7 +28,7 @@ for (BillingGroup bg : service.getAllBillingGroups()) {
 }
 
 if (engineering != null) {
-    Map&lt;String, Object&gt; attrs = {@link com.brkt.client.BillingGroupRequestBuilder#newUpdateRequest}
+    Map&lt;String, Object&gt; attrs = new {@link com.brkt.client.BillingGroupRequestBuilder}()
         .name("Product Development").build();
     service.updateBillingGroup(engineering.getId(), attrs);
 }

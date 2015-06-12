@@ -43,6 +43,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.10.3</version>
         <executions>
           <execution>
             <id>attach-javadocs</id>
@@ -56,6 +57,10 @@
           <doctitle>Bracket Computing Java SDK 1.0</doctitle>
           <overview>overview.html</overview>
           <notimestamp>true</notimestamp>
+          <additionalparam>-Xdoclint:accessibility</additionalparam>
+          <additionalparam>-Xdoclint:html</additionalparam>
+          <additionalparam>-Xdoclint:syntax</additionalparam>
+          <additionalparam>-Xdoclint:reference</additionalparam>
         </configuration>
       </plugin>
     </plugins>

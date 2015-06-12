@@ -53,11 +53,18 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.3</version>
                 <configuration>
                     <excludePackageNames>com.google</excludePackageNames>
                     <doctitle>Bracket Computing Java SDK 1.0</doctitle>
                     <overview>overview.html</overview>
                     <notimestamp>true</notimestamp>
+                    <!-- Check all lint groups except "missing".  This avoids warnings for
+                        method arguments that don't specify @param. -->
+                    <additionalparam>-Xdoclint:accessibility</additionalparam>
+                    <additionalparam>-Xdoclint:html</additionalparam>
+                    <additionalparam>-Xdoclint:syntax</additionalparam>
+                    <additionalparam>-Xdoclint:reference</additionalparam>
                 </configuration>
                 <executions>
                     <execution>

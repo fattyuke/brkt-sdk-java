@@ -8,7 +8,7 @@ import java.util.Map;
  * Provides a type-safe way to assemble a request for creating
  * or updating a load balancer listener.
  */
-public class LoadBalancerListenerRequestBuilder extends RequestBuilder {
+public class LoadBalancerListenerRequestBuilder {
 
     private final RequestBuilder reqBuilder = new RequestBuilder();
 
@@ -59,9 +59,6 @@ public class LoadBalancerListenerRequestBuilder extends RequestBuilder {
 
     /**
      * Build a {@code Map} that contains all of the added attributes.
-     *
-     * @throws com.brkt.client.util.RequestBuilder.MissingFieldsError
-     * if any required fields are missing
      */
     public Map<String, Object> build() {
         return reqBuilder.build();

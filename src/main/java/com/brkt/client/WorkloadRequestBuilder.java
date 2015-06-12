@@ -66,9 +66,6 @@ public class WorkloadRequestBuilder extends RequestBuilder {
 
     /**
      * Build a {@code Map} that contains all of the added attributes.
-     *
-     * @throws com.brkt.client.util.RequestBuilder.MissingFieldsError
-     * if any required fields are missing
      */
     public Map<String, Object> build() {
         return reqBuilder.build();

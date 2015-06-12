@@ -8,7 +8,7 @@ import java.util.Map;
  * Provides a type-safe way to assemble a request for creating
  * or updating a load balancer.
  */
-public class LoadBalancerRequestBuilder extends RequestBuilder {
+public class LoadBalancerRequestBuilder {
 
     private final RequestBuilder reqBuilder = new RequestBuilder();
 
@@ -64,9 +64,6 @@ public class LoadBalancerRequestBuilder extends RequestBuilder {
 
     /**
      * Build a {@code Map} that contains all of the added attributes.
-     *
-     * @throws com.brkt.client.util.RequestBuilder.MissingFieldsError
-     * if any required fields are missing
      */
     public Map<String, Object> build() {
         return reqBuilder.build();
