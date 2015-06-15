@@ -1,0 +1,14 @@
+   =========================================================================
+   ==  Example NOTICE file for use with the Apache License, Version 2.0,  ==
+   ==  in this case for the Apache httpd-2.0 distribution.                ==
+   =========================================================================
+
+   Bracket Computing Java SDK
+   Copyright 2015 Bracket Computing, Inc. All Rights Reserved.
+
+   This product includes software developed at
+   Bracket Computing, Inc. (http://www.brkt.com/).
+
+   This software contains code derived from Google Guava Core Libraries for
+   Java.  The Google Guava source was modified, in order to remove
+   dependencies on unused portions of the Guava library.
