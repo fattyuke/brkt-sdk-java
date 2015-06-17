@@ -18,6 +18,7 @@ package com.brkt.client;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
+import com.beust.jcommander.ParameterException;
 import com.brkt.client.util.BrktRestClient;
 import com.google.common.collect.Lists;
 
@@ -26,6 +27,8 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -58,7 +61,7 @@ public class IntegrationTest {
         jc.parse(stringArgs);
 
         if (args.help) {
-            jc.setProgramName("integration-test");
+            jc.setProgramName("run-integration-test");
             jc.usage();
             System.exit(0);
         }
@@ -84,6 +87,12 @@ public class IntegrationTest {
         for (BillingGroup group : service.getAllBillingGroups()) {
             if (group.getName().startsWith(PREFIX)) {
                 service.deleteBillingGroup(group.getId());
+            }
+        }
+        for (SecurityGroup sg : service.getAllSecurityGroups()) {
+            if (sg.getName().startsWith(PREFIX) &&
+                    sg.getRequestedState() != Constants.RequestedState.DELETED) {
+                service.deleteSecurityGroup(sg.getId());
             }
         }
     }
@@ -215,6 +224,95 @@ public class IntegrationTest {
         }
     }
 
+    private void testNetwork() {
+        System.out.println("Testing network.");
+
+        Network network = service.getAllNetworks().get(0);
+        ComputingCell cc = service.getComputingCell(network.getComputingCellId());
+        assertNotNull(cc);
+        assertEquals(Constants.RequestedState.AVAILABLE, network.getRequestedState());
+        String id = network.getId();
+        assertEquals(id, service.getNetwork(id).getId());
+
+        List<Zone> zones = service.getNetworkZones(network.getId());
+        assertFalse(zones.isEmpty());
+    }
+
+    private void testZone() {
+        System.out.println("Testing zone.");
+
+        Zone zone = service.getAllZones().get(0);
+        assertNotNull(service.getNetwork(zone.getNetworkId()));
+    }
+
+    private void testSecurityGroupRule(String groupId) {
+        // Create.
+        Map<String, Object> attrs = new SecurityGroupRuleRequestBuilder()
+                .srcSecurityGroupId(groupId)
+                .ipProto("tcp")
+                .portRangeFrom(2000)
+                .portRangeTo(2100).build();
+        SecurityGroupRule rule = service.createSecurityGroupRule(groupId, attrs);
+        String id = rule.getId();
+
+        // Get.
+        assertEquals(id, service.getSecurityGroupRule(id).getId());
+        boolean found = false;
+        List<SecurityGroupRule> rules = service.getRulesForSecurityGroup(groupId);
+        assertEquals(1, rules.size());
+        assertEquals(id, rules.get(0).getId());
+
+        // Update.
+        String description = "Describe this rule";
+        attrs = new SecurityGroupRuleRequestBuilder().description(description).build();
+        rule = service.updateSecurityGroupRule(rule.getId(), attrs);
+        assertEquals(description, rule.getDescription());
+
+        // Delete.
+        service.deleteSecurityGroupRule(id);
+        try {
+            service.getSecurityGroupRule(id);
+            fail("RuntimeHttpError was not thrown");
+        } catch (BrktService.RuntimeHttpError e) {
+            assertEquals(404, e.status);
+        }
+    }
+
+    private void testSecurityGroup() {
+        System.out.println("Testing security group.");
+
+        Network network = service.getAllNetworks().get(0);
+
+        // Create.
+        String name = PREFIX + " security group";
+        Map<String, Object> attrs = new SecurityGroupRequestBuilder().name(name).build();
+        SecurityGroup group = service.createSecurityGroup(network.getId(), attrs);
+        assertEquals(Constants.RequestedState.AVAILABLE, group.getRequestedState());
+        String id = group.getId();
+
+        // Get.
+        assertEquals(id, service.getSecurityGroup(id).getId());
+        boolean found = false;
+        for (SecurityGroup sg : service.getAllSecurityGroups()) {
+            if (sg.getId().equals(id)) {
+                found = true;
+            }
+        }
+        assertTrue(found);
+
+        // Update.
+        String description = "Describe this security group";
+        attrs = new SecurityGroupRequestBuilder().description(description).build();
+        group = service.updateSecurityGroup(id, attrs);
+        assertEquals(description, group.getDescription());
+
+        testSecurityGroupRule(id);
+
+        // Delete.
+        group = service.deleteSecurityGroup(id);
+        assertEquals(Constants.RequestedState.DELETED, group.getRequestedState());
+    }
+
     private void testComputingCell() {
         System.out.println("Testing computing cell.");
         List<ComputingCell> computingCells = service.getAllComputingCells();
@@ -223,7 +321,14 @@ public class IntegrationTest {
     }
 
     public static void main(String[] stringArgs) {
-        Arguments args = parseArgs(stringArgs);
+        Arguments args = null;
+        try {
+            args = parseArgs(stringArgs);
+        } catch (ParameterException e) {
+            System.err.println(e.getMessage());
+            System.exit(1);
+        }
+
         BrktRestClient client = new BrktRestClient.Builder(args.rootUri)
                 .accessToken(args.token).macKey(args.macKey).build();
         BrktService service = new BrktService(client);
@@ -235,8 +340,11 @@ public class IntegrationTest {
         test.testImageDefinition();
         test.testCspImage();
         test.testMachineType();
-        test.testComputingCell();
         test.testBillingGroup();
+        test.testNetwork();
+        test.testZone();
+        test.testSecurityGroup();
+        test.testComputingCell();
 
         test.cleanUp();
 
