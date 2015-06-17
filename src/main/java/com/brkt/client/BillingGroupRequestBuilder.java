@@ -29,6 +29,11 @@ public class BillingGroupRequestBuilder {
 
     private final RequestBuilder reqBuilder = new RequestBuilder();
 
+    public BillingGroupRequestBuilder customerId(String id) {
+        reqBuilder.attr("customer", id);
+        return this;
+    }
+
     public BillingGroupRequestBuilder description(String description) {
         reqBuilder.attr("description", description);
         return this;
