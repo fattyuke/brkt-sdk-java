@@ -19,6 +19,7 @@ package com.brkt.client;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
+import com.brkt.client.Constants.RequestedState;
 import com.brkt.client.util.BrktRestClient;
 import com.google.common.collect.Lists;
 
@@ -28,7 +29,6 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -37,7 +37,6 @@ public class IntegrationTest {
     private static final String PREFIX = "Integration Test";
 
     private final BrktService service;
-    private ComputingCell computingCell;
 
     static class Arguments {
         @Parameter(description = "http[s]://example.com[:port]")
@@ -84,6 +83,12 @@ public class IntegrationTest {
      * previous failed test run.
      */
     private void cleanUp() {
+        for (Volume v : service.getAllVolumes()) {
+            if (v.getName().startsWith(PREFIX) &&
+                    v.getRequestedState() != RequestedState.DELETED) {
+                service.deleteVolume(v.getId());
+            }
+        }
         for (BillingGroup group : service.getAllBillingGroups()) {
             if (group.getName().startsWith(PREFIX)) {
                 service.deleteBillingGroup(group.getId());
@@ -91,7 +96,7 @@ public class IntegrationTest {
         }
         for (SecurityGroup sg : service.getAllSecurityGroups()) {
             if (sg.getName().startsWith(PREFIX) &&
-                    sg.getRequestedState() != Constants.RequestedState.DELETED) {
+                    sg.getRequestedState() != RequestedState.DELETED) {
                 service.deleteSecurityGroup(sg.getId());
             }
         }
@@ -230,7 +235,7 @@ public class IntegrationTest {
         Network network = service.getAllNetworks().get(0);
         ComputingCell cc = service.getComputingCell(network.getComputingCellId());
         assertNotNull(cc);
-        assertEquals(Constants.RequestedState.AVAILABLE, network.getRequestedState());
+        assertEquals(RequestedState.AVAILABLE, network.getRequestedState());
         String id = network.getId();
         assertEquals(id, service.getNetwork(id).getId());
 
@@ -287,7 +292,7 @@ public class IntegrationTest {
         String name = PREFIX + " security group";
         Map<String, Object> attrs = new SecurityGroupRequestBuilder().name(name).build();
         SecurityGroup group = service.createSecurityGroup(network.getId(), attrs);
-        assertEquals(Constants.RequestedState.AVAILABLE, group.getRequestedState());
+        assertEquals(RequestedState.AVAILABLE, group.getRequestedState());
         String id = group.getId();
 
         // Get.
@@ -310,14 +315,59 @@ public class IntegrationTest {
 
         // Delete.
         group = service.deleteSecurityGroup(id);
-        assertEquals(Constants.RequestedState.DELETED, group.getRequestedState());
+        assertEquals(RequestedState.DELETED, group.getRequestedState());
     }
 
     private void testComputingCell() {
         System.out.println("Testing computing cell.");
-        List<ComputingCell> computingCells = service.getAllComputingCells();
-        assertFalse(computingCells.isEmpty());
-        computingCell = computingCells.get(0);
+        ComputingCell cc = service.getAllComputingCells().get(0);
+        assertEquals(RequestedState.AVAILABLE, cc.getRequestedState());
+        String id = cc.getId();
+        assertEquals(id, service.getComputingCell(id).getId());
+
+        // Just make sure that the endpoint is valid.
+        service.getComputingCellVolumes(id);
+    }
+
+    public void testVolume(ComputingCell cell, BillingGroup group) {
+        System.out.println("Testing volume.");
+
+        // Create.
+        String name = PREFIX + " volume";
+        Map<String, Object> attrs = new VolumeRequestBuilder()
+                .computingCellId(cell.getId())
+                .billingGroupId(group.getId())
+                .iops(100)
+                .sizeInGb(10)
+                .name(name).build();
+        Volume volume = service.createVolume(attrs);
+        assertEquals(cell.getId(), volume.getComputingCellId());
+        assertEquals(group.getId(), volume.getBillingGroupId());
+        assertEquals(100, volume.getIops().intValue());
+        assertEquals(10, volume.getSizeInGb().intValue());
+        assertEquals(name, volume.getName());
+        assertEquals(RequestedState.AVAILABLE, volume.getRequestedState());
+
+        // Get.
+        String id = volume.getId();
+        assertEquals(id, service.getVolume(id).getId());
+        boolean found = false;
+        for (Volume v : service.getAllVolumes()) {
+            if (v.getId().equals(id)) {
+                found = true;
+            }
+        }
+        assertTrue(found);
+
+        // Update.
+        String description = "Describe this volume";
+        attrs = new VolumeRequestBuilder().description(description).build();
+        volume = service.updateVolume(id, attrs);
+        assertEquals(description, volume.getDescription());
+
+        // Delete.
+        volume = service.deleteVolume(id);
+        assertEquals(RequestedState.DELETED, volume.getRequestedState());
     }
 
     public static void main(String[] stringArgs) {
@@ -334,6 +384,15 @@ public class IntegrationTest {
         BrktService service = new BrktService(client);
         IntegrationTest test = new IntegrationTest(service);
 
+        // Verify required resources.
+        ComputingCell cell = null;
+        List<ComputingCell> cells = service.getAllComputingCells();
+        if (cells.isEmpty()) {
+            System.err.println("No computing cells found.");
+            System.exit(1);
+        }
+        cell = cells.get(0);
+
         test.cleanUp();
 
         test.testOperatingSystem();
@@ -345,6 +404,15 @@ public class IntegrationTest {
         test.testZone();
         test.testSecurityGroup();
         test.testComputingCell();
+
+        // Create a billing group for new volumes and workloads.
+        String name = PREFIX + " group for workloads";
+        Map<String, Object> attrs = new BillingGroupRequestBuilder()
+                .name(name)
+                .customerId(cell.getCustomerId()).build();
+        BillingGroup group = service.createBillingGroup(attrs);
+
+        test.testVolume(cell, group);
 
         test.cleanUp();
 
