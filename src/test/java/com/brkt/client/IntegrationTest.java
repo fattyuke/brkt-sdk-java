@@ -89,6 +89,14 @@ public class IntegrationTest {
                 service.deleteVolume(v.getId());
             }
         }
+        // No need to explicitly delete instances.  They will automatically
+        // get deleted with their workloads.
+        for (Workload w : service.getAllWorkloads()) {
+            if (w.getName().startsWith(PREFIX) &&
+                    w.getRequestedState() != RequestedState.DELETED) {
+                service.deleteWorkload(w.getId());
+            }
+        }
         for (BillingGroup group : service.getAllBillingGroups()) {
             if (group.getName().startsWith(PREFIX)) {
                 service.deleteBillingGroup(group.getId());
@@ -329,7 +337,7 @@ public class IntegrationTest {
         service.getComputingCellVolumes(id);
     }
 
-    public void testVolume(ComputingCell cell, BillingGroup group) {
+    private void testVolume(ComputingCell cell, BillingGroup group) {
         System.out.println("Testing volume.");
 
         // Create.
@@ -368,6 +376,101 @@ public class IntegrationTest {
         // Delete.
         volume = service.deleteVolume(id);
         assertEquals(RequestedState.DELETED, volume.getRequestedState());
+    }
+
+    private void testInstance(Workload workload) {
+        System.out.println("Testing instance.");
+
+        // Find image definition.
+        ImageDefinition imageDef = null;
+        for (ImageDefinition id : service.getAllImageDefinitions()) {
+            if (id.getName().startsWith("Bracket Ubuntu 14.04")) {
+                imageDef = id;
+            }
+        }
+        assertNotNull(imageDef);
+
+        // Find machine type.
+        MachineType machineType = null;
+        for (MachineType mt : service.getAllMachineTypes()) {
+            if (mt.getCpuCores() == 1) {
+                machineType = mt;
+                break;
+            }
+        }
+        assertNotNull(machineType);
+
+        // Create.
+        String name = PREFIX + " instance";
+        Map<String, Object> attrs = new InstanceRequestBuilder()
+                .workloadId(workload.getId())
+                .imageDefinitionId(imageDef.getId())
+                .machineTypeId(machineType.getId())
+                .name(name).build();
+        Instance instance = service.createInstance(attrs);
+        assertEquals(workload.getId(), instance.getWorkloadId());
+        assertEquals(imageDef.getId(), instance.getImageDefinitionId());
+        assertEquals(machineType.getId(), instance.getMachineTypeId());
+        assertEquals(name, instance.getName());
+
+        // Get.
+        String id = instance.getId();
+        assertEquals(id, service.getInstance(id).getId());
+        boolean found = false;
+        for (Instance i : service.getAllInstances()) {
+            if (i.getId().equals(id)) {
+                found = true;
+            }
+        }
+        assertTrue(found);
+
+        // Update.
+        String description = "Describe this instance";
+        attrs = new InstanceRequestBuilder().description(description).build();
+        instance = service.updateInstance(id, attrs);
+        assertEquals(description, instance.getDescription());
+
+        // Delete.
+        instance = service.deleteInstance(id);
+        assertEquals(RequestedState.DELETED, instance.getRequestedState());
+    }
+
+    private void testWorkload(Zone zone, BillingGroup group) {
+        System.out.println("Testing workload.");
+        String name = PREFIX + " workload";
+
+        // Create.
+        Map<String, Object> attrs = new WorkloadRequestBuilder()
+                .billingGroupId(group.getId())
+                .zoneId(zone.getId())
+                .name(name).build();
+        Workload workload = service.createWorkload(attrs);
+        assertEquals(group.getId(), workload.getBillingGroupId());
+        assertEquals(zone.getId(), workload.getZoneId());
+        assertEquals(name, workload.getName());
+
+        // Get.
+        String id = workload.getId();
+        assertEquals(id, service.getWorkload(id).getId());
+        boolean found = false;
+        for (Workload w : service.getAllWorkloads()) {
+            if (w.getId().equals(id)) {
+                found = true;
+            }
+        }
+        assertTrue(found);
+
+        // Update.
+        String description = "Describe this workload";
+        attrs = new WorkloadRequestBuilder().description(description).build();
+        workload = service.updateWorkload(id, attrs);
+        assertEquals(description, workload.getDescription());
+
+        testInstance(workload);
+
+        // Delete.
+        workload = service.deleteWorkload(id);
+        assertEquals(RequestedState.DELETED, workload.getRequestedState());
     }
 
     public static void main(String[] stringArgs) {
@@ -413,6 +516,8 @@ public class IntegrationTest {
         BillingGroup group = service.createBillingGroup(attrs);
 
         test.testVolume(cell, group);
+        Zone zone = service.getAllZones().get(0);
+        test.testWorkload(zone, group);
 
         test.cleanUp();
 
