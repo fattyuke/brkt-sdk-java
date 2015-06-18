@@ -19,6 +19,8 @@ package com.brkt.client;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
+import com.brkt.client.Constants.DeploymentType;
+import com.brkt.client.Constants.Protocol;
 import com.brkt.client.Constants.RequestedState;
 import com.brkt.client.util.BrktRestClient;
 import com.google.common.collect.Lists;
@@ -83,14 +85,16 @@ public class IntegrationTest {
      * previous failed test run.
      */
     private void cleanUp() {
+        System.out.println("Cleaning up.");
+
         for (Volume v : service.getAllVolumes()) {
             if (v.getName().startsWith(PREFIX) &&
                     v.getRequestedState() != RequestedState.DELETED) {
                 service.deleteVolume(v.getId());
             }
         }
-        // No need to explicitly delete instances.  They will automatically
-        // get deleted with their workloads.
+        // No need to explicitly delete instances or load balancers.
+        // They will automatically get deleted with their workloads.
         for (Workload w : service.getAllWorkloads()) {
             if (w.getName().startsWith(PREFIX) &&
                     w.getRequestedState() != RequestedState.DELETED) {
@@ -367,6 +371,25 @@ public class IntegrationTest {
         }
         assertTrue(found);
 
+        // Sanity-check other volume endpoints.
+        attrs = new VolumeRequestBuilder()
+                .billingGroupId(volume.getBillingGroupId())
+                .name(name + " snapshot").build();
+        service.snapshotVolume(volume.getId(), attrs);
+
+        attrs = new VolumeRequestBuilder()
+                .billingGroupId(volume.getBillingGroupId())
+                .name(name + " clone").build();
+        try {
+            service.cloneVolume(volume.getId(), attrs);
+        } catch (BrktService.RuntimeHttpError e) {
+            // Can't clone until volume is ready.
+            assertEquals(400, e.status);
+        }
+
+        List<Volume> children = service.getVolumeChildren(volume.getId());
+        assertFalse(children.isEmpty());
+
         // Update.
         String description = "Describe this volume";
         attrs = new VolumeRequestBuilder().description(description).build();
@@ -430,9 +453,102 @@ public class IntegrationTest {
         instance = service.updateInstance(id, attrs);
         assertEquals(description, instance.getDescription());
 
+        try {
+            service.rebootInstance(id);
+        } catch (BrktService.RuntimeHttpError e) {
+            // Can't reboot until instance is ready.
+            assertEquals(400, e.status);
+        }
+
         // Delete.
         instance = service.deleteInstance(id);
         assertEquals(RequestedState.DELETED, instance.getRequestedState());
+    }
+
+    private void testLoadBalancerListener(LoadBalancer balancer) {
+        System.out.println("Testing load balancer listener.");
+
+        // Create.
+        Map<String, Object> attrs = new LoadBalancerListenerRequestBuilder()
+                .loadBalancerId(balancer.getId())
+                .instanceProtocol(Protocol.HTTP)
+                .instancePort(8080)
+                .listenerProtocol(Protocol.HTTP)
+                .listenerPort(8080)
+                .isHealthCheckListener(false).build();
+        LoadBalancerListener listener = service.createLoadBalancerListener(attrs);
+        assertEquals(balancer.getId(), listener.getLoadBalancerId());
+        assertEquals(Protocol.HTTP, listener.getInstanceProtocol());
+        assertEquals(8080, listener.getListenerPort().intValue());
+        assertEquals(Protocol.HTTP, listener.getListenerProtocol());
+        assertEquals(8080, listener.getListenerPort().intValue());
+        assertFalse(listener.getIsHealthCheckListener());
+
+        // Get.
+        String id = listener.getId();
+        assertEquals(id, service.getLoadBalancerListener(id).getId());
+        List<LoadBalancerListener> listeners = service.getListenersForLoadBalancer(balancer.getId());
+        assertEquals(1, listeners.size());
+        assertEquals(id, listeners.get(0).getId());
+
+        // TODO: Uncomment this after NUC-8533 is fixed.
+        /*
+        boolean found = false;
+        for (LoadBalancerListener lbl : service.getAllLoadBalancerListeners()) {
+            if (lbl.getId().equals(id)) {
+                found = true;
+            }
+        }
+        assertTrue(found);
+        */
+
+        // Update.
+        attrs = new LoadBalancerListenerRequestBuilder().listenerPort(8081).build();
+        listener = service.updateLoadBalancerListener(id, attrs);
+        assertEquals(8081, listener.getListenerPort().intValue());
+
+        // Delete.
+        service.deleteLoadBalancerListener(listener.getId());
+    }
+
+    private void testLoadBalancer(Workload workload) {
+        System.out.println("Testing load balancer.");
+
+        // Create.
+        Network network = service.getAllNetworks().get(0);
+        Map<String, Object> attrs = new SecurityGroupRequestBuilder()
+                .name(PREFIX + " load balancer security group").build();
+        SecurityGroup sg = service.createSecurityGroup(network.getId(), attrs);
+        String name = PREFIX + " load balancer";
+
+        attrs = new LoadBalancerRequestBuilder()
+                .workloadId(workload.getId())
+                .securityGroupId(sg.getId())
+                .name(name).build();
+        LoadBalancer balancer = service.createLoadBalancer(attrs);
+
+        // Get.
+        String id = balancer.getId();
+        assertEquals(id, service.getLoadBalancer(id).getId());
+        boolean found = false;
+        for (LoadBalancer lb : service.getAllLoadBalancers()) {
+            if (lb.getId().equals(id)) {
+                found = true;
+            }
+        }
+        assertTrue(found);
+
+        // Update.
+        String description = "Describe this load balancer";
+        attrs = new LoadBalancerRequestBuilder().description(description).build();
+        balancer = service.updateLoadBalancer(id, attrs);
+        assertEquals(description, balancer.getDescription());
+
+        testLoadBalancerListener(balancer);
+
+        // Delete.
+        balancer = service.deleteLoadBalancer(id);
+        assertEquals(RequestedState.DELETED, balancer.getRequestedState());
     }
 
     private void testWorkload(Zone zone, BillingGroup group) {
@@ -467,10 +583,43 @@ public class IntegrationTest {
         assertEquals(description, workload.getDescription());
 
         testInstance(workload);
+        testLoadBalancer(workload);
 
         // Delete.
         workload = service.deleteWorkload(id);
         assertEquals(RequestedState.DELETED, workload.getRequestedState());
+    }
+
+    private void testCloudInit() {
+        System.out.println("Testing cloudinit.");
+        String name = PREFIX + " cloudinit";
+
+        // Create.
+        Map<String, Object> attrs = new CloudInitRequestBuilder()
+                .name(name)
+                .deploymentType(DeploymentType.DEFAULT).build();
+        CloudInit cloudInit = service.createCloudInit(attrs);
+        assertEquals(name, cloudInit.getName());
+        assertEquals(DeploymentType.DEFAULT, cloudInit.getDeploymentType());
+
+        // Get.
+        String id = cloudInit.getId();
+        assertEquals(id, service.getCloudInit(id).getId());
+        boolean found = false;
+        for (CloudInit ci : service.getAllCloudInits()) {
+            if (ci.getId().equals(id)) {
+                found = true;
+            }
+        }
+        assertTrue(found);
+
+        // Update.
+        String description = "Describe this cloudinit";
+        attrs = new CloudInitRequestBuilder().description(description).build();
+        cloudInit = service.updateCloudInit(id, attrs);
+        assertEquals(description, cloudInit.getDescription());
+
+        // TODO: test delete after NUC-8392 is fixed.
     }
 
     public static void main(String[] stringArgs) {
@@ -507,6 +656,7 @@ public class IntegrationTest {
         test.testZone();
         test.testSecurityGroup();
         test.testComputingCell();
+        test.testCloudInit();
 
         // Create a billing group for new volumes and workloads.
         String name = PREFIX + " group for workloads";
@@ -518,7 +668,6 @@ public class IntegrationTest {
         test.testVolume(cell, group);
         Zone zone = service.getAllZones().get(0);
         test.testWorkload(zone, group);
-
         test.cleanUp();
 
         System.out.println("Success!");

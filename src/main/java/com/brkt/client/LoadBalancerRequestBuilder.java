@@ -68,6 +68,11 @@ public class LoadBalancerRequestBuilder {
         return this;
     }
 
+    public LoadBalancerRequestBuilder securityGroupId(String id) {
+        reqBuilder.attr("security_group", id);
+        return this;
+    }
+
     public LoadBalancerRequestBuilder serviceName(String name) {
         reqBuilder.attr("service_name", name);
         return this;
@@ -75,6 +80,11 @@ public class LoadBalancerRequestBuilder {
 
     public LoadBalancerRequestBuilder unhealthyThreshold(int numTimes) {
         reqBuilder.attr("unhealthy_threshold", numTimes);
+        return this;
+    }
+
+    public LoadBalancerRequestBuilder workloadId(String id) {
+        reqBuilder.attr("workload", id);
         return this;
     }
 

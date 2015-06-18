@@ -500,6 +500,12 @@ public class BrktService {
         return get(Constants.LOAD_BALANCER_LISTENER_ROOT, Constants.TYPE_LOAD_BALANCER_LISTENER_LIST);
     }
 
+    public List<LoadBalancerListener> getListenersForLoadBalancer(String loadBalancerId) {
+        Preconditions.checkNotNull(loadBalancerId);
+        String uri = String.format("%s/%s/listeners", Constants.LOAD_BALANCER_ROOT, loadBalancerId);
+        return get(uri, Constants.TYPE_LOAD_BALANCER_LISTENER_LIST);
+    }
+
     public LoadBalancerListener getLoadBalancerListener(String id) {
         Preconditions.checkNotNull(id);
         String uri = String.format("%s/%s", Constants.LOAD_BALANCER_LISTENER_ROOT, id);
