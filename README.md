@@ -2,8 +2,7 @@ The **Bracket Java SDK** is a Java library for interacting with the Bracket
 REST API.
 
 To install the Java SDK, clone the git repo and run the Maven build. The
-build places the JAR and Javadoc in the `target` directory.  **Note that
-the git URL will change once we move the SDK to a public repo.**
+build places the JAR and Javadoc in the `target` directory.
 
     ~/test$ git clone git@github.com:brkt/brkt-sdk-java.git
     Cloning into 'brkt-java-sdk'...
