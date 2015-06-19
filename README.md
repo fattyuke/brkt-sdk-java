@@ -5,7 +5,7 @@ To install the Java SDK, clone the git repo and run the Maven build. The
 build places the JAR and Javadoc in the `target` directory.  **Note that
 the git URL will change once we move the SDK to a public repo.**
 
-    ~/test$ git clone git@github.int.brkt.com:boris/brkt-java-sdk.git
+    ~/test$ git clone git@github.com:brkt/brkt-sdk-java.git
     Cloning into 'brkt-java-sdk'...
     remote: Counting objects: 917, done.
     remote: Compressing objects: 100% (428/428), done.
@@ -27,4 +27,4 @@ the git URL will change once we move the SDK to a public repo.**
     [INFO] Final Memory: 17M/81M
     [INFO] ------------------------------------------------------------------------
 
-For more details and sample code, take a look at the [Javadoc](https://github.int.brkt.com/pages/boris/brkt-java-sdk/).
+For more details and sample code, take a look at the [Javadoc](http://brkt.github.io/brkt-sdk-java/).
