@@ -51,7 +51,7 @@ The Bracket Java SDK JAR file is executable.  This allows you
 to exercise the code in {@link com.brkt.client.BrktService} from the command
 line.  You can find the CLI code in {@link com.brkt.client.util.Main}.
 
-    ~/test/brkt-java-sdk (master)$ java -jar ./target/brkt-java-sdk-1.0-SNAPSHOT.jar --token 60435a8b84104e25bbe13ad7b63f8695 --key 6e08558938f346038c61716ccb98dacf --root-uri http://10.95.0.10 getAllWorkloads
+    ~/test/brkt-sdk-java (master)$ java -jar ./target/brkt-sdk-java-1.0-SNAPSHOT.jar --token 60435a8b84104e25bbe13ad7b63f8695 --key 6e08558938f346038c61716ccb98dacf --root-uri http://10.95.0.10 getAllWorkloads
     Workload{id=828196b0675f4ef78f858a51321040a9, name=NUC-7407b, requestedState=AVAILABLE}
     Workload{id=9d1bbef921b5486a9bf991b4460131b5, name=NUC-7407c, requestedState=AVAILABLE}
     Workload{id=442c8ad633994ee28fbf998a175cf5b9, name=NUC-7461a, requestedState=AVAILABLE}
